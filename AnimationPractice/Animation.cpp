@@ -94,12 +94,11 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	return TRUE;
 }
 
-//: WndProc(HWND, UINT, WPARAM, LPARAM)
-//  용도: 주 창의 메시지를 처리합니다.
-//
-//  WM_COMMAND  - 애플리케이션 메뉴를 처리합니다.
-//  WM_PAINT    - 주 창을 그립니다.
-//  WM_DESTROY  - 종료 메시지를 게시하고 반환합니다.
+bool MyIntersectRect(LPRECT rc1, LPRECT rc2)
+{
+	return((rc1->left < rc2->right&& rc1->right > rc2->left) &&
+		(rc1->top < rc2->bottom&& rc1->bottom > rc2->top));
+}
 enum Dir { down, up, left, right };
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -109,11 +108,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	HBITMAP hMapBitmap = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP3));
 	BITMAP bit;
 	static RECT rect;
+	GetObject(hPlayerBitmap, sizeof(BITMAP), &bit);
+	static RECT playerRect = { 0,0,400*0.2, 600*0.2 };
+	static RECT enemyRect;
 	static int nRenderNumberX = 0;
 	static int nRenderNumberY = 0;
-
-	static int playerX = 0;
-	static int playerY = 0;
 
 	switch (message)
 	{
@@ -129,41 +128,55 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		if (wParam == VK_LEFT)
 		{
-			playerX -= 8;
+			playerRect.left -= 8;
+			playerRect.right -= 8;
 			nRenderNumberY = Dir::left;
 		}
 		if (wParam == VK_RIGHT)
 		{
-			playerX += 8;
+			playerRect.left += 8;
+			playerRect.right += 8;
+
 			nRenderNumberY = Dir::right;
 		}
 		if (wParam == VK_DOWN)
 		{
-			playerY += 8;
+			playerRect.bottom += 8;
+			playerRect.top += 8;
+
 			nRenderNumberY = Dir::down;
 		}
 		if (wParam == VK_UP)
 		{
-			playerY -= 8;
+			playerRect.bottom -= 8;
+			playerRect.top -= 8;
 			nRenderNumberY = Dir::up;
 		}
 
 		nRenderNumberX++;
 		if (nRenderNumberX > 3) nRenderNumberX = 0;
 		InvalidateRect(hWnd, nullptr, false);
-
-		if (playerX < 0)
-			playerX += 8;
-		else if (playerX + 70 > rect.right)
-			playerX -= 8;
-		else if (playerY < 0)
-			playerY += 8;
-		else if (playerY + 100 > rect.bottom)
-			playerY -= 8;
-	}break;
-
-	case WM_TIMER:
-	{
+		bool isC = MyIntersectRect(&enemyRect, &playerRect);
+		if (playerRect.left < 0 || (isC && nRenderNumberY == Dir::left))
+		{
+			playerRect.left += 8;
+			playerRect.right += 8;
+		}
+		else if (playerRect.left + 70 > rect.right || (isC && nRenderNumberY == Dir::right))
+		{
+			playerRect.left -= 8;
+			playerRect.right -= 8;
+		}
+		else if (playerRect.top < 0 || (isC && nRenderNumberY == Dir::up))
+		{
+			playerRect.bottom += 8;
+			playerRect.top += 8;
+		}
+		else if (playerRect.top + 100 > rect.bottom || (isC && nRenderNumberY == Dir::down))
+		{
+			playerRect.bottom -= 8;
+			playerRect.top -= 8;
+		}
 	}break;
 
 	case WM_PAINT:
@@ -186,21 +199,32 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		BitBlt(hBackDC, 0, 0, bx, by, hMemDC, 0, 0, SRCCOPY);
 		SelectObject(hMemDC, oldBitmap);
 
-
 		GetObject(hPlayerBitmap, sizeof(BITMAP), &bit);
 		bx = bit.bmWidth / 4;
 		by = bit.bmHeight / 4;
 
 		oldBitmap = (HBITMAP)SelectObject(hMemDC, hPlayerBitmap);
-		GdiTransparentBlt(hBackDC, playerX, playerY, bx * 0.2f, by * 0.2f, hMemDC, nRenderNumberX * bx, nRenderNumberY * by, bx, by, RGB(255, 0, 255));
+		GdiTransparentBlt(hBackDC, playerRect.left, playerRect.top, bx * 0.2f, by * 0.2f, hMemDC, nRenderNumberX * bx, nRenderNumberY * by, bx, by, RGB(255, 0, 255));
 		SelectObject(hMemDC, oldBitmap);
-		
-		BitBlt(hdc, 0, 0, rect.right, rect.bottom, hBackDC, 0, 0, SRCCOPY);
 
+		bx = bit.bmWidth;
+		by = bit.bmHeight;
+
+		enemyRect.left = 500;
+		enemyRect.top = 200;
+		enemyRect.right = 700;
+		enemyRect.bottom = 400;
+
+		Rectangle(hBackDC, enemyRect.left, enemyRect.top, enemyRect.right, enemyRect.bottom);
+
+		SelectObject(hMemDC, oldBitmap);
+
+		BitBlt(hdc, 0, 0, rect.right, rect.bottom, hBackDC, 0, 0, SRCCOPY);
 
 		SelectObject(hBackDC, oldBitmap);
 		DeleteDC(hMemDC);
 		DeleteDC(hBackDC);
+		DeleteObject(hBackBitmap);
 		EndPaint(hWnd, &ps);
 	}
 	break;

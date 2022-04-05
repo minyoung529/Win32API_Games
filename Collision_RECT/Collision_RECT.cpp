@@ -1,6 +1,5 @@
 ﻿#include "framework.h"
-#include "Collision.h"
-#include "Resource.h"
+#include "Collision_RECT.h"
 #include "math.h"
 
 #define MAX_LOADSTRING 100
@@ -16,9 +15,6 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
-bool MyPtInRect(RECT rt, POINT pt);
-bool MyPtInCircle(RECT rt, POINT pt);
-
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPWSTR    lpCmdLine,
@@ -27,11 +23,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
-	// TODO: 여기에 코드를 입력합니다.
-
-	// 전역 문자열을 초기화합니다.
 	LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-	LoadStringW(hInstance, IDC_COLLISION, szWindowClass, MAX_LOADSTRING);
+	LoadStringW(hInstance, IDC_COLLISIONRECT, szWindowClass, MAX_LOADSTRING);
 	MyRegisterClass(hInstance);
 
 	// 애플리케이션 초기화를 수행합니다:
@@ -40,7 +33,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		return FALSE;
 	}
 
-	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_COLLISION));
+	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_COLLISIONRECT));
 
 	MSG msg;
 
@@ -58,6 +51,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 }
 
 
+
+//
+//  함수: MyRegisterClass()
+//
+//  용도: 창 클래스를 등록합니다.
+//
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
 	WNDCLASSEXW wcex;
@@ -69,16 +68,26 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = 0;
 	wcex.hInstance = hInstance;
-	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_COLLISION));
+	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_COLLISIONRECT));
 	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_COLLISION);
+	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_COLLISIONRECT);
 	wcex.lpszClassName = szWindowClass;
 	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
 	return RegisterClassExW(&wcex);
 }
 
+//
+//   함수: InitInstance(HINSTANCE, int)
+//
+//   용도: 인스턴스 핸들을 저장하고 주 창을 만듭니다.
+//
+//   주석:
+//
+//        이 함수를 통해 인스턴스 핸들을 전역 변수에 저장하고
+//        주 프로그램 창을 만든 다음 표시합니다.
+//
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 	hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
@@ -97,39 +106,94 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	return TRUE;
 }
 
+bool MyIntersectRect(LPRECT rc1, LPRECT rc2)
+{
+	return((rc1->left < rc2->right&& rc1->right > rc2->left) &&
+		(rc1->top < rc2->bottom&& rc1->bottom > rc2->top));
+}
+
+bool MyIntersectCircle(RECT rc, RECT rc2)
+{
+	float rad1 = (rc.right - rc.left) / 2;
+	float rad2 = (rc2.right - rc2.left) / 2;
+
+	float deltaX = (rc.left + rad1) - (rc2.left + rad2);
+	float deltaY = (rc.top + rad1) - (rc2.top + rad2);
+	float distance = sqrt(pow(deltaX, 2) + pow(deltaY, 2));
+
+	return (distance < rad1 + rad2);
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	RECT bitmapRect = { 100,100,200,200 };
+	static RECT Rect1 = { 50,50,150,150 };
+	static RECT Rect2 = { 250,250,400,400 };
+	static RECT rt;
+	static bool isCollide;
+	static RECT clientRect; 
 
 	switch (message)
 	{
-	case WM_LBUTTONDOWN:
+	case WM_KEYDOWN:
 	{
-		POINT pt;
-		pt.x = LOWORD(lParam);
-		pt.y = HIWORD(lParam);
-
-		if (MyPtInCircle(bitmapRect, pt))
+		switch (wParam)
 		{
-			MessageBox(hWnd, TEXT("충돌됨"), TEXT("충돌 메세지 박스"), MB_OK);
+		case VK_UP:
+			Rect1.top -= 5;
+			Rect1.bottom -= 5;
+			break;
+		case VK_DOWN:
+			Rect1.top += 5;
+			Rect1.bottom += 5;
+			break;
+		case VK_LEFT:
+			Rect1.left -= 5;
+			Rect1.right -= 5;
+			break;
+		case VK_RIGHT:
+			Rect1.left += 5;
+			Rect1.right += 5;
+			break;
 		}
-	}
-	break;
 
+		if (MyIntersectCircle(Rect1, Rect2))
+		{
+			int a = 1;
+			a = 2;
+		}
+		InvalidateRect(hWnd, nullptr, false);
+	}break;
 	case WM_PAINT:
 	{
-		BITMAP bit;
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hWnd, &ps);
 		HDC hMemDC = CreateCompatibleDC(hdc);
-		HBITMAP hButtonBitmap = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP1));
-		GetObject(hButtonBitmap, sizeof(BITMAP), &bit);
-		HBITMAP hOldBitmap = (HBITMAP)SelectObject(hMemDC, hButtonBitmap);
-		BitBlt(hdc, 0, 0, bit.bmWidth, bit.bmHeight, hMemDC, 0, 0, SRCCOPY);
+		
+		GetClientRect(hWnd, &clientRect);
 
-		Ellipse(hdc, 100, 100, 200, 200);
+		HBITMAP bitmap = CreateCompatibleBitmap(hdc, clientRect.right, clientRect.bottom);
+		HBITMAP oldBitmap = (HBITMAP)SelectObject(hMemDC, bitmap);
+
+		FillRect(hMemDC, &clientRect, (HBRUSH)GetStockObject(WHITE_BRUSH));
+
+		Ellipse(hMemDC, Rect1.left, Rect1.top, Rect1.right, Rect1.bottom);
+		Ellipse(hMemDC, Rect2.left, Rect2.top, Rect2.right, Rect2.bottom);
+
+		if (isCollide)
+		{
+			HBRUSH hBrush = CreateSolidBrush(RGB(12, 215, 124));
+			HBRUSH oldBrush = (HBRUSH)SelectObject(hMemDC, hBrush);
+
+			Rectangle(hMemDC, rt.left, rt.top, rt.right, rt.bottom);
+			SelectObject(hMemDC, oldBrush);
+			DeleteObject(hBrush);
+		}
+
+		BitBlt(hdc, 0, 0, clientRect.right, clientRect.bottom, hMemDC, 0, 0, SRCCOPY);
+		
+		SelectObject(hMemDC, oldBitmap);
+		DeleteObject(bitmap);
 		DeleteDC(hMemDC);
-		SelectObject(hMemDC, hOldBitmap);
 		EndPaint(hWnd, &ps);
 	}
 	break;
@@ -140,22 +204,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
 	return 0;
-}
-
-bool MyPtInRect(RECT rt, POINT pt)
-{
-	return (rt.left <= pt.x && rt.right >= pt.x &&
-		rt.top <= pt.y && rt.bottom >= pt.y);
-}
-
-bool MyPtInCircle(RECT rt, POINT pt)
-{
-	float rad = rt.right - rt.left;
-	float deltaX = rt.left + rad - pt.x;
-	float deltaY = rt.top + rad - pt.y;
-	float length = sqrt(pow(deltaX, 2) + pow(deltaY, 2));
-
-	return(length <= rad);
 }
 
 // 정보 대화 상자의 메시지 처리기입니다.
