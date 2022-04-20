@@ -37,7 +37,7 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 void OnPaint(HWND hWnd, HDC hdc);
 void OnLButtonDown(HWND hWnd, int x, int y);
-char CheckWinCondition();
+char CheckWinCondition(HWND hWnd);
 void Reset(HWND hWnd);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
@@ -214,7 +214,7 @@ void OnLButtonDown(HWND hWnd, int mouseX, int mouseY)
 
 			InvalidateRect(hWnd, nullptr, true);
 
-			char result = CheckWinCondition();
+			char result = CheckWinCondition(hWnd);
 
 			if (result == -1)
 			{
@@ -304,7 +304,7 @@ bool IsGameOver()
 	return 0;
 }
 
-char CheckWinCondition()
+char CheckWinCondition(HWND hWnd)
 {
 
 	int bCount[4] = { 0, };
@@ -322,13 +322,10 @@ char CheckWinCondition()
 				{
 					bCount[0] = 0;
 					wCount[0] = 0;
-					continue;
 				}
-				if (board[curPosY][curPosX + i] == BLACK_DOL) bCount[0]++;
+				else if (board[curPosY][curPosX + i] == BLACK_DOL) bCount[0]++;
 				else if (board[curPosY][curPosX + i] == WHITE_DOL) wCount[0]++;
 			}
-
-			// 대각선 고치기
 
 			if (curPosY + i >= 0 && curPosY + i < Y_COUNT)
 			{
@@ -336,12 +333,12 @@ char CheckWinCondition()
 				{
 					bCount[1] = 0;
 					wCount[1] = 0;
-					continue;
 				}
-				if (board[curPosY + i][curPosX] == BLACK_DOL) bCount[1]++;
+				else if (board[curPosY + i][curPosX] == BLACK_DOL) bCount[1]++;
 				else if (board[curPosY + i][curPosX] == WHITE_DOL) wCount[1]++;
 			}
 
+			// 대각선 고치기
 			if (curPosX + i >= 0 && curPosX + i < X_COUNT &&
 				curPosY + i >= 0 && curPosY + i < Y_COUNT)
 			{
@@ -349,32 +346,27 @@ char CheckWinCondition()
 				{
 					bCount[2] = 0;
 					wCount[2] = 0;
-					continue;
 				}
-				if (board[curPosY + i][curPosX + i] == BLACK_DOL) bCount[2]++;
+				else if (board[curPosY + i][curPosX + i] == BLACK_DOL) bCount[2]++;
 				else if (board[curPosY + i][curPosX + i] == WHITE_DOL) wCount[2]++;
 			}
 
 			if (curPosX - i >= 0 && curPosX - i < X_COUNT &&
 				curPosY + i >= 0 && curPosY + i < Y_COUNT)
 			{
-				if (board[curPosY + i][curPosX + i] == NONE)
+				if (board[curPosY + i][curPosX - i] == NONE)
 				{
 					bCount[3] = 0;
 					wCount[3] = 0;
-					continue;
 				}
-				if (board[curPosY + i][curPosX - i] == BLACK_DOL) bCount[3]++;
+				else if (board[curPosY + i][curPosX - i] == BLACK_DOL) bCount[3]++;
 				else if (board[curPosY + i][curPosX - i] == WHITE_DOL) wCount[3]++;
 			}
 
-			if (bCount[0] >= 5 || bCount[1] >= 5) return BLACK_DOL;
-			else if (wCount[0] >= 5 || wCount[1] >= 5) return WHITE_DOL;
+			if (bCount[0] >= 5 || bCount[1] >= 5 || bCount[2] >= 5 || bCount[3] >= 5) return BLACK_DOL;
+			else if (wCount[0] >= 5 || wCount[1] >= 5 || wCount[2] >= 5 || wCount[3] >= 5) return WHITE_DOL;
 		}
-
-		return 0;
 	}
-
 	return 0;
 }
 
