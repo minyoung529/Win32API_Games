@@ -29,6 +29,9 @@ enum OMOKPIECE { NONE, BLACK_DOL, WHITE_DOL };
 bool turn = true;
 int pieceCount = 0;
 
+int curPosX;
+int curPosY;
+
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -132,10 +135,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hWnd, &ps);
-		if (IsGameOver() != 0)
-		{
-
-		}
 		OnPaint(hWnd, hdc);
 		EndPaint(hWnd, &ps);
 	}
@@ -199,15 +198,15 @@ void OnLButtonDown(HWND hWnd, int mouseX, int mouseY)
 	if (mouseX > XPOS(0) - HALFINTERVAL && mouseY > YPOS(0) - HALFINTERVAL &&
 		mouseX < XPOS(X_COUNT - 1) + HALFINTERVAL && mouseY < YPOS(Y_COUNT - 1) + HALFINTERVAL)
 	{
-		int x = (mouseX - START_X + HALFINTERVAL) / INTERVAL;
-		int y = (mouseY - START_Y + HALFINTERVAL) / INTERVAL;
+		curPosX = (mouseX - START_X + HALFINTERVAL) / INTERVAL;
+		curPosY = (mouseY - START_Y + HALFINTERVAL) / INTERVAL;
 
-		if (board[y][x] == NONE)
+		if (board[curPosY][curPosX] == NONE)
 		{
 			if (turn == true)
-				board[y][x] = BLACK_DOL;
+				board[curPosY][curPosX] = BLACK_DOL;
 			else
-				board[y][x] = WHITE_DOL;
+				board[curPosY][curPosX] = WHITE_DOL;
 
 			turn = !turn;
 
@@ -307,115 +306,73 @@ bool IsGameOver()
 
 char CheckWinCondition()
 {
+
+	int bCount[4] = { 0, };
+	int wCount[4] = { 0, };
+
 	if (pieceCount >= X_COUNT * Y_COUNT) return -1;
 
 	else
 	{
-		int bCount = 0;
-		int wCount = 0;
-
-		for (int y = 0; y < Y_COUNT; y++)
+		for (int i = -4; i < 5; i++)
 		{
-			for (int x = 0; x < X_COUNT; x++)
+			if (curPosX + i >= 0 && curPosX + i < X_COUNT)
 			{
-				if (board[y][x] == BLACK_DOL)
-					bCount++;
-				else
-					bCount = 0;
-
-				if (board[y][x] == WHITE_DOL)
-					wCount++;
-				else
-					wCount = 0;
-
-				if (bCount >= 5) return BLACK_DOL;
-				else if (wCount >= 5) return WHITE_DOL;
+				if (board[curPosY][curPosX + i] == NONE)
+				{
+					bCount[0] = 0;
+					wCount[0] = 0;
+					continue;
+				}
+				if (board[curPosY][curPosX + i] == BLACK_DOL) bCount[0]++;
+				else if (board[curPosY][curPosX + i] == WHITE_DOL) wCount[0]++;
 			}
 
-			bCount = 0;
-			wCount = 0;
-		}
+			// 대각선 고치기
 
-		for (int x = 0; x < X_COUNT; x++)
-		{
-			for (int y = 0; y < Y_COUNT; y++)
+			if (curPosY + i >= 0 && curPosY + i < Y_COUNT)
 			{
-				if (board[y][x] == BLACK_DOL)
-					bCount++;
-				else
-					bCount = 0;
-
-				if (board[y][x] == WHITE_DOL)
-					wCount++;
-				else
-					wCount = 0;
-
-				if (bCount >= 5) return BLACK_DOL;
-				else if (wCount >= 5) return WHITE_DOL;
+				if (board[curPosY + i][curPosX] == NONE)
+				{
+					bCount[1] = 0;
+					wCount[1] = 0;
+					continue;
+				}
+				if (board[curPosY + i][curPosX] == BLACK_DOL) bCount[1]++;
+				else if (board[curPosY + i][curPosX] == WHITE_DOL) wCount[1]++;
 			}
 
-			bCount = 0;
-			wCount = 0;
-		}
-
-		//대각선..ㅠ
-		for (int x = 0; x < X_COUNT - 3; x++)
-		{
-			for (int y = 0, b2Cnt = 0, w2Cnt = 0; y < Y_COUNT; y++)
+			if (curPosX + i >= 0 && curPosX + i < X_COUNT &&
+				curPosY + i >= 0 && curPosY + i < Y_COUNT)
 			{
-				if (board[y][x + y] == BLACK_DOL)
-					bCount++;
-				else
-					bCount = 0;
-
-				if (board[y][x + y] == WHITE_DOL)
-					wCount++;
-				else
-					wCount = 0;
-
-				if (board[y][X_COUNT - 1 - x - y] == BLACK_DOL)
-					b2Cnt++;
-				else
-					b2Cnt = 0;
-
-				if (board[y][X_COUNT - 1 - x - y] == WHITE_DOL)
-					w2Cnt++;
-				else
-					w2Cnt = 0;
-
-				if (bCount >= 5 || b2Cnt >= 5) return BLACK_DOL;
-				else if (wCount >= 5 || w2Cnt >= 5) return WHITE_DOL;
+				if (board[curPosY + i][curPosX + i] == NONE)
+				{
+					bCount[2] = 0;
+					wCount[2] = 0;
+					continue;
+				}
+				if (board[curPosY + i][curPosX + i] == BLACK_DOL) bCount[2]++;
+				else if (board[curPosY + i][curPosX + i] == WHITE_DOL) wCount[2]++;
 			}
-		}
 
-		for (int y = 0; y < Y_COUNT - 3; y++)
-		{
-			for (int x = 0, b2Cnt = 0, w2Cnt = 0; x < X_COUNT; x++)
+			if (curPosX - i >= 0 && curPosX - i < X_COUNT &&
+				curPosY + i >= 0 && curPosY + i < Y_COUNT)
 			{
-				if (board[y + x][x] == BLACK_DOL)
-					bCount++;
-				else
-					bCount = 0;
-
-				if (board[y + x][x] == WHITE_DOL)
-					wCount++;
-				else
-					wCount = 0;
-
-				if (board[Y_COUNT - 1 - x + y][x] == BLACK_DOL)
-					b2Cnt++;
-				else
-					b2Cnt = 0;
-
-				if (board[Y_COUNT - 1 - x + y][x] == WHITE_DOL)
-					w2Cnt++;
-				else
-					w2Cnt = 0;
-
-				if (bCount >= 5 || b2Cnt >= 5) return BLACK_DOL;
-				else if (wCount >= 5 || w2Cnt >= 5) return WHITE_DOL;
+				if (board[curPosY + i][curPosX + i] == NONE)
+				{
+					bCount[3] = 0;
+					wCount[3] = 0;
+					continue;
+				}
+				if (board[curPosY + i][curPosX - i] == BLACK_DOL) bCount[3]++;
+				else if (board[curPosY + i][curPosX - i] == WHITE_DOL) wCount[3]++;
 			}
+
+			if (bCount[0] >= 5 || bCount[1] >= 5) return BLACK_DOL;
+			else if (wCount[0] >= 5 || wCount[1] >= 5) return WHITE_DOL;
 		}
+
+		return 0;
 	}
 
 	return 0;
