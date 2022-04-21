@@ -22,8 +22,8 @@ HINSTANCE hInst;                                // 현재 인스턴스입니다.
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 
-unsigned char board[X_COUNT][Y_COUNT];
-enum OMOKPIECE { NONE, BLACK_DOL, WHITE_DOL };
+unsigned char board[Y_COUNT][X_COUNT];
+enum OMOKPIECE { NONE, BLACK, WHITE };
 
 // black => true, white => false
 bool turn = true;
@@ -37,7 +37,7 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 void OnPaint(HWND hWnd, HDC hdc);
 void OnLButtonDown(HWND hWnd, int x, int y);
-char CheckWinCondition(HWND hWnd);
+char CheckWinCondition();
 void Reset(HWND hWnd);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
@@ -182,7 +182,7 @@ void OnPaint(HWND hWnd, HDC hdc)
 		{
 			if (board[y][x] > 0)
 			{
-				if (board[y][x] == BLACK_DOL)
+				if (board[y][x] == BLACK)
 					SelectObject(hdc, GetStockObject(BLACK_BRUSH));
 				else
 					SelectObject(hdc, GetStockObject(WHITE_BRUSH));
@@ -204,9 +204,9 @@ void OnLButtonDown(HWND hWnd, int mouseX, int mouseY)
 		if (board[curPosY][curPosX] == NONE)
 		{
 			if (turn == true)
-				board[curPosY][curPosX] = BLACK_DOL;
+				board[curPosY][curPosX] = BLACK;
 			else
-				board[curPosY][curPosX] = WHITE_DOL;
+				board[curPosY][curPosX] = WHITE;
 
 			turn = !turn;
 
@@ -214,19 +214,19 @@ void OnLButtonDown(HWND hWnd, int mouseX, int mouseY)
 
 			InvalidateRect(hWnd, nullptr, true);
 
-			char result = CheckWinCondition(hWnd);
+			char result = CheckWinCondition();
 
 			if (result == -1)
 			{
 				if (IDOK == MessageBox(hWnd, TEXT("꽉 찼습니다."), TEXT("게임 종료!"), MB_OK))
 					Reset(hWnd);
 			}
-			else if (result == BLACK_DOL)
+			else if (result == BLACK)
 			{
 				if (IDOK == MessageBox(hWnd, TEXT("검은 돌 이겼습니다."), TEXT("게임 종료!"), MB_OK))
 					Reset(hWnd);
 			}
-			else if (result == WHITE_DOL)
+			else if (result == WHITE)
 			{
 				if (IDOK == MessageBox(hWnd, TEXT("하얀 돌 이겼습니다."), TEXT("게임 종료!"), MB_OK))
 					Reset(hWnd);
@@ -250,7 +250,7 @@ bool IsGameOver()
 				board[y][x + 2] == board[y][x + 3] &&
 				board[y][x + 3] == board[y][x + 4])
 			{
-				if (board[y][x] == BLACK_DOL || board[y][x] == WHITE_DOL)
+				if (board[y][x] == BLACK || board[y][x] == WHITE)
 					return 1;
 			}
 
@@ -260,7 +260,7 @@ bool IsGameOver()
 				board[y + 2][x] == board[y + 3][x] &&
 				board[y + 3][x] == board[y + 4][x])
 			{
-				if (board[y][x] == BLACK_DOL || board[y][x] == WHITE_DOL)
+				if (board[y][x] == BLACK || board[y][x] == WHITE)
 					return 1;
 			}
 
@@ -270,7 +270,7 @@ bool IsGameOver()
 				board[y + 2][x + 2] == board[x + 3][y + 3] &&
 				board[y + 3][x + 3] == board[x + 4][y + 4])
 			{
-				if (board[y][x] == BLACK_DOL || board[y][x] == WHITE_DOL)
+				if (board[y][x] == BLACK || board[y][x] == WHITE)
 					return 1;
 			}
 
@@ -280,7 +280,7 @@ bool IsGameOver()
 				board[y - 2][x + 2] == board[y - 3][x + 3] &&
 				board[y - 3][x + 3] == board[y - 4][x + 4])
 			{
-				if (board[y][x] == BLACK_DOL || board[y][x] == WHITE_DOL)
+				if (board[y][x] == BLACK || board[y][x] == WHITE)
 					return 1;
 			}
 
@@ -290,7 +290,7 @@ bool IsGameOver()
 				board[y + 2][x + 2] == board[x + 3][y + 3] &&
 				board[y + 3][x + 3] == board[x + 4][y + 4])
 			{
-				if (board[y][x] == BLACK_DOL || board[y][x] == WHITE_DOL)
+				if (board[y][x] == BLACK || board[y][x] == WHITE)
 					return 1;
 			}
 
@@ -304,7 +304,7 @@ bool IsGameOver()
 	return 0;
 }
 
-char CheckWinCondition(HWND hWnd)
+char CheckWinCondition()
 {
 
 	int bCount[4] = { 0, };
@@ -323,8 +323,8 @@ char CheckWinCondition(HWND hWnd)
 					bCount[0] = 0;
 					wCount[0] = 0;
 				}
-				else if (board[curPosY][curPosX + i] == BLACK_DOL) bCount[0]++;
-				else if (board[curPosY][curPosX + i] == WHITE_DOL) wCount[0]++;
+				else if (board[curPosY][curPosX + i] == BLACK) bCount[0]++;
+				else if (board[curPosY][curPosX + i] == WHITE) wCount[0]++;
 			}
 
 			if (curPosY + i >= 0 && curPosY + i < Y_COUNT)
@@ -334,11 +334,10 @@ char CheckWinCondition(HWND hWnd)
 					bCount[1] = 0;
 					wCount[1] = 0;
 				}
-				else if (board[curPosY + i][curPosX] == BLACK_DOL) bCount[1]++;
-				else if (board[curPosY + i][curPosX] == WHITE_DOL) wCount[1]++;
+				else if (board[curPosY + i][curPosX] == BLACK) bCount[1]++;
+				else if (board[curPosY + i][curPosX] == WHITE) wCount[1]++;
 			}
 
-			// 대각선 고치기
 			if (curPosX + i >= 0 && curPosX + i < X_COUNT &&
 				curPosY + i >= 0 && curPosY + i < Y_COUNT)
 			{
@@ -347,8 +346,8 @@ char CheckWinCondition(HWND hWnd)
 					bCount[2] = 0;
 					wCount[2] = 0;
 				}
-				else if (board[curPosY + i][curPosX + i] == BLACK_DOL) bCount[2]++;
-				else if (board[curPosY + i][curPosX + i] == WHITE_DOL) wCount[2]++;
+				else if (board[curPosY + i][curPosX + i] == BLACK) bCount[2]++;
+				else if (board[curPosY + i][curPosX + i] == WHITE) wCount[2]++;
 			}
 
 			if (curPosX - i >= 0 && curPosX - i < X_COUNT &&
@@ -359,12 +358,12 @@ char CheckWinCondition(HWND hWnd)
 					bCount[3] = 0;
 					wCount[3] = 0;
 				}
-				else if (board[curPosY + i][curPosX - i] == BLACK_DOL) bCount[3]++;
-				else if (board[curPosY + i][curPosX - i] == WHITE_DOL) wCount[3]++;
+				else if (board[curPosY + i][curPosX - i] == BLACK) bCount[3]++;
+				else if (board[curPosY + i][curPosX - i] == WHITE) wCount[3]++;
 			}
 
-			if (bCount[0] >= 5 || bCount[1] >= 5 || bCount[2] >= 5 || bCount[3] >= 5) return BLACK_DOL;
-			else if (wCount[0] >= 5 || wCount[1] >= 5 || wCount[2] >= 5 || wCount[3] >= 5) return WHITE_DOL;
+			if (bCount[0] >= 5 || bCount[1] >= 5 || bCount[2] >= 5 || bCount[3] >= 5) return BLACK;
+			else if (wCount[0] >= 5 || wCount[1] >= 5 || wCount[2] >= 5 || wCount[3] >= 5) return WHITE;
 		}
 	}
 	return 0;
