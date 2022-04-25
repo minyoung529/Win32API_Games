@@ -16,7 +16,6 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
-SYSTEMTIME sys;
 
 void Init();
 void Release();
@@ -46,6 +45,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_WINDOWFRAMEWORK));
 
 	MSG msg;
+	Init();
 
 	while (true)
 	{
@@ -139,8 +139,16 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	return (INT_PTR)FALSE;
 }
 
+HBITMAP bitmap;
+POINT imageSize;
+
 void Init()
 {
+	bitmap = (HBITMAP)LoadImage(g_hInst, TEXT("dd.bmp"), IMAGE_BITMAP, 0,0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+	BITMAP bit;
+	GetObject(bitmap, sizeof(BITMAP), &bit);
+	imageSize.x = bit.bmWidth;
+	imageSize.y = bit.bmHeight;
 }
 
 void Release()
@@ -158,51 +166,59 @@ void Render()
 	HBITMAP hOldBitmap = (HBITMAP)SelectObject(hMemDC, hBitmap);
 
 	FillRect(hMemDC, &rt, (HBRUSH)COLOR_BACKGROUND);
-	Rectangle(hMemDC, rectPosition.x, rectPosition.y, rectPosition.x + 100, rectPosition.y + 100);
+	//Rectangle(hMemDC, rectPosition.x, rectPosition.y, rectPosition.x + 100, rectPosition.y + 100);
 
-	//윈도우 기준
-	TCHAR str[128];
-	wsprintf(str, TEXT("[윈도우 기준 x: %4d, y: %4d]"), mousePosition.x, mousePosition.y);
-	TextOut(hMemDC, 10, 10, str, lstrlen(str));
+	////윈도우 기준
+	//TCHAR str[128];
+	//wsprintf(str, TEXT("[윈도우 기준 x: %4d, y: %4d]"), mousePosition.x, mousePosition.y);
+	//TextOut(hMemDC, 10, 10, str, lstrlen(str));
 
-	ScreenToClient(g_hWnd, &mousePosition);
-	wsprintf(str, TEXT("[클라이언트 기준 x: %4d, y: %4d]"), mousePosition.x, mousePosition.y);
-	TextOut(hMemDC, 10, 30, str, lstrlen(str));
+	//ScreenToClient(g_hWnd, &mousePosition);
+	//wsprintf(str, TEXT("[클라이언트 기준 x: %4d, y: %4d]"), mousePosition.x, mousePosition.y);
+	//TextOut(hMemDC, 10, 30, str, lstrlen(str));
+
+	HDC hBitmapDC = CreateCompatibleDC(hMemDC);
+	HBITMAP oldImage = (HBITMAP)SelectObject(hBitmapDC, bitmap);
+	BitBlt(hMemDC, 50, 50, imageSize.x, imageSize.y, hBitmapDC, 0, 0, SRCCOPY);
+	SelectObject(hBitmapDC, oldImage);
 
 	BitBlt(hdc, 0, 0, rt.right, rt.bottom, hMemDC, 0, 0, SRCCOPY);
 
 	SelectObject(hMemDC, hOldBitmap);
 	DeleteObject(hBitmap);
 	DeleteDC(hMemDC);
+	DeleteDC(hBitmapDC);
 	ReleaseDC(g_hWnd, hdc);
 }
 
 void Update()
 {
-	if (GetAsyncKeyState(VK_UP) & 0x8000)
-	{
-		rectPosition.y--;
-	}
+	/*
+	static float fStartTime = (float)timeGetTime() * 0.001f;
+	static TCHAR szTemp[256];
+	static DWORD dwCount = 0;
 
-	if (GetAsyncKeyState(VK_DOWN) & 0x8000)
-	{
-		rectPosition.y++;
-	}
+	float fNowTime = (float)timeGetTime() * 0.001f;
 
-	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+	if (fNowTime - fStartTime >= 1.0f)
 	{
-		rectPosition.x--;
-	}
+		dwCount++;
+		wsprintf(szTemp, TEXT("1초마다 호출 : %d"), dwCount);
 
-	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+		SetWindowTextW(g_hWnd, szTemp);
+		fStartTime = fNowTime;
+	}*/
+
+	/*static DWORD dwStartTick = GetTickCount();
+	static TCHAR szTemp[256];
+	static DWORD dwCount = 0;
+
+	if (GetTickCount64() - dwStartTick >= 1000/60)
 	{
-		rectPosition.x++;
-	}
+		dwCount++;
+		wsprintf(szTemp, TEXT("1초마다 호출 : %d"), dwCount);
+		SetWindowTextW(g_hWnd, szTemp);
 
-	GetCursorPos(&mousePosition);
-
-	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)
-	{
-		PlaySound(TEXT("Laugh.wav"), nullptr, SND_FILENAME | SND_ASYNC);
-	}
+		dwStartTick = GetTickCount64();
+	}*/
 }
