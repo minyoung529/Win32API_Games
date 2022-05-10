@@ -53,7 +53,7 @@ void SceneManager::RegisterScene(const std::string& sceneName, Scene* scene)
 {
 	if (scene == nullptr || sceneName.compare("") == 0) return;
 
-	scene->Init();
+	//scene->Init();
 	sceneContainer.insert(sceneContainer.end(), pair<string, Scene*>(sceneName, scene));
 }
 

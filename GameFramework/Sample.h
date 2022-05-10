@@ -18,7 +18,7 @@ private:
 	InputState inputState;
 
 private:
-	int posX;
-	int posY;
-	int moveSpeed;
+	float posX;
+	float posY;
+	float moveSpeed;
 };

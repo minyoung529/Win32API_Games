@@ -1,9 +1,24 @@
 #include "Engine.h"
 
-Engine::Engine() : interval(30.0f)
+// 전역 엔진
+Engine* engine = nullptr;
+
+Engine::Engine() :
+	prevCount{},
+	curCount{},
+	frequency{},
+	deltaTime(0.0f),
+	callCount(0),
+	fps(0)
 {
-	lastTime = currentTime = (float)timeGetTime();
+	engine = this;
 	mSceneManager = new SceneManager;
+
+	// 현재 카운트
+	QueryPerformanceCounter(&prevCount);
+
+	// 초당 카운트 횟수
+	QueryPerformanceFrequency(&frequency);
 }
 
 Engine::~Engine()
@@ -27,19 +42,29 @@ void Engine::StartUp()
 // 게임 루프
 void Engine::MainLoop()
 {
-	currentTime = (float)timeGetTime();
-	float frameDelta = (currentTime - lastTime) * 0.001f;
+	QueryPerformanceCounter(&curCount);
+	deltaTime = (float)(curCount.QuadPart - prevCount.QuadPart) /
+		(float)(frequency.QuadPart);
 
-	if (frameDelta >= 1.0f / interval)
+	prevCount = curCount;
+
+	++callCount;
+	accumulate += deltaTime;
+
+	if (accumulate > 1.0f)
 	{
-		_Update(frameDelta);
-		HDC hdc = GetDC(hWnd);
-		_Render(hdc, frameDelta);
-		ReleaseDC(hWnd, hdc);
+		fps = callCount;
+		callCount = 0;
+		accumulate = 0.0f;
 
-		_RenderText(frameDelta);
-		lastTime = currentTime;
+		_RenderText(fps, deltaTime);
 	}
+
+	_Update(deltaTime);
+
+	HDC hdc = GetDC(hWnd);
+	_Render(hdc, deltaTime);
+	ReleaseDC(hWnd, hdc);
 }
 
 //장치의 종료
@@ -74,7 +99,7 @@ void Engine::_Render(HDC hdc, float deltaTime)
 	FillRect(hMemDC, &rect, (HBRUSH)GetStockObject(WHITE_BRUSH));
 
 	if (mSceneManager)
-		mSceneManager->Render(hdc, deltaTime);
+		mSceneManager->Render(hMemDC, deltaTime);
 
 	Render(hMemDC, deltaTime);
 
@@ -85,23 +110,12 @@ void Engine::_Render(HDC hdc, float deltaTime)
 	DeleteDC(hMemDC);
 }
 
-void Engine::_RenderText(float deltaTime)
+void Engine::_RenderText(UINT fps, float deltaTime)
 {
-	static DWORD frameCount; // 프레임 카운트
-	static float timeElapsed = 0.0f; // 흐른 시간
+	static TCHAR szTemp[256];
+	swprintf_s(szTemp, TEXT("FPS : %d,  DT: %f"), fps, deltaTime);
 
-	timeElapsed += deltaTime;
-	frameCount++;
-
-	if (timeElapsed >= 1.0f)
-	{
-		static TCHAR szTemp[256];
-		wsprintf(szTemp, TEXT("게임 속도 FPS : %d"), frameCount);
-		SetWindowTextW(hWnd, szTemp);
-
-		frameCount = 0;
-		timeElapsed = 0.01f;
-	}
+	SetWindowTextW(hWnd, szTemp);
 }
 
 void Engine::Init()

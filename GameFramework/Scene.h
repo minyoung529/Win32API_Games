@@ -7,7 +7,7 @@ class Scene
 {
 public:
 	Scene() = default;
-	~Scene() = default;
+	virtual ~Scene() = default;
 
 public:
 	virtual		void Init() = 0;

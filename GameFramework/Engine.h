@@ -21,7 +21,7 @@ public:
 private:
 	void _Update(float deltaTime);
 	void _Render(HDC hdc, float deltaTime);
-	void _RenderText(float deltaTime);
+	void _RenderText(UINT fps, float deltaTime);
 
 public:
 	virtual void	Init();
@@ -30,9 +30,14 @@ public:
 	virtual void	Release();
 
 private:
-	float			interval;
-	float			lastTime;
-	float			currentTime;
+	LARGE_INTEGER	prevCount;
+	LARGE_INTEGER	curCount;
+	LARGE_INTEGER	frequency;
+
+	float			deltaTime;	// 프레임간 시간 값
+	float			accumulate;		// 누적 시간
+	UINT			callCount;
+	UINT			fps;
 
 public: 
 	Input			Input;

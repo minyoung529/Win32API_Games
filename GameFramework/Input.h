@@ -18,6 +18,7 @@ struct InputState
 	DWORD	keyDown;
 	DWORD	keyLeft;
 	DWORD	keyRight;
+	DWORD	KeySpace;
 };
 
 class Input

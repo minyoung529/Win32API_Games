@@ -28,7 +28,7 @@ public:
 public:
 	bool			IsEmpty();
 	HBITMAP			GetBitmapHandle();
-	const BITMAP&	GetBitmap();
+	const BITMAP&	GetBitmapInfo();
 	
 public:
 	static void		SetTransparentColor(DWORD color);

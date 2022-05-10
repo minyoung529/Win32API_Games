@@ -68,7 +68,7 @@ HBITMAP Image::GetBitmapHandle()
 	return bitmapHandle;
 }
 
-const BITMAP& Image::GetBitmap()
+const BITMAP& Image::GetBitmapInfo()
 {
 	return bitmap;
 }
