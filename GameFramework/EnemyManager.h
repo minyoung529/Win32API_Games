@@ -41,6 +41,7 @@ public:
 public:
 	bool IsCollision(RECT* rect, RECT* targetRect);
 	void CreateEnemy(int level);
+	void SetTargetPos(FPOINT pos);
 
 private:
 	vector<Enemy*>	enemies;

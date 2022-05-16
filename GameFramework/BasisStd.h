@@ -35,4 +35,10 @@ typedef struct tagOBJECTSIZE
 	float height;
 } OBJECTSIZE;
 
+enum class BULLET_TYPE
+{
+	NORMAL = 0,
+	FOLLOW,
+	BARRAGE
+};
 #endif

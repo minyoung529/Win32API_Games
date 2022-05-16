@@ -21,7 +21,6 @@ public:
 	bool IsValid();
 	bool IsCollision();
 
-
 private:
 	Image	bulletImage;
 	float	speed;

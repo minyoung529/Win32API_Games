@@ -22,6 +22,7 @@ public:
 
 protected:
 	Object(FPOINT pos, OBJECTSIZE size) : pos(pos), size(size), scale(1.0f){}
+	Object(FPOINT pos, OBJECTSIZE size, float scale) : pos(pos), size(size), scale(scale){}
 };
 
 #endif

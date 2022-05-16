@@ -85,13 +85,36 @@ bool EnemyManager::IsCollision(RECT* rect, RECT* targetRect)
 
 void EnemyManager::CreateEnemy(int level)
 {
-	for (int i = 1; i <= 10; i++)
+	if (level == 1)
 	{
-		Enemy* enemy = new Enemy(FPOINT{ rand() % 350 + 40.f, rand() % 200 + 50.f },
-			OBJECTSIZE{}, scale / level, moveSpeed * level);
+		for (int i = 1; i <= 10; i++)
+		{
+			Enemy* enemy = new Enemy(FPOINT{ rand() % 350 + 40.f, rand() % 200 + 50.f },
+				OBJECTSIZE{}, scale / level, moveSpeed * level, BULLET_TYPE::FOLLOW);
 
-		if (enemy) enemy->Init();
+			if (enemy) enemy->Init();
 
-		enemies.push_back(enemy);
+			enemies.push_back(enemy);
+		}
+	}
+	else
+	{
+		for (int i = 1; i <= 10; i++)
+		{
+			Enemy* enemy = new Enemy(FPOINT{ rand() % 350 + 40.f, rand() % 200 + 50.f },
+				OBJECTSIZE{}, scale / level, moveSpeed * level);
+
+			if (enemy) enemy->Init();
+
+			enemies.push_back(enemy);
+		}
+	}
+}
+
+void EnemyManager::SetTargetPos(FPOINT pos)
+{
+	for (UINT i = 0; i < enemies.size(); i++)
+	{
+		enemies[i]->SetTargetPos(pos);
 	}
 }

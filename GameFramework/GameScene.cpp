@@ -27,6 +27,7 @@ void GameScene::Update(float deltaTime)
 	if (player) player->Update(deltaTime);
 
 	EnemyManager::Instance()->Update(deltaTime);
+	EnemyManager::Instance()->SetTargetPos(player->GetCenter());
 }
 
 void GameScene::Render(HDC hdc, float deltaTime)

@@ -30,5 +30,12 @@ public:
 	void	Update(float deltaTime);
 	void	Render(HDC  hdc, float deltaTime);
 	void	Release();
+
+	FPOINT	GetPos() { return FPOINT{ pos.x, pos.y }; }
+	FPOINT	GetCenter()
+	{
+		return FPOINT{	(pos.x + size.width * 0.5f),
+						(pos.y + size.height * 0.5f) };
+	}
 };
 #endif

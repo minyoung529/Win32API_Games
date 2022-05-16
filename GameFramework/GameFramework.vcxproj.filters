@@ -81,6 +81,9 @@
     <ClInclude Include="Background.h">
       <Filter>Object</Filter>
     </ClInclude>
+    <ClInclude Include="EnemyBullet.h">
+      <Filter>Object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Window.cpp">
@@ -120,6 +123,9 @@
       <Filter>Object</Filter>
     </ClCompile>
     <ClCompile Include="Background.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyBullet.cpp">
       <Filter>Object</Filter>
     </ClCompile>
   </ItemGroup>
