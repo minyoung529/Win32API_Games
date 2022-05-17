@@ -84,6 +84,12 @@
     <ClInclude Include="EnemyBullet.h">
       <Filter>Object</Filter>
     </ClInclude>
+    <ClInclude Include="StartScene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="EndScene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Window.cpp">
@@ -127,6 +133,12 @@
     </ClCompile>
     <ClCompile Include="EnemyBullet.cpp">
       <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="StartScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="EndScene.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

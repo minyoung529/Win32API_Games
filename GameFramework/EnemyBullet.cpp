@@ -53,6 +53,11 @@ void EnemyBullet::Update(float deltaTime)
 {
 	pos.x += cosf(angle) * speed * deltaTime;
 	pos.y += sinf(angle) * speed * deltaTime;
+
+	rect.left = (int)pos.x;
+	rect.right = pos.x + size.width;
+	rect.top = (int)pos.y;
+	rect.bottom = pos.y + size.height;
 }
 
 void EnemyBullet::Render(HDC hdc, float deltaTime)
@@ -75,14 +80,14 @@ bool EnemyBullet::IsValid()
 
 bool EnemyBullet::IsCollision(RECT* targetRect)
 {
-	RECT* tempRect = nullptr;
+	RECT tempRect;
 
 	rect.left = (int)pos.x;
 	rect.right = pos.x + size.width;
 	rect.top = (int)pos.y;
 	rect.bottom = pos.y + size.height;
 
-	if (IntersectRect(tempRect, &rect, targetRect))
+	if (IntersectRect(&tempRect, &rect, targetRect))
 	{
 		return true;
 	}

@@ -26,7 +26,9 @@ void SceneManager::Update(float deltaTime)
 	if (reservedScene)
 	{
 		if (currentScene)
+		{
 			currentScene->Release();
+		}
 
 		reservedScene->Init();
 

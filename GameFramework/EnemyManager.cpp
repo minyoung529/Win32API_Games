@@ -47,6 +47,7 @@ void EnemyManager::Update(float deltaTime)
 		else
 		{
 			enemies[i]->Update(deltaTime);
+
 		}
 	}
 }
@@ -83,31 +84,42 @@ bool EnemyManager::IsCollision(RECT* rect, RECT* targetRect)
 	return collision;
 }
 
+bool EnemyManager::IsBulletCollision(RECT* targetRect)
+{
+	bool isCollision = false;
+
+	for (UINT i = 0; i < enemies.size(); i++)
+	{
+		if (enemies[i]->IsBulletCollision(targetRect))
+		{
+			isCollision = true;
+		}
+	}
+
+	return isCollision;
+}
+
 void EnemyManager::CreateEnemy(int level)
 {
-	if (level == 1)
+	BULLET_TYPE bulletType = BULLET_TYPE::NORMAL;
+
+	if (level % 2 == 0)
 	{
-		for (int i = 1; i <= 10; i++)
-		{
-			Enemy* enemy = new Enemy(FPOINT{ rand() % 350 + 40.f, rand() % 200 + 50.f },
-				OBJECTSIZE{}, scale / level, moveSpeed * level, BULLET_TYPE::FOLLOW);
-
-			if (enemy) enemy->Init();
-
-			enemies.push_back(enemy);
-		}
+		bulletType = BULLET_TYPE::FOLLOW;
 	}
 	else
 	{
-		for (int i = 1; i <= 10; i++)
-		{
-			Enemy* enemy = new Enemy(FPOINT{ rand() % 350 + 40.f, rand() % 200 + 50.f },
-				OBJECTSIZE{}, scale / level, moveSpeed * level);
+		bulletType = BULLET_TYPE::BARRAGE;
+	}
 
-			if (enemy) enemy->Init();
+	for (int i = 1; i <= 10; i++)
+	{
+		Enemy* enemy = new Enemy(FPOINT{ rand() % 350 + 40.f, rand() % 200 + 50.f },
+			OBJECTSIZE{}, scale / level, moveSpeed * level, bulletType);
 
-			enemies.push_back(enemy);
-		}
+		if (enemy) enemy->Init();
+
+		enemies.push_back(enemy);
 	}
 }
 

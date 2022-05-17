@@ -39,6 +39,8 @@ public:
 	bool	GetCollision();
 	void	SetCollision(bool isCollision);
 	RECT*	GetRect();
+	bool	IsBulletCollision(RECT* targetRect);
+	void	Move(float dt);
 
 private:
 	BULLET_TYPE		bulletType;

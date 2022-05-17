@@ -1,8 +1,9 @@
 #include "GameScene.h"
+#include "BasisSystem.h"
 
 GameScene::GameScene()
 {
-	player = new Player(FPOINT{ 200,550 }, OBJECTSIZE{}, 200);
+	player = new Player(FPOINT{ 200,550 }, OBJECTSIZE{}, 200, 0.5f);
 	background = new Background(FPOINT{ 0,0 }, OBJECTSIZE{});
 }
 
@@ -24,10 +25,22 @@ void GameScene::Init()
 void GameScene::Update(float deltaTime)
 {
 	if (background)  background->Update(deltaTime);
-	if (player) player->Update(deltaTime);
+	if (player)
+	{
+		player->Update(deltaTime);
+		EnemyManager::Instance()->SetTargetPos(player->GetCenter());
+		if (EnemyManager::Instance()->IsBulletCollision(player->GetRect()))
+		{
+			player->AddHP(-1.f);
+
+			if (player->GetHP() < 0.f && engine->mSceneManager)
+			{
+				engine->mSceneManager->ReserveChangeScene("EndScene");
+			}
+		}
+	}
 
 	EnemyManager::Instance()->Update(deltaTime);
-	EnemyManager::Instance()->SetTargetPos(player->GetCenter());
 }
 
 void GameScene::Render(HDC hdc, float deltaTime)

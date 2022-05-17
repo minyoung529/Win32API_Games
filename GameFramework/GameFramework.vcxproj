@@ -146,6 +146,7 @@
     <ClInclude Include="BasisStd.h" />
     <ClInclude Include="BasisSystem.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="EndScene.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyBullet.h" />
     <ClInclude Include="EnemyManager.h" />
@@ -160,11 +161,13 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Sound.h" />
+    <ClInclude Include="StartScene.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="EndScene.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyBullet.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
@@ -176,6 +179,7 @@
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="StartScene.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>

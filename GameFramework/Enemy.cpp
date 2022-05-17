@@ -58,23 +58,8 @@ void Enemy::Init()
 
 void Enemy::Update(float deltaTime)
 {
-	pos.x += speed * deltaTime;
-
-	RECT rt;
-	GetClientRect(engine->GetWndHandle(), &rt);
-	rt.right -= (collider.right - collider.left);
-
-	if (!PtInRect(&rt, POINT{ (int)pos.x, (int)pos.y }))
-	{
-		if (pos.x <= rt.left)
-			pos.x += 1.f;
-		if (pos.x >= rt.right)
-			pos.x -= 1.f;
-
-		speed = -speed;
-	}
-
 	UpdateCollider();
+	Move(deltaTime);
 
 	accTime += deltaTime;
 	if (accTime >= regenTime)
@@ -103,7 +88,20 @@ void Enemy::Update(float deltaTime)
 
 		case BULLET_TYPE::BARRAGE:
 		{
+			for (UINT i = 0; i < 20; i++)
+			{
+				EnemyBullet* newBullet =
+					new EnemyBullet(FPOINT{ pos.x, pos.y }, OBJECTSIZE{}, 200.f, (float)2 * PI / 20 * i);
 
+				if (newBullet)
+				{
+					newBullet->Init();
+					bullets.push_back(newBullet);
+				}
+			}
+
+			regenTime = rand() % (int)maxRegen + 1;
+			accTime = 0.f;
 		}break;
 		}
 	}
@@ -163,4 +161,41 @@ void Enemy::SetCollision(bool isCollision)
 RECT* Enemy::GetRect()
 {
 	return &collider;
+}
+
+bool Enemy::IsBulletCollision(RECT* targetRect)
+{
+	bool isCollision = false;
+
+	for (UINT i = 0; i < bullets.size(); i++)
+	{
+		if (bullets[i]->IsCollision(targetRect))
+		{
+			bullets[i]->Release();
+			delete bullets[i];
+			bullets.erase(bullets.begin() + i);
+			isCollision = true;
+		}
+	}
+
+	return isCollision;
+}
+
+void Enemy::Move(float deltaTime)
+{
+	pos.x += speed * deltaTime;
+
+	RECT rt;
+	GetClientRect(engine->GetWndHandle(), &rt);
+	rt.right -= (collider.right - collider.left);
+
+	if (!PtInRect(&rt, POINT{ (int)pos.x, (int)pos.y }))
+	{
+		if (pos.x <= rt.left)
+			pos.x += 1.f;
+		if (pos.x >= rt.right)
+			pos.x -= 1.f;
+
+		speed = -speed;
+	}
 }

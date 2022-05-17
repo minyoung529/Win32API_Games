@@ -1,5 +1,7 @@
 #include "Sample.h"
 #include "GameScene.h"
+#include "StartScene.h"
+#include "EndScene.h"
 
 Sample::Sample()
 {
@@ -14,7 +16,10 @@ void Sample::Init()
 	if (mSceneManager)
 	{
 		mSceneManager->RegisterScene("GameScene", new GameScene);
-		mSceneManager->ReserveChangeScene("GameScene");
+		mSceneManager->RegisterScene("StartScene", new StartScene);
+		mSceneManager->RegisterScene("EndScene", new EndScene);
+		
+		mSceneManager->ReserveChangeScene("StartScene");
 	}
 }
 
