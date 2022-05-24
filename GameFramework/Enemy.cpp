@@ -27,7 +27,7 @@ Enemy::Enemy(FPOINT pos, OBJECTSIZE size, float scale, float speed)
 }
 
 Enemy::Enemy(FPOINT pos, OBJECTSIZE size, float scale, float speed, BULLET_TYPE type)
-	:Object(pos, size, 1.f)
+	:Object(pos, size, scale)
 	, speed(speed)
 	, collider{}
 	, isCollision(false)
@@ -136,6 +136,13 @@ void Enemy::Render(HDC hdc, float deltaTime)
 
 void Enemy::Release()
 {
+	for (UINT i = 0; i < bullets.size(); i++)
+	{
+		bullets[i]->Release();
+		delete bullets[i];
+		bullets.erase(bullets.begin() + i);
+	}
+
 	enemyImage.Release();
 }
 

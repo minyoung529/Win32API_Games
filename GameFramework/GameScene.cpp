@@ -3,19 +3,17 @@
 
 GameScene::GameScene()
 {
-	player = new Player(FPOINT{ 200,550 }, OBJECTSIZE{}, 200, 0.5f);
-	background = new Background(FPOINT{ 0,0 }, OBJECTSIZE{});
 }
-
 
 GameScene::~GameScene()
 {
-	if (player) delete player;
-	if (background) delete background;
 }
 
 void GameScene::Init()
 {
+	player = new Player(FPOINT{ 200,550 }, OBJECTSIZE{}, 200, 0.5f);
+	background = new Background(FPOINT{ 0,0 }, OBJECTSIZE{});
+
 	if (background)  background->Init();
 	if (player) player->Init();
 
@@ -57,4 +55,7 @@ void GameScene::Release()
 	if (background) background->Release();
 
 	EnemyManager::Instance()->Release();
+
+	if (player) delete player;
+	if (background) delete background;
 }

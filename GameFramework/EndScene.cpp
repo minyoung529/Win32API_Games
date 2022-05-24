@@ -4,7 +4,6 @@ EndScene::EndScene()
 	: startPosition{ 100, 700 }
 	, startRect{ }
 {
-	memset(&inputState, 0, sizeof(InputState));
 }
 
 EndScene::~EndScene()
@@ -13,6 +12,10 @@ EndScene::~EndScene()
 
 void EndScene::Init()
 {
+	startPosition = { 100, 700 };
+	startRect = { };
+	memset(&inputState, 0, sizeof(InputState));
+
 	backgroundImage.Load(TEXT("Data/BG05.bmp"));
 	startButtonImage.Load(TEXT("Data/restartbutton.bmp"));
 

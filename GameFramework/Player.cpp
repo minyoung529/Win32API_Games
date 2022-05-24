@@ -36,6 +36,8 @@ Player::~Player()
 
 void Player::Init()
 {
+	hp = maxHp;
+
 	playerImage.Load(TEXT("Data/airplane.bmp"));
 
 	size.width = playerImage.GetBitmapInfo().bmWidth;

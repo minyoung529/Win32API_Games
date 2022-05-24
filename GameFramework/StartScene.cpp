@@ -13,6 +13,8 @@ StartScene::~StartScene()
 
 void StartScene::Init()
 {
+	startPosition = { 100, 700 };
+	startRect = { };
 	backgroundImage.Load(TEXT("Data/BG05.bmp"));
 	startButtonImage.Load(TEXT("Data/startbutton.bmp"));
 
@@ -27,9 +29,9 @@ void StartScene::Update(float deltaTime)
 	if (!engine) return;
 
 	engine->Input.KeyCheck(VK_LBUTTON, inputState.mouseLButton);
-	
+
 	if (inputState.mouseLButton == KEY_PUSH)
-	{	
+	{
 		POINT point;
 		GetCursorPos(&point);
 		ScreenToClient(engine->GetWndHandle(), &point);

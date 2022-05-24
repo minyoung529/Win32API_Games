@@ -24,8 +24,9 @@ EnemyManager::~EnemyManager()
 
 void EnemyManager::Init()
 {
+	level = 1;
+	moveSpeed = 50.f;
 	enemies.reserve(100);
-
 	CreateEnemy(level);
 }
 
