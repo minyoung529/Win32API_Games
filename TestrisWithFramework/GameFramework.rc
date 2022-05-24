@@ -1,0 +1,87 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "winres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 한국어(대한민국) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+#pragma code_page(949)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""winres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BITMAP1             BITMAP                  "C:\\Users\\USER\\Desktop\\Tetris\\bgImage.bmp"
+
+IDB_BITMAP2             BITMAP                  "C:\\Users\\USER\\Desktop\\Tetris\\blue.bmp"
+
+IDB_BITMAP3             BITMAP                  "C:\\Users\\USER\\Desktop\\Tetris\\gray.bmp"
+
+IDB_BITMAP4             BITMAP                  "C:\\Users\\USER\\Desktop\\Tetris\\green.bmp"
+
+IDB_BITMAP5             BITMAP                  "C:\\Users\\USER\\Desktop\\Tetris\\guide.bmp"
+
+IDB_BITMAP6             BITMAP                  "C:\\Users\\USER\\Desktop\\Tetris\\orange.bmp"
+
+IDB_BITMAP7             BITMAP                  "C:\\Users\\USER\\Desktop\\Tetris\\purple.bmp"
+
+IDB_BITMAP8             BITMAP                  "C:\\Users\\USER\\Desktop\\Tetris\\red.bmp"
+
+IDB_BITMAP9             BITMAP                  "C:\\Users\\USER\\Desktop\\Tetris\\white.bmp"
+
+IDB_BITMAP10            BITMAP                  "c:\\users\\user\\desktop\\tetris\\bitmap10.bmp"
+
+#endif    // 한국어(대한민국) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
