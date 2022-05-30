@@ -81,7 +81,7 @@ void Window::RegisterWndClass()
 void Window::CreateWnd()
 {
 	hWnd = CreateWindowW(TEXT("GameFramework"), TEXT("GameFramework!"), WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, 0, WINSIZEX, WINSIZEY, nullptr, nullptr, hInst, nullptr);
+		CW_USEDEFAULT, 0, WINSIZE_X, WINSIZE_Y, nullptr, nullptr, hInst, nullptr);
 }
 
 void Window::ShowWnd(int nCmdShow)

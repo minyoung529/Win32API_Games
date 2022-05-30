@@ -3,6 +3,7 @@
 
 #include "Scene.h"
 #include "Piece.h"
+#include "Block.h"
 
 class GameScene : public Scene
 {
@@ -18,5 +19,11 @@ public:
 
 private:
 	Piece* piece;
+	Block* block;
+
+private:
+	HBITMAP background;
+	RECT	backgroundRect;
+	RECT	previewRect;
 };
 #endif

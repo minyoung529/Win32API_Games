@@ -106,6 +106,26 @@ void Engine::_Render(HDC hdc, float deltaTime)
 
 	SelectObject(hMemDC, hOldBitmap);
 	DeleteObject(hBitmap);
+
+	HPEN myPen = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+	HPEN oldPen = (HPEN)SelectObject(hdc, myPen);
+
+	// ¼¼·Î ¼±
+	for (UINT i = 0; i <= 10; ++i)
+	{
+		MoveToEx(hdc, MARGIN_COLUMN + i * RATIO, MARGIN_ROW, nullptr);
+		LineTo(hdc, MARGIN_COLUMN + i * RATIO, MARGIN_ROW + BOARDSIZE_Y);
+	}
+
+	for (UINT i = 0; i <= 20; ++i)
+	{
+		MoveToEx(hdc, MARGIN_COLUMN , MARGIN_ROW + i * RATIO, nullptr);
+		LineTo(hdc, MARGIN_COLUMN + BOARDSIZE_X, MARGIN_ROW  + i * RATIO);
+	}
+
+	SelectObject(hdc, oldPen);
+	DeleteObject(myPen);
+
 	DeleteDC(hMemDC);
 }
 
