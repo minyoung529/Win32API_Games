@@ -18,8 +18,8 @@ public:
 	virtual void Release() override;
 
 private:
-	Piece* piece;
-	Block* block;
+	bool		gameStart;
+	InputState	inputState;
 
 private:
 	HBITMAP background;

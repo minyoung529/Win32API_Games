@@ -62,4 +62,11 @@ enum class TETRIS_TYPE
 	T
 };
 
-#endif
+enum class BLOCK_STATE
+{
+	PREVIEW,
+	HANDLENOW,
+	FROZEN
+};
+
+#endif // BASISSTD_H

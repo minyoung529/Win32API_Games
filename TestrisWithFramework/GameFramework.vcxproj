@@ -149,6 +149,7 @@
     <ClInclude Include="Image.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="Piece.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Sample.h" />
@@ -164,6 +165,7 @@
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="Piece.cpp" />
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="SceneManager.cpp" />

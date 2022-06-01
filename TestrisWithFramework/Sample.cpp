@@ -3,6 +3,7 @@
 
 Sample::Sample()
 {
+	srand((UINT)time(NULL));
 }
 
 Sample::~Sample()

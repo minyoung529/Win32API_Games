@@ -117,6 +117,7 @@ void Engine::_Render(HDC hdc, float deltaTime)
 		LineTo(hdc, MARGIN_COLUMN + i * RATIO, MARGIN_ROW + BOARDSIZE_Y);
 	}
 
+	// °¡·Î ¼±
 	for (UINT i = 0; i <= 20; ++i)
 	{
 		MoveToEx(hdc, MARGIN_COLUMN , MARGIN_ROW + i * RATIO, nullptr);
