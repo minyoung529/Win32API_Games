@@ -4,7 +4,6 @@
 #include "Window.h"
 #include "Image.h"
 #include "Input.h"
-#include "Sound.h"
 #include "SceneManager.h"
 
 class Engine : public Window
@@ -41,7 +40,6 @@ private:
 
 public: 
 	Input			Input;
-	BSound			Sound;
 	SceneManager*	mSceneManager;
 };
 

@@ -30,7 +30,6 @@ Engine::~Engine()
 void Engine::StartUp()
 {
 	Input.Init();
-	Sound.Init();
 
 	if (mSceneManager)
 		mSceneManager->Init();
@@ -70,7 +69,6 @@ void Engine::MainLoop()
 void Engine::Cleanup()
 {
 	Input.Release();
-	Sound.Release();
 
 	if (mSceneManager)
 		mSceneManager->Release();

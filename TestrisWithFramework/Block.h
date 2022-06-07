@@ -40,6 +40,10 @@ public:
 
 	bool IsRightRotateBlock(POINT pt[]);
 
+	// 谅快 面倒
+	bool CheckOutOfLeft(const POINT center, const POINT pt[]) const;
+	bool CheckOutOfRight(const POINT center, const POINT pt[]) const;
+
 	// 面倒 眉农
 	bool ReachTheGround(const POINT center) const;
 	bool CheckOutOfRange(const POINT center, const POINT pt[]) const;

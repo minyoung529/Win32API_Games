@@ -48,9 +48,6 @@
     <ClInclude Include="Input.h">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="Sound.h">
-      <Filter>Base</Filter>
-    </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Scene</Filter>
     </ClInclude>
@@ -90,9 +87,6 @@
       <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="Input.cpp">
-      <Filter>Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Sound.cpp">
       <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="SceneManager.cpp">

@@ -76,7 +76,7 @@ void Block::Update(float deltaTime)
 				POINT _point[POINTNUM];
 				memcpy(_point, point, sizeof(_point));
 
-				if (!ReachTheGround(center) && IsRightRotateBlock(_point)
+				if (!ReachTheGround(center)
 					&& !ObjectManager::GetInstance()->CheckOverlapWithPiece(center, point))
 				{
 					RightRotateBlock();
@@ -262,6 +262,17 @@ void Block::RightRotateBlock()
 	{
 		RightRotatePiece(point[i].x, point[i].y);
 	}
+
+	while (CheckOutOfLeft(center, point))
+	{
+		++center.x;
+	}
+
+	while (CheckOutOfRight(center, point))
+	{
+		--center.x;
+	}
+
 }
 
 void Block::LeftRotatePiece(LONG& x, LONG& y)
@@ -287,8 +298,27 @@ bool Block::IsRightRotateBlock(POINT pt[])
 		RightRotatePiece(pt[i].x, pt[i].y);
 	}
 
-	if (!CheckOutOfRange(center, pt))
-		return true;
+	return false;
+}
+
+bool Block::CheckOutOfLeft(const POINT center, const POINT pt[]) const
+{
+	for (UINT i = 0; i < POINTNUM; ++i)
+	{
+		if (center.x + pt[i].x < (MARGIN_COLUMN / RATIO))
+			return true;
+	}
+	return false;
+}
+
+bool Block::CheckOutOfRight(const POINT center, const POINT pt[]) const
+{
+	for (UINT i = 0; i < POINTNUM; ++i)
+	{
+		if (center.x + pt[i].x >= ((MARGIN_COLUMN + BOARDSIZE_X) / RATIO))
+			return true;
+	}
+
 	return false;
 }
 

@@ -34,7 +34,10 @@ void GameScene::Update(float deltaTime)
 {
 	if (ObjectManager::GetInstance()->GetGameOver())
 	{
-		if (MessageBox(engine->GetWndHandle(), TEXT("GameOver!"), TEXT("Game"), MB_OK))
+		TCHAR str[128];
+		wsprintf(str, TEXT("»πµÊ¡°ºˆ: %d"), ObjectManager::GetInstance()->GetScore());
+
+		if (MessageBox(engine->GetWndHandle(), str, TEXT("Game Ober"), MB_OK))
 		{
 			SendMessage(engine->GetWndHandle(), WM_DESTROY, 0, 0);
 		}
@@ -55,6 +58,50 @@ void GameScene::Update(float deltaTime)
 	}
 
 	ObjectManager::GetInstance()->Update(deltaTime);
+
+	// PIECE ªË¡¶
+	vector<Object*> gameObj = ObjectManager::GetInstance()->GetGameObjectList();
+	map<int, vector<Object*>> pieceInYaxis;
+
+	for (size_t i = 0; i < gameObj.size(); ++i)
+	{
+		if (gameObj[i]->GetTag() == TAG::PIECE)
+		{
+			int key = dynamic_cast<Piece*>(gameObj[i])->GetPos().y;
+			pieceInYaxis[key].push_back(gameObj[i]);
+		}
+	}
+
+	int fallYaxis = 0;
+
+	for (auto it = pieceInYaxis.rbegin(); it != pieceInYaxis.rend(); ++it)
+	{
+		if ((*it).second.size() == BOARDSIZE_X / RATIO)
+		{
+			int score = ObjectManager::GetInstance()->GetScore() + 10;
+			ObjectManager::GetInstance()->SetScore(score);
+
+			for (auto piece : (*it).second)
+			{
+				fallYaxis = (*it).first;
+				ObjectManager::GetInstance()->RemoveObject(piece->GetId());
+			}
+			break;
+		}
+	}
+
+	for (auto piece : pieceInYaxis)
+	{
+		if (piece.first < fallYaxis)
+		{
+			for (auto p : piece.second)
+			{
+				POINT pos = dynamic_cast<Piece*>(p)->GetPos();
+				++pos.y;
+				dynamic_cast<Piece*>(p)->SetPos(pos);
+			}
+		}
+	}
 }
 
 void GameScene::Render(HDC hdc, float deltaTime)
