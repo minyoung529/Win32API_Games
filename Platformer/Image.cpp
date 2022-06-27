@@ -88,9 +88,6 @@ void Image::DrawAniRender(HDC hdc, int x, int y, Animation* ani)
 {
 	if (!ani) return;
 
-	x = x - ani->GetFrameWidth() / 2;
-	y = y - ani->GetFrameHeight() / 2;
-
 	DrawBitmapByCropping(hdc, x, y,
 		ani->GetFrameWidth(), ani->GetFrameHeight(),
 		ani->GetFramePos().x, ani->GetFramePos().y,
@@ -100,13 +97,59 @@ void Image::DrawAniRender(HDC hdc, int x, int y, Animation* ani)
 void Image::DrawBitmapByCropping(HDC hdc, int x, int y, int width, int height, int sx, int sy, int swidth, int sheight)
 {
 	HDC hMemDC = CreateCompatibleDC(hdc);
-	HBITMAP oldBitmap = (HBITMAP) SelectObject(hMemDC, bitmapHandle);
+	HBITMAP oldBitmap = (HBITMAP)SelectObject(hMemDC, bitmapHandle);
 
- 	GdiTransparentBlt(hdc, x, y, width, height,
-					  hMemDC, sx, sy, swidth, sheight, GetTransparentsColor());
+	GdiTransparentBlt(hdc, x, y, width, height,
+		hMemDC, sx, sy, swidth, sheight, GetTransparentsColor());
 
 	SelectObject(hMemDC, oldBitmap);
 	DeleteDC(hMemDC);
+}
+
+void Image::DrawLoopRender(HDC hdc, RECT drawArea, int offsetX, int offsetY)
+{
+	if (offsetX < 0) offsetX = 0;
+	if (offsetY < 0) offsetY = 0;
+
+	RECT destination = {};
+	RECT source = {};
+
+	int drawAreaX = drawArea.left;					// 그려질 영역의 left
+	int drawAreaY = drawArea.top;					// 그려질 영역의 top
+	int drawAreaW = drawArea.right - drawAreaX;		// 그려질 영역의 넓이
+	int drawAreaH = drawArea.bottom - drawAreaY;	// 그려질 영역의 높이
+
+	int sourceWidth = 0;	// 그려질 영역의 높이
+
+	source.top = offsetY % bitmap.bmHeight;
+	source.bottom = bitmap.bmHeight;
+
+	for (int x = 0; x < drawAreaW; x += sourceWidth)
+	{
+		source.left = (x + offsetX) % bitmap.bmWidth;
+		source.right = bitmap.bmWidth;
+
+		sourceWidth = source.right - source.left;
+
+		if (x + sourceWidth > drawAreaW)
+		{
+			source.right -= (x + sourceWidth) - drawAreaW;
+			sourceWidth = source.right - source.left;
+		}
+
+		destination.left = x + drawAreaX;
+		destination.right = destination.left + sourceWidth;
+
+		int width = source.right - source.left;
+		int height = source.bottom - source.top;
+
+		DrawBitmapByCropping
+		(
+			hdc,
+			destination.left, destination.top, width, height,
+			source.left, source.top, width, height
+		);
+	}
 }
 
 

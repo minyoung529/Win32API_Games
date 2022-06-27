@@ -3,6 +3,8 @@
 
 #include "Scene.h"
 #include "Player.h"
+#include "Background.h"
+#include "PixelCollision.h"
 
 class GameScene : public Scene
 {
@@ -17,7 +19,10 @@ public:
     void    Release();
 
 private:
+    STAGE stage;
     Player* player;
+    Background* background;
+    PixelCollision* pixelCollision;
 };
 
-#endif // ! GAMESCENE_H
+#endif // GAMESCENE_H

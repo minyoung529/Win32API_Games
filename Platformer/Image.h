@@ -26,6 +26,7 @@ public:
 	void			DrawAniRender(HDC hdc, int x, int y, Animation* ani);
 	void			DrawBitmapByCropping(HDC hdc, int x, int y, int width, int height,
 										 int sx, int sy, int swidth, int sheight);
+	void			DrawLoopRender(HDC hdc, RECT drawArea, int offsetX, int offsetY);
 
 public:
 	bool			IsEmpty();

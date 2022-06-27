@@ -79,12 +79,62 @@ public:
 		return false;
 	}
 
+	bool IsJumping()
+	{
+		if (state == PLAYER_STATE::LEFT_JUMP || state == PLAYER_STATE::RIGHT_JUMP)
+			return true;
+		return false;
+	}
+
+	bool IsFalling()
+	{
+		if (state == PLAYER_STATE::LEFT_FALL || state == PLAYER_STATE::RIGHT_FALL)
+			return true;
+		return false;
+	}
+
+
+	FPOINT GetPos() { return pos; }
+	OBJSIZE GetSize() { return size; }
+
+	bool IsMovingRight()
+	{
+		if (state == PLAYER_STATE::RIGHT_MOVE ||
+			state == PLAYER_STATE::RIGHT_JUMP ||
+			state == PLAYER_STATE::RIGHT_FALL)
+			return true;
+		return false;
+	}
+
+	bool IsMovingLeft()
+	{
+		if (state == PLAYER_STATE::LEFT_MOVE ||
+			state == PLAYER_STATE::LEFT_JUMP ||
+			state == PLAYER_STATE::LEFT_FALL)
+			return true;
+		return false;
+	}
+
+	void SetIsOnGround(bool isG) { isOnGround = isG; }
+	bool GetIsOnGround() { return isOnGround; }
+
+	void SetCanMoveLeft(bool left) { canMoveLeft = left; }
+	bool GetCanMoveLeft() { return canMoveLeft; }
+
+	void SetCanMoveRight(bool right) { canMoveRight = right; }
+	bool GetCanMoveRight() { return canMoveRight; }
+
 private:
 	float			speed;
+	float			jumpSpeed;
 	float			angle;
 	float			gravity;
 	float			hp;
 	float			maxHp;
+
+	bool			isOnGround;
+	bool			canMoveLeft;
+	bool			canMoveRight;
 
 	PLAYER_STATE	state;
 	PLAYER_STATE	stateBefore;
@@ -94,7 +144,7 @@ private:
 
 	Image* imagePlayer;
 	Image* imageEffect;
-	Image imageAnimation[(UINT) PLAYER_IMAGE::COUNT];
+	Image imageAnimation[(UINT)PLAYER_IMAGE::COUNT];
 
 	Animation* ani_Idle;
 	Animation* ani_Move;

@@ -2,6 +2,7 @@
 #define ENGINE_H
 
 #include "Window.h"
+#include "Camera.h"
 #include "Image.h"
 #include "Input.h"
 #include "Sound.h"
@@ -43,6 +44,7 @@ private:
 public: 
 	Input			Input;
 	BSound			Sound;
+	Camera			cameraObject;
 	SceneManager*	mSceneManager;
 };
 

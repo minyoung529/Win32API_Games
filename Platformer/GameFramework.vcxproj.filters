@@ -25,6 +25,9 @@
     <Filter Include="Object">
       <UniqueIdentifier>{e32a8592-99c4-462f-ab8c-d08d9edb5e2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Collision">
+      <UniqueIdentifier>{ba1c0362-82c0-432b-988e-0c14caf090cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasisStd.h">
@@ -72,6 +75,15 @@
     <ClInclude Include="BasisSys.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Background.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="PixelCollision.h">
+      <Filter>Collision</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Window.cpp">
@@ -103,6 +115,15 @@
     </ClCompile>
     <ClCompile Include="GameScene.cpp">
       <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Background.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="PixelCollision.cpp">
+      <Filter>Collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

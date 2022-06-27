@@ -3,6 +3,7 @@
 Player::Player()
 	: Object(FPOINT{ 100,SCREEN_HEIGHT / 2 }, OBJSIZE{ 96,96 }, 1.f)
 	, speed(10.f)
+	, jumpSpeed(6.0f)
 	, angle(PI / 2)
 	, gravity(0.f)
 	, hp(0.f)
@@ -11,12 +12,16 @@ Player::Player()
 	, ani_AttackEffect(nullptr)
 	, state(PLAYER_STATE::NONE)
 {
+	canMoveLeft = false;
+	canMoveRight = false;
+	isOnGround = false;
 	memset(&inputState, 0, sizeof(InputState));
 }
 
 Player::Player(FPOINT pos, OBJSIZE size, float speed)
 	: Object(pos, size, 1.f)
 	, speed(speed)
+	, jumpSpeed(6.0f)
 	, angle(PI / 2)
 	, gravity(0.f)
 	, hp(0.f)
@@ -25,6 +30,9 @@ Player::Player(FPOINT pos, OBJSIZE size, float speed)
 	, ani_AttackEffect(nullptr)
 	, state(PLAYER_STATE::NONE)
 {
+	canMoveLeft = false;
+	canMoveRight = false;
+	isOnGround = false;
 	memset(&inputState, 0, sizeof(InputState));
 }
 
@@ -61,6 +69,144 @@ void Player::Init()
 
 void Player::Update(float deltaTime)
 {
+	engine->Input.KeyCheck(VK_LEFT, inputState.keyLeft);
+	engine->Input.KeyCheck(VK_RIGHT, inputState.keyRight);
+	engine->Input.KeyCheck(VK_SPACE, inputState.keySpace);
+	engine->Input.KeyCheck('A', inputState.keyA);
+
+	if (inputState.keyLeft == KEY_PUSH)
+	{
+		if (!(IsJumping() || IsFalling() || IsAttacking()))
+		{
+			SetAnimation(PLAYER_STATE::LEFT_MOVE);
+		}
+	}
+
+	if (inputState.keyLeft == KEY_DOWN)
+	{
+		stateBefore = PLAYER_STATE::LEFT_MOVE;
+
+		if (IsJumping())
+		{
+			angle = PI / 5 * 3;
+			SetAnimation(PLAYER_STATE::LEFT_JUMP);
+		}
+		if (IsFalling())
+		{
+			SetAnimation(PLAYER_STATE::LEFT_FALL);
+		}
+		if (state == PLAYER_STATE::LEFT_MOVE && ani_Move->IsPlay() && canMoveLeft)
+		{
+			pos.x -= speed * deltaTime;
+		}
+	}
+
+	if (inputState.keyLeft == KEY_UP)
+	{
+		stateBefore = PLAYER_STATE::LEFT_IDLE;
+
+		if (isOnGround)
+		{
+			SetAnimation(PLAYER_STATE::LEFT_IDLE);
+		}
+		else if (!(IsFalling() || IsJumping() || IsAttacking()))
+		{
+			SetAnimation(PLAYER_STATE::LEFT_FALL);
+			angle = PI / 5 * 3;
+			gravity = jumpSpeed + 0.2f;
+		}
+	}
+
+	if (inputState.keyRight == KEY_PUSH)
+	{
+		if (!(IsJumping() || IsFalling() || IsAttacking()))
+		{
+			SetAnimation(PLAYER_STATE::RIGHT_MOVE);
+		}
+	}
+
+	if (inputState.keyRight == KEY_DOWN)
+	{
+		stateBefore = PLAYER_STATE::RIGHT_MOVE;
+		if (IsJumping())
+		{
+			angle = PI / 5 * 2;
+			SetAnimation(PLAYER_STATE::RIGHT_JUMP);
+		}
+		if (IsFalling())
+		{
+			SetAnimation(PLAYER_STATE::RIGHT_FALL);
+		}
+		if (state == PLAYER_STATE::RIGHT_MOVE && ani_Move->IsPlay() && canMoveRight)
+		{
+			pos.x += speed * deltaTime;
+		}
+	}
+
+	if (inputState.keyRight == KEY_UP)
+	{
+		stateBefore = PLAYER_STATE::RIGHT_IDLE;
+
+		if (isOnGround)
+		{
+			SetAnimation(PLAYER_STATE::RIGHT_IDLE);
+		}
+
+		else if (!(IsFalling() || IsJumping() || IsAttacking()))
+		{
+			SetAnimation(PLAYER_STATE::RIGHT_FALL);
+			angle = PI / 5 * 2;
+			gravity = jumpSpeed + 0.2f;
+		}
+	}
+
+	if (!(IsJumping() || IsFalling()) && !GetIsOnGround())
+	{
+		pos.y += 3;
+	}
+
+	if (inputState.keyA == KEY_PUSH)
+	{
+		if (!IsAttacking())
+		{
+			if (IsLeft())
+			{
+				SetAnimation(PLAYER_STATE::LEFT_ATTACK);
+			}
+			else
+			{
+				SetAnimation(PLAYER_STATE::RIGHT_ATTACK);
+			}
+		}
+	}
+
+	if (inputState.keySpace == KEY_PUSH)
+	{
+		if (IsLeft() && !IsJumping() && !IsFalling() && isOnGround && !IsAttacking())
+		{
+			stateBefore = state;
+			SetAnimation(PLAYER_STATE::LEFT_JUMP);
+			gravity = 0;
+			isOnGround = false;
+			angle = PI / 2;
+		}
+		else if (!IsLeft() && !IsJumping() && !IsFalling() && isOnGround && !IsAttacking())
+		{
+			stateBefore = state;
+			SetAnimation(PLAYER_STATE::RIGHT_JUMP);
+			gravity = 0;
+			isOnGround = false;
+			angle = PI / 2;
+		}
+	}
+
+	if (/*!*/(IsJumping() || IsFalling()) && !GetIsOnGround())
+	{
+		pos.x += cosf(angle) * jumpSpeed;
+		pos.y += -sinf(angle) * jumpSpeed + gravity;
+		gravity += 0.15f;
+	}
+
 	switch (state)
 	{
 	case PLAYER_STATE::RIGHT_IDLE:
@@ -98,12 +244,24 @@ void Player::Update(float deltaTime)
 		ani_Hurt->FrameUpdate(deltaTime);
 		break;
 	case PLAYER_STATE::RIGHT_JUMP:
+		ani_Jump->FrameUpdate(deltaTime);
+		if (gravity > jumpSpeed)
+		{
+			SetAnimation(PLAYER_STATE::RIGHT_FALL);
+		}
+		break;
 	case PLAYER_STATE::LEFT_JUMP:
 		ani_Jump->FrameUpdate(deltaTime);
+		if (gravity > jumpSpeed)
+		{
+			SetAnimation(PLAYER_STATE::LEFT_FALL);
+		}
 		break;
 	case PLAYER_STATE::RIGHT_FALL:
 	case PLAYER_STATE::LEFT_FALL:
 		ani_Jump->FrameUpdate(deltaTime);
+		if (isOnGround)
+			SetAnimation(stateBefore);
 		break;
 	case PLAYER_STATE::RIGHT_DEAD:
 	case PLAYER_STATE::LEFT_DEAD:
@@ -118,51 +276,7 @@ void Player::Render(HDC hdc, float deltaTime)
 {
 	if (!imagePlayer) return;
 
-	engine->Input.KeyCheck(VK_LEFT, inputState.keyLeft);
-	engine->Input.KeyCheck(VK_RIGHT, inputState.keyRight);
-	engine->Input.KeyCheck('A', inputState.keyA);
-
-	if (inputState.keyRight == KEY_DOWN && !IsAttacking())
-	{
-		SetAnimation(PLAYER_STATE::RIGHT_MOVE);
-
-		if (state == PLAYER_STATE::RIGHT_MOVE && ani_Move->IsPlay())
-		{
-			pos.x += speed * deltaTime;
-		}
-	}
-
-	if (inputState.keyRight == KEY_UP && !IsAttacking())
-	{
-		SetAnimation(PLAYER_STATE::RIGHT_IDLE);
-	}
-
-	if (inputState.keyLeft == KEY_DOWN && !IsAttacking())
-	{
-		SetAnimation(PLAYER_STATE::LEFT_MOVE);
-
-		if (state == PLAYER_STATE::LEFT_MOVE && ani_Move->IsPlay())
-		{
-			pos.x -= speed * deltaTime;
-		}
-	}
-
-	if (inputState.keyLeft == KEY_UP && !IsAttacking())
-	{
-		SetAnimation(PLAYER_STATE::LEFT_IDLE);
-	}
-
-	if (inputState.keyA == KEY_PUSH && !IsAttacking())
-	{
-		if (IsLeft())
-		{
-			SetAnimation(PLAYER_STATE::LEFT_ATTACK);
-		}
-		else
-		{
-			SetAnimation(PLAYER_STATE::RIGHT_ATTACK);
-		}
-	}
+	
 
 	switch (state)
 	{
@@ -201,6 +315,9 @@ void Player::Render(HDC hdc, float deltaTime)
 	default:
 		break;
 	}
+
+	SelectObject(hdc, GetStockObject(NULL_BRUSH));
+	Rectangle(hdc, pos.x, pos.y, pos.x + size.width, pos.y + size.height);
 }
 
 void Player::Release()
@@ -302,23 +419,23 @@ void Player::SetAnimation(PLAYER_STATE _state)
 		break;
 
 	case PLAYER_STATE::RIGHT_JUMP:
-		ani_Jump->SetPlayFrame(0, 4, false, false);
+		ani_Jump->SetPlayFrame(3, 3, false, false);
 		ani_Jump->Start();
 		imagePlayer = &imageAnimation[(UINT)PLAYER_IMAGE::JUMP];
 		break;
 	case PLAYER_STATE::LEFT_JUMP:
-		ani_Jump->SetPlayFrame(11, 15, true, false);
+		ani_Jump->SetPlayFrame(12, 12, true, false);
 		ani_Jump->Start();
 		imagePlayer = &imageAnimation[(UINT)PLAYER_IMAGE::JUMP];
 		break;
 
 	case PLAYER_STATE::RIGHT_FALL:
-		ani_Jump->SetPlayFrame(5, 7, false, false);
+		ani_Jump->SetPlayFrame(5, 5, false, false);
 		ani_Jump->Start();
 		imagePlayer = &imageAnimation[(UINT)PLAYER_IMAGE::JUMP];
 		break;
 	case PLAYER_STATE::LEFT_FALL:
-		ani_Jump->SetPlayFrame(8, 10, true, false);
+		ani_Jump->SetPlayFrame(10, 10, true, false);
 		ani_Jump->Start();
 		imagePlayer = &imageAnimation[(UINT)PLAYER_IMAGE::JUMP];
 		break;

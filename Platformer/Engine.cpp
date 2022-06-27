@@ -31,6 +31,8 @@ void Engine::StartUp()
 	Input.Init();
 	Sound.Init();
 
+	cameraObject.Init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH * 2, SCREEN_HEIGHT);
+	
 	if (mSceneManager)
 		mSceneManager->Init();
 
