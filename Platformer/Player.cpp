@@ -3,7 +3,7 @@
 Player::Player()
 	: Object(FPOINT{ 100,SCREEN_HEIGHT / 2 }, OBJSIZE{ 96,96 }, 1.f)
 	, speed(10.f)
-	, jumpSpeed(6.0f)
+	, jumpSpeed(10.0f)
 	, angle(PI / 2)
 	, gravity(0.f)
 	, hp(0.f)
@@ -21,7 +21,7 @@ Player::Player()
 Player::Player(FPOINT pos, OBJSIZE size, float speed)
 	: Object(pos, size, 1.f)
 	, speed(speed)
-	, jumpSpeed(6.0f)
+	, jumpSpeed(10.0f)
 	, angle(PI / 2)
 	, gravity(0.f)
 	, hp(0.f)
@@ -225,14 +225,7 @@ void Player::Update(float deltaTime)
 
 		if (!ani_Attack->IsPlay())
 		{
-			if (IsLeft())
-			{
-				SetAnimation(PLAYER_STATE::LEFT_IDLE);
-			}
-			else
-			{
-				SetAnimation(PLAYER_STATE::RIGHT_IDLE);
-			}
+			SetAnimation(stateBefore);
 		}
 		break;
 	case PLAYER_STATE::RIGHT_THROW:
@@ -275,8 +268,6 @@ void Player::Update(float deltaTime)
 void Player::Render(HDC hdc, float deltaTime)
 {
 	if (!imagePlayer) return;
-
-	
 
 	switch (state)
 	{

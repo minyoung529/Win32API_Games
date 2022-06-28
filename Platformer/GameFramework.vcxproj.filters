@@ -28,6 +28,9 @@
     <Filter Include="Collision">
       <UniqueIdentifier>{ba1c0362-82c0-432b-988e-0c14caf090cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Monster">
+      <UniqueIdentifier>{ddf349b4-a388-4218-ac99-6c22bbcf61d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasisStd.h">
@@ -84,6 +87,12 @@
     <ClInclude Include="PixelCollision.h">
       <Filter>Collision</Filter>
     </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="KingPig.h">
+      <Filter>Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Window.cpp">
@@ -124,6 +133,9 @@
     </ClCompile>
     <ClCompile Include="PixelCollision.cpp">
       <Filter>Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="KingPig.cpp">
+      <Filter>Monster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

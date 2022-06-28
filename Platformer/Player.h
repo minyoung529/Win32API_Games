@@ -100,8 +100,9 @@ public:
 	bool IsMovingRight()
 	{
 		if (state == PLAYER_STATE::RIGHT_MOVE ||
-			state == PLAYER_STATE::RIGHT_JUMP ||
-			state == PLAYER_STATE::RIGHT_FALL)
+			((state == PLAYER_STATE::RIGHT_JUMP ||
+			state == PLAYER_STATE::RIGHT_FALL) &&
+			angle != (float)PI / 2.0f))
 			return true;
 		return false;
 	}
@@ -109,8 +110,9 @@ public:
 	bool IsMovingLeft()
 	{
 		if (state == PLAYER_STATE::LEFT_MOVE ||
-			state == PLAYER_STATE::LEFT_JUMP ||
-			state == PLAYER_STATE::LEFT_FALL)
+			((state == PLAYER_STATE::LEFT_JUMP ||
+			state == PLAYER_STATE::LEFT_FALL) &&
+			angle != (float)PI / 2.0f))
 			return true;
 		return false;
 	}
