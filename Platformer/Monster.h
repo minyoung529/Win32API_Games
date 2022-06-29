@@ -1,8 +1,8 @@
 #ifndef MONSTER_H
 #define MONSTER_H
 
-#include "BasisStd.h"
 #include "Animation.h"
+#include "Player.h"
 
 enum MONSTER_TYPE
 {
@@ -40,7 +40,7 @@ public:
 
 public:
 	Monster(MONSTER_TYPE type, FPOINT pos, float speed = 10.0f) :
-		type(type), pos(pos), speed(speed), scale(1.f), gravity(10.f) {}
+		type(type), pos(pos), speed(speed), scale(1.f), gravity(10.f), isDead(false) {}
 
 public:
 	virtual void Init() = 0;
@@ -119,31 +119,39 @@ public:
 	void SetState(MONSTER_STATE state) { this->state = state; }
 	MONSTER_STATE GetState() { return state; }
 
+	void SetPlayer(Player* player) { this->player = player; }
+
+	void SetIsDead(bool isDead) { this->isDead = isDead; }
+	bool IsDead() { return isDead; }
+
 protected:
-	UINT		id;
-	FPOINT		pos;
-	FPOINT		center;
-	OBJSIZE		size;
-	float		scale;
-	float		speed;
-	int			gravity;
+	UINT			id;
+	FPOINT			pos;
+	FPOINT			center;
+	OBJSIZE			size;
 
-	int			hp;
-	int			maxHp;
+	float			scale;
+	float			speed;
+	int				gravity;
 
-	bool isOnGround;
-	bool canMoveLeft;
-	bool canMoveRight;
+	int				hp;
+	int				maxHp;
 
-	MONSTER_TYPE type;
+	bool			isDead;
+	bool			isOnGround;
+	bool			canMoveLeft;
+	bool			canMoveRight;
 
-	MONSTER_STATE state;
-	MONSTER_STATE stateBefore;
+	MONSTER_TYPE	type;
+	MONSTER_STATE	state;
+	MONSTER_STATE	stateBefore;
 
-	Animation* ani_Idle;
-	Animation* ani_Move;
-	Animation* ani_Attack;
-	Animation* ani_Hit;
-	Animation* ani_Dead;
+	Animation*		ani_Idle;
+	Animation*		ani_Move;
+	Animation*		ani_Attack;
+	Animation*		ani_Hit;
+	Animation*		ani_Dead;
+
+	Player*		player;
 };
 #endif // MONSTER_H

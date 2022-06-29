@@ -26,8 +26,11 @@ void PixelCollision::Init()
 
 void PixelCollision::Update(float deltaTime)
 {
-	// 주인공 픽셀 ㄹ충돌
+	// 주인공 픽셀 충돌
 	PlayerPixelCollision();
+
+	// 몬스터들 픽셀 충돌
+	MonstersPixelCollision();
 }
 
 void PixelCollision::Render(HDC hdc)
@@ -122,6 +125,59 @@ void PixelCollision::PlayerPixelCollision()
 		{
 			player->SetCanMoveLeft(true);
 			player->SetCanMoveRight(true);
+		}
+	}
+}
+
+void PixelCollision::MonstersPixelCollision()
+{
+	for (size_t i = 0; i < monsters->size(); ++i)
+	{
+		Monster* monster = monsters->at(i);
+
+		int startY = monster->GetPos().y + monster->GetSize().height - 5;
+
+		for (int y = startY; y <= monster->GetPos().y + monster->GetSize().height; ++y)
+		{
+			COLORREF color = GetPixel(currentMemDC, monster->GetPos().x, y);
+
+			int r = GetRValue(color);
+			int g = GetGValue(color);
+			int b = GetBValue(color);
+
+			if ((r == 0 && g == 255 && b == 255))
+			{
+				monster->SetIsOnGround(true);
+			}
+			else
+			{
+				monster->SetIsOnGround(false);
+			}
+		}
+
+		if (monster->GetState() == MONSTER_STATE::LEFT_MOVE || monster->GetState() == MONSTER_STATE::RIGHT_MOVE)
+		{
+			int y = monster->GetPos().y;
+			int x = monster->IsLeft() ? monster->GetPos().x : monster->GetPos().x + monster->GetSize().width;
+
+			COLORREF color = GetPixel(currentMemDC, x, y);
+
+			int r = GetRValue(color);
+			int g = GetGValue(color);
+			int b = GetBValue(color);
+
+			if ((r == 0 && g == 255 && b == 255))
+			{
+				if (monster->IsLeft())
+					monster->SetCanMoveLeft(false);
+				else
+					monster->SetCanMoveRight(false);
+			}
+			else
+			{
+				monster->SetCanMoveLeft(true);
+				monster->SetCanMoveRight(true);
+			}
 		}
 	}
 }

@@ -153,6 +153,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="KingPig.h" />
     <ClInclude Include="Monster.h" />
+    <ClInclude Include="MonsterManager.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="PixelCollision.h" />
     <ClInclude Include="Player.h" />
@@ -160,6 +161,7 @@
     <ClInclude Include="Sample.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="Singleton.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
@@ -172,6 +174,7 @@
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="KingPig.cpp" />
+    <ClCompile Include="MonsterManager.cpp" />
     <ClCompile Include="PixelCollision.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Sample.cpp" />

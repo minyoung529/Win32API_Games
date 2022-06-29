@@ -23,14 +23,14 @@ void KingPig::Init()
 {
 	imageAnimations[KING_PIG_IMAGE::IDLE].Load(TEXT("Data/Monster/King_Pig_Idle_212.bmp"));
 	imageAnimations[KING_PIG_IMAGE::ATTACK].Load(TEXT("Data/Monster/King_Pig_Attack_25.bmp"));
-	imageAnimations[KING_PIG_IMAGE::MOVE].Load(TEXT("Data/Monster/King_Pig_Run_26.bmp"));
-	imageAnimations[KING_PIG_IMAGE::HIT].Load(TEXT("Data/Monster/King_Pig_Dead_24.bmp"));
+	imageAnimations[KING_PIG_IMAGE::MOVE].Load(TEXT("Data/Monster/King_Pig_Move_26.bmp"));
+	imageAnimations[KING_PIG_IMAGE::HIT].Load(TEXT("Data/Monster/King_Pig_Hit_22.bmp"));
 	imageAnimations[KING_PIG_IMAGE::DEAD].Load(TEXT("Data/Monster/King_Pig_Dead_24.bmp"));
 
 	DefineAnimation(ani_Idle, KING_PIG_IMAGE::IDLE, 12, 2, 10);
-	DefineAnimation(ani_Move, KING_PIG_IMAGE::MOVE, 5, 2, 10);
-	DefineAnimation(ani_Attack, KING_PIG_IMAGE::ATTACK, 6, 2, 10);
-	DefineAnimation(ani_Hit, KING_PIG_IMAGE::HIT, 4, 2, 10);
+	DefineAnimation(ani_Move, KING_PIG_IMAGE::MOVE, 6, 2, 10);
+	DefineAnimation(ani_Attack, KING_PIG_IMAGE::ATTACK, 5, 2, 10);
+	DefineAnimation(ani_Hit, KING_PIG_IMAGE::HIT, 2, 2, 10);
 	DefineAnimation(ani_Dead, KING_PIG_IMAGE::DEAD, 4, 2, 10);
 
 	SetAnimation(MONSTER_STATE::LEFT_IDLE);
@@ -177,7 +177,7 @@ void KingPig::SetAnimation(MONSTER_STATE _state)
 		size.height = ani_Idle->GetFrameHeight();
 		break;
 	case LEFT_IDLE:
-		ani_Idle->SetPlayFrame(12, 12, true, true);
+		ani_Idle->SetPlayFrame(12, 23, true, true);
 		ani_Idle->Start();
 		currentImage = &imageAnimations[KING_PIG_IMAGE::IDLE];
 		size.width = ani_Idle->GetFrameWidth();
@@ -201,7 +201,7 @@ void KingPig::SetAnimation(MONSTER_STATE _state)
 		ani_Attack->SetPlayFrame(0, 4, false, false);
 		ani_Attack->Start();
 		currentImage = &imageAnimations[KING_PIG_IMAGE::ATTACK];
-		size.width = ani_Attack-> GetFrameWidth();
+		size.width = ani_Attack->GetFrameWidth();
 		size.height = ani_Attack->GetFrameHeight();
 		break;
 	case LEFT_ATTACK:
@@ -212,14 +212,14 @@ void KingPig::SetAnimation(MONSTER_STATE _state)
 		size.height = ani_Attack->GetFrameHeight();
 		break;
 	case RIGHT_HIT:
-		ani_Hit->SetPlayFrame(0, 3, false, false);
+		ani_Hit->SetPlayFrame(0, 1, false, false);
 		ani_Hit->Start();
 		currentImage = &imageAnimations[KING_PIG_IMAGE::ATTACK];
 		size.width = ani_Hit->GetFrameWidth();
 		size.height = ani_Hit->GetFrameHeight();
 		break;
 	case LEFT_HIT:
-		ani_Hit->SetPlayFrame(4, 7, true, false);
+		ani_Hit->SetPlayFrame(2, 3, true, false);
 		ani_Hit->Start();
 		currentImage = &imageAnimations[KING_PIG_IMAGE::ATTACK];
 		size.width = ani_Hit->GetFrameWidth();
@@ -234,7 +234,7 @@ void KingPig::SetAnimation(MONSTER_STATE _state)
 		break;
 
 	case LEFT_DEAD:
-		ani_Dead->SetPlayFrame(4, 7, true , false);
+		ani_Dead->SetPlayFrame(4, 7, true, false);
 		ani_Dead->Start();
 		currentImage = &imageAnimations[KING_PIG_IMAGE::DEAD];
 		size.width = ani_Dead->GetFrameWidth();
@@ -247,6 +247,32 @@ void KingPig::SetAnimation(MONSTER_STATE _state)
 
 void KingPig::CheckMonsterState()
 {
+	if (player == nullptr)return;
+
+	// 추적 거리 안에 오면 다가간다
+	if (Distance(player->GetPos(), pos) <= traceDistance)
+	{
+		if (player->GetPos().x < pos.x)
+		{
+			SetAnimation(MONSTER_STATE::LEFT_MOVE);
+		}
+		else
+		{
+			SetAnimation(MONSTER_STATE::RIGHT_MOVE);
+		}
+	}
+	// 아니라면 Idle
+	else
+	{
+		if (IsLeft())
+		{
+			SetAnimation(MONSTER_STATE::LEFT_IDLE);
+		}
+		else
+		{
+			SetAnimation(MONSTER_STATE::RIGHT_IDLE);
+		}
+	}
 }
 
 void KingPig::CheckCollision()
