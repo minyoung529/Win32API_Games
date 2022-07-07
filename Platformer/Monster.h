@@ -87,6 +87,15 @@ public:
 	void SetSize(OBJSIZE size) { this->size = size; }
 	OBJSIZE GetSize() { return size; }
 
+	RECT* GetRect()
+	{
+		rect.left = pos.x;
+		rect.top = pos.y;
+		rect.right = pos.x + size.width;
+		rect.bottom = pos.y + size.height;
+		return &rect;
+	}
+
 	void SetScale(float scale) { this->scale = scale; }
 	float GetScale() { return scale; }
 
@@ -129,6 +138,7 @@ protected:
 	FPOINT			pos;
 	FPOINT			center;
 	OBJSIZE			size;
+	RECT			rect;
 
 	float			scale;
 	float			speed;

@@ -3,6 +3,7 @@
 Camera::Camera()
 {
 	pCameraInfo = nullptr;
+	flag = -1;
 }
 
 Camera::~Camera()
@@ -48,4 +49,9 @@ bool Camera::CheckCameraY()
 		return false;
 
 	return true;
+}
+
+void Camera::CameraShake()
+{
+	flag *= -1;
 }

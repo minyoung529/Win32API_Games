@@ -35,10 +35,36 @@ public:
 	virtual void CheckMonsterState() override;
 	virtual void CheckCollision() override;
 
+	bool IsAttacking()
+	{
+		if (state == MONSTER_STATE::LEFT_ATTACK || state == MONSTER_STATE::RIGHT_ATTACK)
+			return true;
+		return false;
+	}
+
+	bool IsHitting()
+	{
+		if (state == MONSTER_STATE::LEFT_HIT || state == MONSTER_STATE::RIGHT_HIT)
+			return true;
+		return false;
+	}
+
+	bool IsDead()
+	{
+		if (state == MONSTER_STATE::LEFT_DEAD || state == MONSTER_STATE::RIGHT_DEAD)
+			return true;
+		return false;
+
+	}
+
 private:
 	float traceDistance;
+	float deadTime;
+	float deadDelayTime;
+
 	Image* currentImage;
 	Image imageAnimations[KING_PIG_COUNT];
+
 
 	void DefineAnimation(Animation*& animation, UINT state, int width, int height, int fps);
 };

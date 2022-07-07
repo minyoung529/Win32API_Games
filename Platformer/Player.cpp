@@ -15,6 +15,11 @@ Player::Player()
 	canMoveLeft = false;
 	canMoveRight = false;
 	isOnGround = false;
+	isAttacked = false;
+
+	attackTime = 0.f;
+	attackDelayTime = 0.5f;
+
 	memset(&inputState, 0, sizeof(InputState));
 }
 
@@ -33,6 +38,10 @@ Player::Player(FPOINT pos, OBJSIZE size, float speed)
 	canMoveLeft = false;
 	canMoveRight = false;
 	isOnGround = false;
+	isAttacked = false;
+	attackTime = 0.f;
+	attackDelayTime = 0.5f;
+
 	memset(&inputState, 0, sizeof(InputState));
 }
 
@@ -207,6 +216,27 @@ void Player::Update(float deltaTime)
 		gravity += 0.15f;
 	}
 
+	effectPos = pos;
+	effectPos.x += (IsLeft()) ? -size.width / 2 : 0;
+
+	if (isAttacked)
+	{
+		if (attackTime == 0.0f)
+		{
+			engine->cameraObject.SetIsShaking(true);
+		}
+
+		attackTime += deltaTime;
+		
+		if (attackTime > attackDelayTime)
+		{
+			isAttacked = false;
+			attackTime = 0.f;
+			engine->cameraObject.SetIsShaking(false);
+			SetAnimation(stateBefore);
+		}
+	}
+
 	switch (state)
 	{
 	case PLAYER_STATE::RIGHT_IDLE:
@@ -283,7 +313,7 @@ void Player::Render(HDC hdc, float deltaTime)
 	case PLAYER_STATE::RIGHT_ATTACK:
 	case PLAYER_STATE::LEFT_ATTACK:
 		imagePlayer->DrawAniRender(hdc, pos.x, pos.y, ani_Attack);
-		imageEffect->DrawAniRender(hdc, pos.x, pos.y, ani_AttackEffect);
+		imageEffect->DrawAniRender(hdc, effectPos.x, effectPos.y, ani_AttackEffect);
 		break;
 	case PLAYER_STATE::RIGHT_THROW:
 	case PLAYER_STATE::LEFT_THROW:
@@ -309,6 +339,11 @@ void Player::Render(HDC hdc, float deltaTime)
 
 	SelectObject(hdc, GetStockObject(NULL_BRUSH));
 	Rectangle(hdc, pos.x, pos.y, pos.x + size.width, pos.y + size.height);
+	
+	if (IsAttacking())
+	{
+		Rectangle(hdc, effectPos.x, effectPos.y, effectPos.x + effectSize.width, effectPos.y + effectSize.height);
+	}
 }
 
 void Player::Release()
@@ -365,6 +400,8 @@ void Player::SetAnimation(PLAYER_STATE _state)
 
 		imagePlayer = &imageAnimation[(UINT)PLAYER_IMAGE::MOVE];
 		imageEffect = &imageAnimation[(UINT)PLAYER_IMAGE::MOVE_EFFECT];
+		effectSize.width = ani_AttackEffect->GetFrameWidth();
+		effectSize.height = ani_AttackEffect->GetFrameHeight();
 		break;
 
 	case PLAYER_STATE::RIGHT_ATTACK:
@@ -375,6 +412,8 @@ void Player::SetAnimation(PLAYER_STATE _state)
 		ani_AttackEffect->SetPlayFrame(0, 3, false, false);
 		ani_AttackEffect->Start();
 		imageEffect = &imageAnimation[(UINT)PLAYER_IMAGE::ATTACK_EFFECT];
+		effectSize.width = ani_AttackEffect->GetFrameWidth();
+		effectSize.height = ani_AttackEffect->GetFrameHeight();
 		break;
 	case PLAYER_STATE::LEFT_ATTACK:
 		ani_Attack->SetPlayFrame(6, 11, true, false);

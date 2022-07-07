@@ -63,7 +63,11 @@ void GameScene::Update(float deltaTime)
 	if (pixelCollision)
 		pixelCollision->Update(deltaTime);
 
-	engine->cameraObject.SetPos(player->GetPos().x, player->GetPos().y);
+
+	if (engine->cameraObject.GetIsShaking())
+		engine->cameraObject.CameraShake();
+	else
+		engine->cameraObject.SetPos(player->GetPos().x, player->GetPos().y);
 }
 
 void GameScene::Render(HDC hdc, float dt)
@@ -85,7 +89,7 @@ void GameScene::Render(HDC hdc, float dt)
 
 	MonsterManager::GetSingleton()->Render(hMemDC);
 
-	GdiTransparentBlt(hdc, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
+	GdiTransparentBlt(hdc, 0 + engine->cameraObject.GetShakeNumber(), 0, SCREEN_WIDTH, SCREEN_HEIGHT,
 		hMemDC, engine->cameraObject.GetLeft(), engine->cameraObject.GetTop(),
 		engine->cameraObject.GetWidth(), engine->cameraObject.GetHeight(), RGB(255, 0, 255));
 

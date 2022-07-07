@@ -94,15 +94,34 @@ public:
 	}
 
 
+	void AddForceX(float x) { pos.x += x; }
 	FPOINT GetPos() { return pos; }
 	OBJSIZE GetSize() { return size; }
+	RECT* GetRect()
+	{
+		rect.left = pos.x;
+		rect.top = pos.y;
+		rect.right = pos.x + size.width;
+		rect.bottom = pos.y + size.height;
+
+		return &rect;
+	}
+	RECT* GetAttackRect()
+	{
+		attackRect.left = pos.x;
+		attackRect.top = pos.y;
+		attackRect.right = pos.x + effectSize.width;
+		attackRect.bottom = pos.y + effectSize.height;
+
+		return &attackRect;
+	}
 
 	bool IsMovingRight()
 	{
 		if (state == PLAYER_STATE::RIGHT_MOVE ||
 			((state == PLAYER_STATE::RIGHT_JUMP ||
-			state == PLAYER_STATE::RIGHT_FALL) &&
-			angle != (float)PI / 2.0f))
+				state == PLAYER_STATE::RIGHT_FALL) &&
+				angle != (float)PI / 2.0f))
 			return true;
 		return false;
 	}
@@ -111,10 +130,31 @@ public:
 	{
 		if (state == PLAYER_STATE::LEFT_MOVE ||
 			((state == PLAYER_STATE::LEFT_JUMP ||
-			state == PLAYER_STATE::LEFT_FALL) &&
-			angle != (float)PI / 2.0f))
+				state == PLAYER_STATE::LEFT_FALL) &&
+				angle != (float)PI / 2.0f))
 			return true;
 		return false;
+	}
+
+	bool IsAttacked()
+	{
+		return isAttacked;
+	}
+
+	void SetIsAttacked(bool isAtk)
+	{
+		if (!isAttacked)
+		{
+			if (IsLeft())
+			{
+				SetAnimation(PLAYER_STATE::LEFT_HURT);
+			}
+			else
+			{
+				SetAnimation(PLAYER_STATE::RIGHT_HURT);
+			}
+		}
+		isAttacked = isAtk;
 	}
 
 	void SetIsOnGround(bool isG) { isOnGround = isG; }
@@ -137,6 +177,15 @@ private:
 	bool			isOnGround;
 	bool			canMoveLeft;
 	bool			canMoveRight;
+
+	bool			isAttacked;
+	float			attackTime;
+	float			attackDelayTime;
+
+	RECT			rect;
+	RECT			attackRect;
+	FPOINT			effectPos;
+	OBJSIZE			effectSize;
 
 	PLAYER_STATE	state;
 	PLAYER_STATE	stateBefore;

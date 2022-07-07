@@ -28,10 +28,12 @@ public:
 	bool CheckCameraX();
 	bool CheckCameraY();
 
+	void CameraShake();
+
 	void SetX(float x) { pCameraInfo->x = x; }
 	float GetX() { return pCameraInfo->x; }
 
-	void SetPos(float x, float y) { pCameraInfo->x = x; pCameraInfo->y = y;}
+	void SetPos(float x, float y) { pCameraInfo->x = x; pCameraInfo->y = y; }
 
 	void SetY(float y) { pCameraInfo->y = y; }
 	float GetY() { return pCameraInfo->y; }
@@ -83,7 +85,21 @@ public:
 		return rc;
 	}
 
+	void SetIsShaking(bool isShaking)
+	{
+		this->isShaking = isShaking;
+		shakeAmount = (isShaking) ? 6.0f : 0.0f;
+	}
+
+	bool GetIsShaking() { return isShaking; }
+
+	float GetShakeNumber() { return shakeAmount * flag; }
+
 private:
 	CAMERA_INFO* pCameraInfo;
+
+	bool	isShaking;
+	float	shakeAmount;
+	int		flag;
 };
 #endif // CAMERA_H
