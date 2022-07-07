@@ -16,6 +16,7 @@ Player::Player()
 	canMoveRight = false;
 	isOnGround = false;
 	isAttacked = false;
+	canAttack = false;
 
 	attackTime = 0.f;
 	attackDelayTime = 0.5f;
@@ -39,6 +40,8 @@ Player::Player(FPOINT pos, OBJSIZE size, float speed)
 	canMoveRight = false;
 	isOnGround = false;
 	isAttacked = false;
+	canAttack = false;
+
 	attackTime = 0.f;
 	attackDelayTime = 0.5f;
 
@@ -178,6 +181,8 @@ void Player::Update(float deltaTime)
 	{
 		if (!IsAttacking())
 		{
+			canAttack = true;
+
 			if (IsLeft())
 			{
 				SetAnimation(PLAYER_STATE::LEFT_ATTACK);

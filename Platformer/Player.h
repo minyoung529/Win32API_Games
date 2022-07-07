@@ -166,6 +166,9 @@ public:
 	void SetCanMoveRight(bool right) { canMoveRight = right; }
 	bool GetCanMoveRight() { return canMoveRight; }
 
+	void SetCanAttack(bool canAtk) { canAttack = canAtk; }
+	bool GetCanAttack() { return canAttack; }
+
 private:
 	float			speed;
 	float			jumpSpeed;
@@ -181,6 +184,8 @@ private:
 	bool			isAttacked;
 	float			attackTime;
 	float			attackDelayTime;
+
+	bool			canAttack;
 
 	RECT			rect;
 	RECT			attackRect;

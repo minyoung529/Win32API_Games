@@ -65,7 +65,6 @@ private:
 	Image* currentImage;
 	Image imageAnimations[KING_PIG_COUNT];
 
-
 	void DefineAnimation(Animation*& animation, UINT state, int width, int height, int fps);
 };
 

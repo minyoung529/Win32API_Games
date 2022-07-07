@@ -20,6 +20,9 @@ KingPig::KingPig(MONSTER_TYPE type, FPOINT pos, float speed)
 
 	deadTime = 0.f;
 	deadDelayTime = 1.f;
+
+	maxHp = 5;
+	hp = maxHp;
 }
 
 void KingPig::Init()
@@ -72,6 +75,9 @@ void KingPig::Update(float deltaTime)
 	case LEFT_HIT:
 		if (ani_Hit)
 			ani_Hit->FrameUpdate(deltaTime);
+
+		if (!ani_Hit->IsPlay())
+			SetAnimation(stateBefore);
 		break;
 
 	case RIGHT_DEAD:
@@ -85,7 +91,6 @@ void KingPig::Update(float deltaTime)
 			isDead = true;
 			deadTime = 0.f;
 		}
-
 		break;
 
 	default:
@@ -229,14 +234,14 @@ void KingPig::SetAnimation(MONSTER_STATE _state)
 	case RIGHT_HIT:
 		ani_Hit->SetPlayFrame(0, 1, true, false);
 		ani_Hit->Start();
-		currentImage = &imageAnimations[KING_PIG_IMAGE::ATTACK];
+		currentImage = &imageAnimations[KING_PIG_IMAGE::HIT];
 		size.width = ani_Hit->GetFrameWidth();
 		size.height = ani_Hit->GetFrameHeight();
 		break;
 	case LEFT_HIT:
 		ani_Hit->SetPlayFrame(2, 3, false, false);
 		ani_Hit->Start();
-		currentImage = &imageAnimations[KING_PIG_IMAGE::ATTACK];
+		currentImage = &imageAnimations[KING_PIG_IMAGE::HIT];
 		size.width = ani_Hit->GetFrameWidth();
 		size.height = ani_Hit->GetFrameHeight();
 		break;
@@ -263,7 +268,7 @@ void KingPig::SetAnimation(MONSTER_STATE _state)
 void KingPig::CheckMonsterState()
 {
 	if (player == nullptr)return;
-	if (IsAttacking())return;
+	if (IsAttacking() || IsHitting() || IsDead())return;
 
 	// 추적 거리 안에 오면 다가간다
 	if (IsCollision(GetRect(), player->GetRect()))
@@ -304,8 +309,10 @@ void KingPig::CheckMonsterState()
 
 void KingPig::CheckCollision()
 {
+	if (!player)return;
+
 	// 플레이어를 공격
-	if (player && !player->IsAttacked())
+	if (!player->IsAttacked())
 	{
 		if (IsCollision(player->GetRect(), GetRect()))
 		{
@@ -316,6 +323,29 @@ void KingPig::CheckCollision()
 	}
 
 	// 플레이어에 공격 당했을 때
+	if (player->IsAttacking() && player->GetCanAttack())
+	{
+		if (IsCollision(player->GetAttackRect(), GetRect()))
+		{
+			player->SetCanAttack(false);
+			hp--;
+
+			if (hp <= 0)
+			{
+				if (IsLeft())
+					SetAnimation(MONSTER_STATE::LEFT_DEAD);
+				else
+					SetAnimation(MONSTER_STATE::RIGHT_DEAD);
+			}
+			else
+			{
+				if (IsLeft())
+					SetAnimation(MONSTER_STATE::LEFT_HIT);
+				else
+					SetAnimation(MONSTER_STATE::RIGHT_HIT);
+			}
+		}
+	}
 }
 
 void KingPig::DefineAnimation(Animation*& animation, UINT state, int width, int height, int fps)

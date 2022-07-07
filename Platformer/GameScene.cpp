@@ -49,7 +49,6 @@ void GameScene::Init()
 	engine->cameraObject.Init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH * 2, SCREEN_HEIGHT);
 }
 
-
 void GameScene::Update(float deltaTime)
 {
 	if (player)
