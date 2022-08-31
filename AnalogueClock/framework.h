@@ -14,4 +14,5 @@
 #include <memory.h>
 #include <tchar.h>
 
-#define PI 3.141592
+#define PI			3.141592
+#define DEG2RAD		PI/180

@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\Toggle">
+      <UniqueIdentifier>{b6e44eb3-91d0-45c9-8de5-6b0be2b7cb10}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -29,6 +32,12 @@
     </ClInclude>
     <ClInclude Include="Clock.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>소스 파일\Toggle</Filter>
+    </ClInclude>
+    <ClInclude Include="ClockToggle.h">
+      <Filter>소스 파일\Toggle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

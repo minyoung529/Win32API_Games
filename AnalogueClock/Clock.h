@@ -10,8 +10,8 @@ class Clock
 {
 private:
 	int radius;
-	int clockState = HOUR | MINUTE | SECOND;
 	POINT pos;
+	int clockState = HOUR | MINUTE | SECOND;
 
 public:
 	Clock() : radius(0)
@@ -30,9 +30,12 @@ public:
 		this->clockState = clockState;
 	}
 
+	virtual ~Clock() {}
+
 	void RenderClock(SYSTEMTIME time, HDC hdc)
 	{
 		RenderCircle(hdc);
+		RenderGraduation(hdc);
 
 		if (clockState & SECOND)
 			RenderSecond(time, hdc);
@@ -58,6 +61,18 @@ public:
 	void RenderSecond(SYSTEMTIME systemTime, HDC hdc);
 	void RenderMinute(SYSTEMTIME systemTime, HDC hdc);
 
+	void RenderGraduation(HDC hdc);
 	void RenderNumber(HDC hdc);
 	void RenderCircle(HDC hdc);
+
+public:
+	void AddClockState(int state)
+	{
+		clockState |= state;
+	}
+
+	void RemoveClockState(int state)
+	{
+		clockState ^= state;
+	}
 };

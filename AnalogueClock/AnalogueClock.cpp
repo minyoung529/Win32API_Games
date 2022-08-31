@@ -1,6 +1,7 @@
 ﻿#include "framework.h"
 #include "AnalogueClock.h"
 #include "Clock.h"
+#include "ClockToggle.h"
 #include <math.h>
 
 #define MAX_LOADSTRING 100
@@ -12,6 +13,15 @@ SYSTEMTIME st;
 int radius;
 int nWidth;
 int nHeight;
+
+// 시계 객체
+Clock* clock;
+
+// 토글 UI
+ClockToggle* hourToggle;
+ClockToggle* minuteToggle;
+ClockToggle* secondToggle;
+ClockToggle* soundToggle;
 
 // 전역 변수:
 HINSTANCE hInst;                                // 현재 인스턴스
@@ -85,7 +95,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
 	HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-		0, 0, 400, 400, nullptr, nullptr, hInstance, nullptr);
+		0, 0, 400, 550, nullptr, nullptr, hInstance, nullptr);
 
 	if (!hWnd)
 	{
@@ -110,6 +120,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		nHeight = rt.bottom - rt.top;
 		radius = (nWidth > nHeight) ? nHeight * 9 / 20 : nWidth * 9 / 20;
 
+		clock = new Clock(radius, { nWidth, nWidth }, HOUR | SECOND | MINUTE | SOUND);
+
+		hourToggle = new ClockToggle(RGB(255, 0, 0), { 40,450 }, 30, 20, clock, HOUR);
+		minuteToggle = new ClockToggle(RGB(0, 255, 0), { 140,450 }, 30, 20, clock, MINUTE);
+		secondToggle = new ClockToggle(RGB(0, 0, 255), { 240,450 }, 30, 20, clock, SECOND);
+		soundToggle = new ClockToggle(RGB(255, 0, 255), { 340,450 }, 30, 20, clock, SOUND);
+
 		SetTimer(hWnd, 1, 1000, nullptr);
 	}break;
 	case WM_TIMER:
@@ -131,13 +148,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		GetLocalTime(&st);
 
-		Clock* clock = new Clock(radius, { nWidth, nHeight }, HOUR | SECOND | MINUTE | SOUND);
 		clock->RenderClock(st, hdc);
+
+		hourToggle->OnClickButton();
+
+		hourToggle	->Update(hdc);
+		minuteToggle->Update(hdc);
+		secondToggle->Update(hdc);
+		soundToggle	->Update(hdc);
 
 		EndPaint(hWnd, &ps);
 	}
 	break;
 	case WM_DESTROY:
+
+		delete clock;
+		delete hourToggle;
+		delete minuteToggle;
+		delete secondToggle;
+		delete soundToggle;
 		PostQuitMessage(0);
 		break;
 	default:
@@ -146,7 +175,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-// 정보 대화 상자의 메시지 처리기입니다.
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
