@@ -13,3 +13,5 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+
+#define PI 3.141592
