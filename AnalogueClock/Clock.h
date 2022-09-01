@@ -46,14 +46,6 @@ public:
 		if (clockState & HOUR)
 			RenderHour(time, hdc);
 
-		if (clockState & SOUND)
-		{
-			if (time.wSecond >= 57 && time.wSecond <= 59)
-				Beep(500, 200);
-			else if (time.wSecond == 0)
-				Beep(1000, 400);
-		}
-
 		RenderNumber(hdc);
 	}
 
@@ -64,6 +56,7 @@ public:
 	void RenderGraduation(HDC hdc);
 	void RenderNumber(HDC hdc);
 	void RenderCircle(HDC hdc);
+	void PlaySound(SYSTEMTIME time);
 
 public: 
 	void AddClockState(int state)

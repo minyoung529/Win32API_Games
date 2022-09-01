@@ -4,7 +4,7 @@
 // 시침 출력
 void Clock::RenderHour(SYSTEMTIME time, HDC hdc)
 {
-	HPEN hPen = CreatePen(PS_SOLID, 16, RGB(255, 0, 0));
+	HPEN hPen = CreatePen(PS_SOLID, 16, HOUR_COLOR);
 	HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
 
 	// minute을 더한 이유:		시간이 흘러감에 따라
@@ -31,7 +31,7 @@ void Clock::RenderHour(SYSTEMTIME time, HDC hdc)
 // 초침 출력
 void Clock::RenderSecond(SYSTEMTIME time, HDC hdc)
 {
-	HPEN hPen = CreatePen(PS_SOLID, 5, RGB(255, 0, 255));
+	HPEN hPen = CreatePen(PS_SOLID, 5, SECOND_COLOR);
 	HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
 
 	float x = sin(DEG2RAD * time.wSecond * 6);
@@ -51,7 +51,7 @@ void Clock::RenderSecond(SYSTEMTIME time, HDC hdc)
 // 분침 출력
 void Clock::RenderMinute(SYSTEMTIME time, HDC hdc)
 {
-	HPEN hPen = CreatePen(PS_SOLID, 9, RGB(34, 116, 28));
+	HPEN hPen = CreatePen(PS_SOLID, 9, MINUTE_COLOR);
 	HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
 
 	float x = sin(DEG2RAD * (time.wMinute * 6));
@@ -72,7 +72,7 @@ void Clock::RenderGraduation(HDC hdc)
 {
 	float radius = this->radius + 15;
 
-	HPEN hPen = CreatePen(PS_SOLID, 2, RGB(34, 116, 28));
+	HPEN hPen = CreatePen(PS_SOLID, 2, GRADUATION_COLOR);
 	HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
 	float len = 10;
 
@@ -121,12 +121,33 @@ void Clock::RenderNumber(HDC hdc)
 
 void Clock::RenderCircle(HDC hdc)
 {
-	HBRUSH hBlueBrush = CreateSolidBrush(RGB(250, 244, 192));
-	HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, hBlueBrush);
-
+	HBRUSH hBrush = CreateSolidBrush(STROKE_COLOR);
+	HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, hBrush);
 	float radius = this->radius + 15;
+	float stroke = 1.05f;
+	
+	Ellipse(hdc, pos.x - radius * stroke, pos.y + radius * stroke, pos.x + radius * stroke, pos.y - radius * stroke);
+	DeleteObject(hBrush);
+
+	hBrush = CreateSolidBrush(CIRCLE_COLOR);
+	
+	SelectObject(hdc, hBrush);
 	Ellipse(hdc, pos.x - radius, pos.y + radius, pos.x + radius, pos.y - radius);
 
 	SelectObject(hdc, oldBrush);
-	DeleteObject(hBlueBrush);
+	DeleteObject(hBrush);
+}
+
+void Clock::PlaySound(SYSTEMTIME time)
+{
+	if (clockState & SOUND)
+	{
+		if (time.wSecond >= 57 && time.wSecond <= 59)
+			Beep(500, 200);
+		else if (time.wSecond == 0)
+			Beep(1000, 400);
+
+		else
+			Beep(200, 100);
+	}
 }

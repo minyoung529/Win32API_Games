@@ -27,9 +27,6 @@
     <ClInclude Include="Resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="AnalogueClock.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Clock.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -38,6 +35,9 @@
     </ClInclude>
     <ClInclude Include="ClockToggle.h">
       <Filter>소스 파일\Toggle</Filter>
+    </ClInclude>
+    <ClInclude Include="AnalogueClock.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

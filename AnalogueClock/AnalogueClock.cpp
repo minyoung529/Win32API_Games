@@ -4,10 +4,8 @@
 #include "ClockToggle.h"
 #include <math.h>
 
-#define MAX_LOADSTRING 100
-
 // 가져올 시스템 시간
-SYSTEMTIME st;
+SYSTEMTIME systemTime;
 
 //화면의 반지름
 int radius;
@@ -95,7 +93,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
 	HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-		0, 0, 400, 550, nullptr, nullptr, hInstance, nullptr);
+		0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, nullptr, nullptr, hInstance, nullptr);
 
 	if (!hWnd)
 	{
@@ -118,20 +116,34 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		GetClientRect(hWnd, &rt);
 		nWidth = rt.right - rt.left;
 		nHeight = rt.bottom - rt.top;
-		radius = (nWidth > nHeight) ? nHeight * 9 / 20 : nWidth * 9 / 20;
+		radius = (nWidth > nHeight) ? nHeight * 8 / 20 : nWidth * 8 / 20;
 
 		clock = new Clock(radius, { nWidth, nWidth }, HOUR | SECOND | MINUTE | SOUND);
 
-		hourToggle = new ClockToggle(RGB(255, 0, 0), { 40,450 }, 30, 20, clock, HOUR);
-		minuteToggle = new ClockToggle(RGB(0, 255, 0), { 140,450 }, 30, 20, clock, MINUTE);
-		secondToggle = new ClockToggle(RGB(0, 0, 255), { 240,450 }, 30, 20, clock, SECOND);
-		soundToggle = new ClockToggle(RGB(255, 0, 255), { 340,450 }, 30, 20, clock, SOUND);
+		hourToggle =	new ClockToggle(HOUR_COLOR, { 40,450 }, 30, 20, clock, HOUR, L"시침");
+		minuteToggle =	new ClockToggle(MINUTE_COLOR, { 140,450 }, 30, 20, clock, MINUTE, L"분침");
+		secondToggle =	new ClockToggle(SECOND_COLOR, { 240,450 }, 30, 20, clock, SECOND, L"초침");
+		soundToggle =	new ClockToggle(SOUND_COLOR, { 340,450 }, 30, 20, clock, SOUND, L"소리");
 
-		SetTimer(hWnd, 1, 100, nullptr);
+		SetTimer(hWnd, SECOND_TIMER, 1000, nullptr);
+		SetTimer(hWnd, RENDER_TIMER, 100, nullptr);
 	}break;
 	case WM_TIMER:
 	{
-		InvalidateRect(hWnd, nullptr, true);
+		switch (wParam)
+		{
+		case SECOND_TIMER:
+			clock->PlaySound(systemTime);
+			break;
+
+		case RENDER_TIMER:
+			InvalidateRect(hWnd, nullptr, true);
+			break;
+
+		default:
+			clock->PlaySound(systemTime);
+			InvalidateRect(hWnd, nullptr, true);
+		}
 	}break;
 	case WM_CHAR:
 	{
@@ -146,14 +158,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hWnd, &ps);
 
-		GetLocalTime(&st);
+		GetLocalTime(&systemTime);
 
 		hourToggle	->Update(hdc, hWnd);
 		minuteToggle->Update(hdc, hWnd);
 		secondToggle->Update(hdc, hWnd);
 		soundToggle	->Update(hdc, hWnd);
 
-		clock->RenderClock(st, hdc);
+		clock->RenderClock(systemTime, hdc);
 
 		EndPaint(hWnd, &ps);
 	}

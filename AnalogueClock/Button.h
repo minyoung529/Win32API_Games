@@ -36,13 +36,15 @@ public:
 	{
 		POINT mousePoint;
 		GetCursorPos(&mousePoint);
-		ScreenToClient(hWnd,&mousePoint);
+		ScreenToClient(hWnd, &mousePoint);
 
 		// 마우스와 충돌 감지
 		if (PtInRect(&rect, mousePoint))
 		{
 			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 			{
+				//InvalidateRect(hWnd, nullptr, true);
+
 				toggle = !toggle;
 				OnClickButton();
 			}
@@ -51,7 +53,7 @@ public:
 		Render(hdc);
 	}
 
-	void Render(HDC hdc)
+	virtual void Render(HDC hdc)
 	{
 		COLORREF buttonColor = (toggle) ? RGB(150, 150, 150) : color;
 		HBRUSH hBlueBrush = CreateSolidBrush(buttonColor);
@@ -70,9 +72,9 @@ private:
 	// 버튼 Rect 설정
 	void SetRect()
 	{
-		rect.left	= pos.x - width;
-		rect.right	= pos.x + width;
-		rect.top	= pos.y - height;
+		rect.left = pos.x - width;
+		rect.right = pos.x + width;
+		rect.top = pos.y - height;
 		rect.bottom = pos.y + height;
 	}
 };

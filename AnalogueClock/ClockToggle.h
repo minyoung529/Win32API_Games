@@ -7,6 +7,7 @@ class ClockToggle : public Button
 private:
 	Clock* clock;
 	int onOffState;
+	TCHAR name[10];
 
 public:
 	ClockToggle() : Button()
@@ -15,11 +16,13 @@ public:
 		onOffState = 0;
 	}
 
-	ClockToggle(COLORREF color, POINT pos, int width, int height, Clock* clock, int onOffState)
+	ClockToggle(COLORREF color, POINT pos, int width, int height, Clock* clock, int onOffState, const wchar_t* buttonName)
 		: Button(color, pos, width, height)
 		, clock(clock)
-		, onOffState(onOffState) 
-	{}
+		, onOffState(onOffState)
+	{
+		wsprintf(name, buttonName);
+	}
 
 	~ClockToggle() {}
 
@@ -34,5 +37,15 @@ public:
 		{
 			clock->AddClockState(onOffState);
 		}
+	}
+
+	void Render(HDC hdc)
+	{
+		Button::Render(hdc);
+
+		// Áß¾Ó Á¤·Ä
+		SetTextAlign(hdc, TA_CENTER);
+
+		TextOut(hdc, rect.left + width, rect.top + height / 2, name, lstrlen(name));
 	}
 };
