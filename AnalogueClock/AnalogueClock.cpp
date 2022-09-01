@@ -127,7 +127,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		secondToggle = new ClockToggle(RGB(0, 0, 255), { 240,450 }, 30, 20, clock, SECOND);
 		soundToggle = new ClockToggle(RGB(255, 0, 255), { 340,450 }, 30, 20, clock, SOUND);
 
-		SetTimer(hWnd, 1, 1000, nullptr);
+		SetTimer(hWnd, 1, 100, nullptr);
 	}break;
 	case WM_TIMER:
 	{
@@ -148,14 +148,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		GetLocalTime(&st);
 
+		hourToggle	->Update(hdc, hWnd);
+		minuteToggle->Update(hdc, hWnd);
+		secondToggle->Update(hdc, hWnd);
+		soundToggle	->Update(hdc, hWnd);
+
 		clock->RenderClock(st, hdc);
-
-		hourToggle->OnClickButton();
-
-		hourToggle	->Update(hdc);
-		minuteToggle->Update(hdc);
-		secondToggle->Update(hdc);
-		soundToggle	->Update(hdc);
 
 		EndPaint(hWnd, &ps);
 	}

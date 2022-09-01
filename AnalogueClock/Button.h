@@ -32,17 +32,20 @@ public:
 	virtual ~Button() {}
 
 public:
-
-	void Update(HDC hdc)
+	void Update(HDC hdc, HWND hWnd)
 	{
 		POINT mousePoint;
 		GetCursorPos(&mousePoint);
+		ScreenToClient(hWnd,&mousePoint);
 
 		// 마우스와 충돌 감지
-		if (PtInRect(&rect, mousePoint) && (GetAsyncKeyState(VK_LBUTTON) & 0x8001))
+		if (PtInRect(&rect, mousePoint))
 		{
-			toggle = !toggle;
-			OnClickButton();
+			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+			{
+				toggle = !toggle;
+				OnClickButton();
+			}
 		}
 
 		Render(hdc);
@@ -67,9 +70,9 @@ private:
 	// 버튼 Rect 설정
 	void SetRect()
 	{
-		rect.left = pos.x - width;
-		rect.right = pos.x + width;
-		rect.top = pos.y + height;
-		rect.bottom = pos.y - height;
+		rect.left	= pos.x - width;
+		rect.right	= pos.x + width;
+		rect.top	= pos.y - height;
+		rect.bottom = pos.y + height;
 	}
 };

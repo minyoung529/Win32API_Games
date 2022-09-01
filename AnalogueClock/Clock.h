@@ -65,7 +65,7 @@ public:
 	void RenderNumber(HDC hdc);
 	void RenderCircle(HDC hdc);
 
-public:
+public: 
 	void AddClockState(int state)
 	{
 		clockState |= state;
