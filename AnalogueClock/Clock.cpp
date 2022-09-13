@@ -1,27 +1,24 @@
 #include "Clock.h"
 #include <math.h>
 
+
 // 시침 출력
 void Clock::RenderHour(SYSTEMTIME time, HDC hdc)
 {
 	HPEN hPen = CreatePen(PS_SOLID, 16, HOUR_COLOR);
 	HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
 
-	// minute을 더한 이유:		시간이 흘러감에 따라
-	//							자연스럽게 시침이 변하는 것을 표현하기 위해서
+	// minute을 더한 이유:		시간이 흘러감에 따라= 자연스럽게 시침이 변하는 것을 표현하기 위해서
 
 	// ex ) 6시 40분				=> 6 * 30 + 40 / 2 => 180 + 20 => 200 degrees
-	float x = sin(PI / 180 * ((double)time.wHour * 30 + time.wMinute / 2));
-	float y = -cos(PI / 180 * ((double)time.wHour * 30 + time.wMinute / 2));
-	float lenOffset = 0.3f;
+	float x = sin(DEG2RAD * ((double)time.wHour * 30 + time.wMinute / 2));
+	float y = -cos(DEG2RAD * ((double)time.wHour * 30 + time.wMinute / 2));
 
-	// startPos에 x y를 더한 이유:	시침이 정 중앙이 아닌 방향의 반대쪽부터 시작하기 때문!
-	//								(빠져나온 길이)
+	// startPos에 x y를 더한 이유:	시침이 정 중앙이 아닌 방향의 반대쪽부터 시작하기 때문! (빠져나온 길이)
 
-	POINT startPos = { pos.x - x * radius / 10, pos.y - y * radius / 10 };
-	POINT endPos = { pos.x + x * radius * lenOffset, pos.y + y * radius * lenOffset };
+	POINT endPos = { pos.x + x * radius * HOUR_RATIO, pos.y + y * radius * HOUR_RATIO };
 
-	MoveToEx(hdc, startPos.x, startPos.y, nullptr);
+	MoveToEx(hdc, STARTPOSX(pos, x, radius), STARTPOSY(pos, y, radius), nullptr);
 	LineTo(hdc, endPos.x, endPos.y);
 
 	SelectObject(hdc, hOldPen);
@@ -36,12 +33,10 @@ void Clock::RenderSecond(SYSTEMTIME time, HDC hdc)
 
 	float x = sin(DEG2RAD * time.wSecond * 6);
 	float y = -cos(DEG2RAD * time.wSecond * 6);
-	float lenOffset = 0.7f;
 
-	POINT startPos = { pos.x - x * radius / 10, pos.y - y * radius / 10 };
-	POINT endPos = { pos.x + x * radius * lenOffset, pos.y + y * radius * lenOffset };
+	POINT endPos = { pos.x + x * radius * SECOND_RATIO, pos.y + y * radius * SECOND_RATIO };
 
-	MoveToEx(hdc, startPos.x, startPos.y, nullptr);
+	MoveToEx(hdc, STARTPOSX(pos, x, radius), STARTPOSY(pos, y, radius), nullptr);
 	LineTo(hdc, endPos.x, endPos.y);
 
 	SelectObject(hdc, hOldPen);
@@ -54,20 +49,19 @@ void Clock::RenderMinute(SYSTEMTIME time, HDC hdc)
 	HPEN hPen = CreatePen(PS_SOLID, 9, MINUTE_COLOR);
 	HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
 
-	float x = sin(DEG2RAD * (time.wMinute * 6));
-	float y = -cos(DEG2RAD * (time.wMinute * 6));
-	float lenOffset = 0.6f;
+	float x =  sin(DEG2RAD * time.wMinute * 6);
+	float y = -cos(DEG2RAD * time.wMinute * 6);
 
-	POINT startPos = { pos.x - x * radius / 10,	 pos.y - y * radius / 10 };
-	POINT endPos = { pos.x + x * radius * lenOffset, pos.y + y * radius * lenOffset };
+	POINT endPos = { pos.x + x * radius * MINUTE_RATIO, pos.y + y * radius * MINUTE_RATIO };
 
-	MoveToEx(hdc, startPos.x, startPos.y, nullptr);
+	MoveToEx(hdc, STARTPOSX(pos, x, radius), STARTPOSY(pos, y, radius), nullptr);
 	LineTo(hdc, endPos.x, endPos.y);
 
 	SelectObject(hdc, hOldPen);
 	DeleteObject(hPen);
 }
 
+// 시계 눈금선 출력
 void Clock::RenderGraduation(HDC hdc)
 {
 	float radius = this->radius + 15;
@@ -78,7 +72,7 @@ void Clock::RenderGraduation(HDC hdc)
 
 	for (int i = 0; i < 60; i++)
 	{
-		float x = sin(DEG2RAD * i * 6);
+		float x =  sin(DEG2RAD * i * 6);
 		float y = -cos(DEG2RAD * i * 6);
 
 		len = (i % 5 != 0) ? 7 : 16;
@@ -94,6 +88,7 @@ void Clock::RenderGraduation(HDC hdc)
 	DeleteObject(hPen);
 }
 
+// 시계 숫자 출력
 void Clock::RenderNumber(HDC hdc)
 {
 	RECT rt;
@@ -119,6 +114,7 @@ void Clock::RenderNumber(HDC hdc)
 	}
 }
 
+// 시계 원 출력
 void Clock::RenderCircle(HDC hdc)
 {
 	HBRUSH hBrush = CreateSolidBrush(STROKE_COLOR);
@@ -144,6 +140,7 @@ void Clock::PlaySound(SYSTEMTIME time)
 	{
 		if (time.wSecond >= 57 && time.wSecond <= 59)
 			Beep(500, 200);
+
 		else if (time.wSecond == 0)
 			Beep(1000, 400);
 

@@ -15,6 +15,9 @@
 
 ### 1. 시계 객체화
 
+[Clock.cpp 소스](https://github.com/minyoung529/Win32API_Games/blob/main/AnalogueClock/Clock.cpp)
+[Clock.h 소스](https://github.com/minyoung529/Win32API_Games/blob/main/AnalogueClock/Clock.h)
+
 WinProc 함수에 있었던 모든 시계 출력, 시간 계산 코드를 **Clock 클래스**의 멤버 함수로 넣어 Clock 객체를 생성하고, 메서드를 부를 수 있게 했다.
 
 > Clock.h
@@ -89,6 +92,51 @@ case WM_PAINT:
 ```
 
 ### 2. 삼각함수 가독성
+
+sin, cos 함수에 매개변수로 들어가는 식들이 직관적으로 이해하기 힘들었기 때문에 `sin(RAD2DEG * degrees)`의 형태로 모두 바꿔주었다.
+
+> RAD2DEG 상수
+``` cpp
+#define PI		3.141592
+#define RAD2DEG		PI/180
+```
+
+> 시침 각도 계산 코드
+``` cpp
+// Before
+x = sin(2 * PI * (st.wHour * 60 + st.wMinute) / 720);
+y = -cos(2 * PI * (st.wHour * 60 + st.wMinute) / 720);
+
+// After
+x =  sin(RAD2DEG * (time.wHour * 30 + time.wMinute / 2));
+y = -cos(RAD2DEG * (time.wHour * 30 + time.wMinute / 2))
+```
+
+> 분침 각도 계산 코드
+``` cpp
+// Before
+x = sin(2 * PI * st.wMinute / 60);
+y = -cos(2 * PI * st.wMinute / 60);
+
+// After
+x =  sin(DEG2RAD * time.wMinute * 6);
+y = -cos(DEG2RAD * time.wMinute * 6);
+```
+
+
+>> 초침 각도 계산 코드
+``` cpp
+// Before
+x = sin(2 * PI * st.wSecond / 60);
+y = -cos(2 * PI * st.wSecond / 60);
+
+// After
+x =  sin(DEG2RAD * time.wSecond * 6);
+y = -cos(DEG2RAD * time.wSecond * 6);
+```
+
+
+큰 차이는 없지만, 나 자신이 이해하기 수월하도록 고쳤다.
 
 
 ### 3. 매크로 상수

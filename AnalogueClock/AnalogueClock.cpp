@@ -118,8 +118,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		nHeight = rt.bottom - rt.top;
 		radius = (nWidth > nHeight) ? nHeight * 8 / 20 : nWidth * 8 / 20;
 
+		// 시계 생성
 		clock = new Clock(radius, { nWidth, nWidth }, HOUR | SECOND | MINUTE | SOUND);
 
+		// 시계 토글들 생성
 		hourToggle =	new ClockToggle(HOUR_COLOR, { 40,450 }, 30, 20, clock, HOUR, L"시침");
 		minuteToggle =	new ClockToggle(MINUTE_COLOR, { 140,450 }, 30, 20, clock, MINUTE, L"분침");
 		secondToggle =	new ClockToggle(SECOND_COLOR, { 240,450 }, 30, 20, clock, SECOND, L"초침");
@@ -160,11 +162,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		GetLocalTime(&systemTime);
 
+		// 토글 버튼들 
 		hourToggle	->Update(hdc, hWnd);
 		minuteToggle->Update(hdc, hWnd);
 		secondToggle->Update(hdc, hWnd);
 		soundToggle	->Update(hdc, hWnd);
 
+		// 시계 출력하기 
 		clock->RenderClock(systemTime, hdc);
 
 		EndPaint(hWnd, &ps);
@@ -177,6 +181,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		delete minuteToggle;
 		delete secondToggle;
 		delete soundToggle;
+
 		PostQuitMessage(0);
 		break;
 	default:

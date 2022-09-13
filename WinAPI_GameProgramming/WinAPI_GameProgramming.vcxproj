@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{9ace7a9c-ff14-4172-9209-2462ac9c5d4c}</ProjectGuid>
-    <RootNamespace>AnalogueClock</RootNamespace>
+    <ProjectGuid>{1ebee3db-1a59-44ab-bb36-72c57e3f55b7}</ProjectGuid>
+    <RootNamespace>WinAPIGameProgramming</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -139,27 +139,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AnalogueClock.h" />
-    <ClInclude Include="Button.h" />
-    <ClInclude Include="Clock.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="ClockToggle.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="WinAPI_GameProgramming.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AnalogueClock.cpp" />
-    <ClCompile Include="Clock.cpp" />
+    <ClCompile Include="WinAPI_GameProgramming.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="AnalogueClock.rc" />
+    <ResourceCompile Include="WinAPI_GameProgramming.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="AnalogueClock.ico" />
     <Image Include="small.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="README.md" />
+    <Image Include="WinAPI_GameProgramming.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

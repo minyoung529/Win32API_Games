@@ -1,10 +1,20 @@
 #pragma once
 #include "framework.h"
 
-#define	HOUR	1
-#define	MINUTE	2
-#define	SECOND	4
-#define	SOUND	8
+// 상태 온오프 플래그
+#define	HOUR			1
+#define	MINUTE			2
+#define	SECOND			4
+#define	SOUND			8
+
+// 반지름에 따른 시곗바늘 비율
+#define HOUR_RATIO		0.3f
+#define MINUTE_RATIO	0.6f
+#define SECOND_RATIO	0.7f
+
+
+#define	STARTPOSX(pos, x, radius)	(pos.x - (((x) * radius) / 10))
+#define	STARTPOSY(pos, x, radius)	(pos.y - (((y) * radius) / 10))
 
 class Clock
 {
@@ -32,6 +42,7 @@ public:
 
 	virtual ~Clock() {}
 
+public:
 	void RenderClock(SYSTEMTIME time, HDC hdc)
 	{
 		RenderCircle(hdc);
@@ -49,16 +60,8 @@ public:
 		RenderNumber(hdc);
 	}
 
-	void RenderHour(SYSTEMTIME systemTime, HDC hdc);
-	void RenderSecond(SYSTEMTIME systemTime, HDC hdc);
-	void RenderMinute(SYSTEMTIME systemTime, HDC hdc);
-
-	void RenderGraduation(HDC hdc);
-	void RenderNumber(HDC hdc);
-	void RenderCircle(HDC hdc);
 	void PlaySound(SYSTEMTIME time);
 
-public: 
 	void AddClockState(int state)
 	{
 		clockState |= state;
@@ -68,4 +71,13 @@ public:
 	{
 		clockState ^= state;
 	}
+
+private:
+	void RenderHour(SYSTEMTIME systemTime, HDC hdc);
+	void RenderSecond(SYSTEMTIME systemTime, HDC hdc);
+	void RenderMinute(SYSTEMTIME systemTime, HDC hdc);
+
+	void RenderGraduation(HDC hdc);
+	void RenderNumber(HDC hdc);
+	void RenderCircle(HDC hdc);
 };

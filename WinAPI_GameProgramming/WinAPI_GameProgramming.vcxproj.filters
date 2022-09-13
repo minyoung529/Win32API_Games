@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="소스 파일\Toggle">
-      <UniqueIdentifier>{b6e44eb3-91d0-45c9-8de5-6b0be2b7cb10}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -27,29 +24,17 @@
     <ClInclude Include="Resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Clock.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Button.h">
-      <Filter>소스 파일\Toggle</Filter>
-    </ClInclude>
-    <ClInclude Include="ClockToggle.h">
-      <Filter>소스 파일\Toggle</Filter>
-    </ClInclude>
-    <ClInclude Include="AnalogueClock.h">
+    <ClInclude Include="WinAPI_GameProgramming.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AnalogueClock.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Clock.cpp">
+    <ClCompile Include="WinAPI_GameProgramming.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="AnalogueClock.rc">
+    <ResourceCompile Include="WinAPI_GameProgramming.rc">
       <Filter>리소스 파일</Filter>
     </ResourceCompile>
   </ItemGroup>
@@ -57,13 +42,8 @@
     <Image Include="small.ico">
       <Filter>리소스 파일</Filter>
     </Image>
-    <Image Include="AnalogueClock.ico">
+    <Image Include="WinAPI_GameProgramming.ico">
       <Filter>리소스 파일</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="README.md">
-      <Filter>소스 파일</Filter>
-    </None>
   </ItemGroup>
 </Project>
