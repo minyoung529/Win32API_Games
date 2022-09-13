@@ -53,4 +53,9 @@ struct WindowInfo
 	bool	windowed;	// 창모드 or 전체화면
 };
 
+enum
+{
+	SWAP_CHAIN_BUFFER_COUNT = 2
+};
+
 extern unique_ptr<class Engine> engine;
