@@ -16,6 +16,7 @@ public:
 	void RenderEnd();
 
 	ComPtr<ID3D12CommandQueue> GetCmdQueue() { return cmdQueue; }
+	ComPtr<ID3D12GraphicsCommandList> GetCmdList() { return cmdList; }
 
 private:
 	// 명령을 차곡차곡 기록했다가 한번에 요청하는 용도

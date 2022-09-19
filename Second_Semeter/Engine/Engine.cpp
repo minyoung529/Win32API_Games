@@ -1,8 +1,5 @@
 #include "pch.h"
 #include "Engine.h"
-#include "Device.h"
-#include "SwapChain.h"
-#include "CommandQueue.h"
 
 void Engine::Init(const WindowInfo& window)
 {
@@ -18,10 +15,12 @@ void Engine::Init(const WindowInfo& window)
 	device = make_shared<Device>();
 	commandQueue = make_shared<CommandQueue>();
 	swapChain = make_shared<SwapChain>();
+	rootSignature = make_shared<RootSignature>();
 
 	device->Init();
 	commandQueue->Init(device->GetDevice(), swapChain);
 	swapChain->Init(window, device->GetDevice(), device->GetDXGI(), commandQueue->GetCmdQueue());
+	rootSignature->Init(device->GetDevice());
 }
 
 void Engine::Render()
@@ -30,6 +29,16 @@ void Engine::Render()
 
 	// ·»´õ¸µ
 
+	commandQueue->RenderEnd();
+}
+
+void Engine::RenderBegin()
+{
+	commandQueue->RenderBegin(&viewport, &scissorsRect);
+}
+
+void Engine::RenderEnd()
+{
 	commandQueue->RenderEnd();
 }
 

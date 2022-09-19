@@ -11,6 +11,11 @@ HINSTANCE hInst;                                // 현재 인스턴스입니다.
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 
+POINT g_ptObjPos = { 500, 300 };
+POINT g_ptObjScale = { 100,100 };
+
+POINT memoPos = { 0,0 };
+
 // 전방 선언 : 함수가 있음을 알리기 위함
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
@@ -154,8 +159,20 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_DESTROY  - 종료 메시지를 게시하고 반환합니다.
 //
 //
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	//static wstring str;
+	static wchar_t str[100];
+	static int count = 0, yPos = 0;
+	static RECT rt = { 0,0,1000,1000 };
+	static SIZE size;
+
+	static int x, y;
+
+	static RECT rtView;
+	HDC hdc;
+
 	switch (message)
 	{
 	case WM_COMMAND:
@@ -183,8 +200,27 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT: // 무효화 영역 (Invalidate Rect)
 	{
 		PAINTSTRUCT ps;
-
 		HDC hdc = BeginPaint(hWnd, &ps);
+
+		// 숙제
+		/*wchar_t temp[11];
+		int i;
+		for (i = 0; i < count % 10; i++)
+		{
+			temp[i] = str[((i / 10) * 10 + i)];
+		}
+
+		temp[i] = NULL;
+
+		DrawText(hdc, str, wcslen(str), &rt, DT_TOP | DT_LEFT);
+		GetTextExtentPoint(hdc, temp, wcslen(temp), &size);
+		SetCaretPos(size.cx, (count / 10) * 15);*/
+
+		Ellipse(hdc, x - 20, y - 20, x + 20, y + 20);
+
+		EndPaint(hWnd, &ps);
+		/*
+
 		// DC 만들어서 그 ID를 반환
 
 		// 커널 오브젝트를 가져오기 위해서~ divice context
@@ -193,84 +229,151 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		// 기본 펜은 검은색, 기본 브러쉬는 하얀색
 
 		// 펜 만들어서 DC에 지급
-		HPEN pen = CreatePen(PS_SOLID, 5, RGB(255, 143, 160));
-		HPEN oldPen = (HPEN)SelectObject(hdc, pen);
 
-		HBRUSH brush = CreateSolidBrush(RGB(254, 255, 92));
-		HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, brush);
+		//
+		//HPEN pen = CreatePen(PS_SOLID, 5, RGB(255, 143, 160));
+		//HPEN oldPen = (HPEN)SelectObject(hdc, pen);
 
-		// 사각형 출력
-		Rectangle(hdc, 10, 10, 110, 100); // 그리기
+		//HBRUSH brush = CreateSolidBrush(RGB(254, 255, 92));
+		//HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, brush);
 
-		// TextOut
-		wstring wstr = L"안뇽";
-		TextOut(hdc, 200, 200, wstr.c_str(), wstr.length());
+		//// 사각형 출력
+		//Rectangle(hdc, 10, 10, 110, 100); // 그리기
 
-		// DrawText
-		RECT rect = { 300, 300, 400, 400 };
+		//// TextOut
+		//wstring wstr = L"안뇽";
+		//TextOut(hdc, 200, 200, wstr.c_str(), wstr.length());
 
-		DrawText(hdc, L"안녕, 세상아!", 9, &rect, DT_SINGLELINE | DT_RIGHT);
+		//// DrawText
+		//RECT rect = { 300, 300, 400, 400 };
 
-		// 선 그리기
-		MoveToEx(hdc, 100, 500, nullptr);
-		LineTo(hdc, 300, 0);
+		//DrawText(hdc, L"안녕, 세상아!", 9, &rect, DT_SINGLELINE | DT_RIGHT);
 
-		Ellipse(hdc, 50, 50, 150, 150);
+		//// 선 그리기
+		//MoveToEx(hdc, 100, 500, nullptr);
+		//LineTo(hdc, 300, 0);
 
-		// 클라이언트 영역 재조정
-		rect = { winPosX, winPosY, winPosX + WINSIZEX, winPosY + WINSIZEY };
-		AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, TRUE);
-		MoveWindow(hWnd, winPosX, winPosY, rect.right - rect.left, rect.bottom - rect.top, TRUE);
+		//Ellipse(hdc, 50, 50, 150, 150);
 
-		// 16 x 9 격자 그리기
-		/*
-		for (int x = 0; x <= WINSIZEX; x += WINSIZEX / 16)
-		{
-			MoveToEx(hdc, x, WINSIZEY, nullptr);
-			LineTo(hdc, x, 0);
-		}
+		//// 클라이언트 영역 재조정
+		//rect = { winPosX, winPosY, winPosX + WINSIZEX, winPosY + WINSIZEY };
+		//AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, TRUE);
+		//MoveWindow(hWnd, winPosX, winPosY, rect.right - rect.left, rect.bottom - rect.top, TRUE);
 
-		for (int y = 0; y <= WINSIZEY; y += WINSIZEY / 9)
-		{
-			MoveToEx(hdc, WINSIZEX, y, nullptr);
-			LineTo(hdc, 0, y);
-		}
-		*/
+		//// 16 x 9 격자 그리기
+		//for (int x = 0; x <= WINSIZEX; x += WINSIZEX / 16)
+		//{
+		//	MoveToEx(hdc, x, WINSIZEY, nullptr);
+		//	LineTo(hdc, x, 0);
+		//}
 
-		/*
-		int left = 100;
-		int top = 100;
+		//for (int y = 0; y <= WINSIZEY; y += WINSIZEY / 9)
+		//{
+		//	MoveToEx(hdc, WINSIZEX, y, nullptr);
+		//	LineTo(hdc, 0, y);
+		//}
 
-		for (int i = 0; i < 25; i++)
-		{
-			if (i % 5 == 0 && i != 0)
-			{
-				left = 100;
-				top += 70;
-			}
+		//int left = 100;
+		//int top = 100;
 
-			if ((i / 5) % 2 == 0)
-			{
-				Rectangle(hdc, left, top, left + 50, top + 50);
-			}
-			else
-			{
-				Ellipse(hdc, left, top, left + 50, top + 50);
-			}
+		//for (int i = 0; i < 25; i++)
+		//{
+		//	if (i % 5 == 0 && i != 0)
+		//	{
+		//		left = 100;
+		//		top += 70;
+		//	}
 
-			left += 70;
-		}
-		*/
+		//	if ((i / 5) % 2 == 0)
+		//	{
+		//		Rectangle(hdc, left, top, left + 50, top + 50);
+		//	}
+		//	else
+		//	{
+		//		Ellipse(hdc, left, top, left + 50, top + 50);
+		//	}
 
-		DeleteObject(pen);
-		DeleteObject(brush);
-		SelectObject(hdc, oldPen);
-		EndPaint(hWnd, &ps);
+		//	left += 70;
+		//}
+
+		//DeleteObject(pen);
+		//DeleteObject(brush);
+		//SelectObject(hdc, oldPen);
+		//*/
+
+		//Rectangle(hdc,
+		//	g_ptObjPos.x - g_ptObjScale.x/2, g_ptObjPos.y - g_ptObjScale.y/2,
+		//	g_ptObjPos.x + g_ptObjScale.x/2, g_ptObjPos.y + g_ptObjScale.y/2);
+		//
+		//EndPaint(hWnd, &ps);
 	}
 	break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
+		HideCaret(hWnd);
+		DestroyCaret();
 		break;
+
+	case WM_KEYDOWN:
+	{
+		switch (wParam)
+		{
+		case VK_RIGHT:
+		{
+			x += 40;
+
+			if (x + 20 > rtView.right)
+			{
+				x -= 40;
+			}
+			InvalidateRect(hWnd, nullptr, true);
+		}break;
+
+		}
+	}break;
+
+	case WM_LBUTTONDOWN:
+	{
+		int x = LOWORD(lParam);
+		int y = HIWORD(lParam);
+		int z = 0;
+	}break;
+
+	case WM_KEYUP:
+		break;
+
+		// 문자 입력시
+	case WM_CHAR:
+	{
+		hdc = GetDC(hWnd);
+
+		if (wParam == VK_BACK && count > 0)
+		{
+			count--;
+		}
+		else
+		{
+			if (count >= 9 && (count) % 9 == 0)
+				str[count++] = '\n';
+
+			str[count++] = wParam;
+		}
+
+		str[count] = NULL;
+		InvalidateRect(hWnd, nullptr, true);
+
+		ReleaseDC(hWnd, hdc);
+	}break;
+
+	case WM_CREATE:
+		count = yPos = 0;
+		x = y = 20;
+		CreateCaret(hWnd, NULL, 2, 15);
+		ShowCaret(hWnd);
+
+		GetClientRect(hWnd, &rtView);
+		break;
+
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}

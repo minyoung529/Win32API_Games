@@ -9,5 +9,6 @@ public:
 	void Release();
 
 private:
-
+	shared_ptr<class Mesh>		mesh;
+	shared_ptr<class Shader>	shader;
 };

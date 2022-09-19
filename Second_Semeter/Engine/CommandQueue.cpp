@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "CommandQueue.h"
-#include "SwapChain.h"
+#include "engine.h"
 
 CommandQueue::CommandQueue()
 {
@@ -57,6 +57,9 @@ void CommandQueue::RenderBegin(const D3D12_VIEWPORT* vp, const D3D12_RECT* rect)
 		D3D12_RESOURCE_STATE_PRESENT, // 화면 출력
 		D3D12_RESOURCE_STATE_RENDER_TARGET// 외주 결과물
 	); 
+
+	// 셰이더에게 보내줘야 하는 자료형
+	cmdList->SetGraphicsRootSignature(ROOT_SIGNATURE.Get());
 
 	cmdList->ResourceBarrier(1, &barrier);
 

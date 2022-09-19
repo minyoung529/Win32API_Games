@@ -58,4 +58,14 @@ enum
 	SWAP_CHAIN_BUFFER_COUNT = 2
 };
 
+struct Vertex
+{
+	Vec3 pos;
+	Vec4 color;
+};
+
+#define DEVICE			engine->GetDevice()->GetDevice()
+#define CMD_LIST		engine->GetCmdQueue()->GetCmdList()
+#define ROOT_SIGNATURE	engine->GetRootSignature()->GetSignature()
+
 extern unique_ptr<class Engine> engine;
