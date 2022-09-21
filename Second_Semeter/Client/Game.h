@@ -11,4 +11,6 @@ public:
 private:
 	shared_ptr<class Mesh>		mesh;
 	shared_ptr<class Shader>	shader;
+
+	Transform meshTransform;
 };

@@ -21,6 +21,7 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+bool				IsInCircle(LONG x, LONG y, LONG circleX, LONG circleY, int radius);
 
 // 물리메모리 주소는 다르지만, 가상메모리 주소는 같아서 instance 값이 같음
 // 따라서 PrevInstnace가 필요 없어짐!
@@ -163,10 +164,11 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	//static wstring str;
-	static wchar_t str[100];
-	static int count = 0, yPos = 0;
+	static wchar_t str[120];
+	static int count = 0, yPos = 0, endlCnt = 0;
 	static RECT rt = { 0,0,1000,1000 };
 	static SIZE size;
+	static bool flag = false;
 
 	static int x, y;
 
@@ -203,22 +205,31 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		HDC hdc = BeginPaint(hWnd, &ps);
 
 		// 숙제
-		/*wchar_t temp[11];
-		int i;
-		for (i = 0; i < count % 10; i++)
+		/*
+		wchar_t temp[MAX_LINE + 1];
+		int endlIndex = 0;
+
+		for (int i = 0; i < 110; i++)
 		{
-			temp[i] = str[((i / 10) * 10 + i)];
+			if (str[i] == '\n')
+				endlIndex = i + 1;
 		}
 
-		temp[i] = NULL;
+		for (int i = 0; i <= MAX_LINE; i++)
+		{
+			temp[i] = str[i + endlIndex];
+		}
 
 		DrawText(hdc, str, wcslen(str), &rt, DT_TOP | DT_LEFT);
 		GetTextExtentPoint(hdc, temp, wcslen(temp), &size);
-		SetCaretPos(size.cx, (count / 10) * 15);*/
+
+		if (temp[0] == NULL)
+			SetCaretPos(0, endlCnt * 16);
+		else
+			SetCaretPos(size.cx, endlCnt * size.cy);
 
 		Ellipse(hdc, x - 20, y - 20, x + 20, y + 20);
-
-		EndPaint(hWnd, &ps);
+		*/
 		/*
 
 		// DC 만들어서 그 ID를 반환
@@ -301,45 +312,61 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		//SelectObject(hdc, oldPen);
 		//*/
 
-		//Rectangle(hdc,
-		//	g_ptObjPos.x - g_ptObjScale.x/2, g_ptObjPos.y - g_ptObjScale.y/2,
-		//	g_ptObjPos.x + g_ptObjScale.x/2, g_ptObjPos.y + g_ptObjScale.y/2);
-		//
-		//EndPaint(hWnd, &ps);
+		HBRUSH hBlueBrush = CreateSolidBrush(RGB(0, 0, 255));
+
+		if (flag)
+		{
+			//SelectObject(hdc, hBlueBrush);
+			Rectangle(hdc, x - 20, y - 20, x + 20, y + 20);
+		}
+
+		Ellipse(hdc, x - 20, y - 20, x + 20, y + 20);
+
+		/*Rectangle(hdc,
+			g_ptObjPos.x - g_ptObjScale.x / 2, g_ptObjPos.y - g_ptObjScale.y / 2,
+			g_ptObjPos.x + g_ptObjScale.x / 2, g_ptObjPos.y + g_ptObjScale.y / 2);*/
+
+		EndPaint(hWnd, &ps);
 	}
 	break;
+
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		HideCaret(hWnd);
 		DestroyCaret();
+		KillTimer(hWnd, 1);
 		break;
 
 	case WM_KEYDOWN:
 	{
-		switch (wParam)
-		{
-		case VK_RIGHT:
-		{
-			x += 40;
-
-			if (x + 20 > rtView.right)
-			{
-				x -= 40;
-			}
-			InvalidateRect(hWnd, nullptr, true);
-		}break;
-
-		}
+		SetTimer(hWnd, 1, 100, NULL);
 	}break;
+
+	case WM_TIMER:
+		x += 40;
+		if (x + 20 > rtView.right)
+		{
+			x -= 40;
+		}
+		InvalidateRect(hWnd, nullptr, true);
+		break;
 
 	case WM_LBUTTONDOWN:
 	{
-		int x = LOWORD(lParam);
-		int y = HIWORD(lParam);
-		int z = 0;
+		int mx = LOWORD(lParam);
+		int my = HIWORD(lParam);
+
+		if (IsInCircle(mx, my, x, y, 40))
+			flag = true;
+		else
+			flag = false;
+
+		InvalidateRect(hWnd, nullptr, true);
 	}break;
 
 	case WM_KEYUP:
+		flag = false;
+		InvalidateRect(hWnd, nullptr, true);
 		break;
 
 		// 문자 입력시
@@ -347,21 +374,40 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		hdc = GetDC(hWnd);
 
+		/*
 		if (wParam == VK_BACK && count > 0)
 		{
-			count--;
+			str[count--] = NULL;
+
+			if (str[count] == '\n')
+			{
+				endlCnt--;
+			}
 		}
 		else
 		{
-			if (count >= 9 && (count) % 9 == 0)
-				str[count++] = '\n';
+			if (((count - endlCnt) >= MAX_LINE && (count - endlCnt) % MAX_LINE == 0) || wParam == VK_RETURN)
+			{
+				if (endlCnt >= MAX_LINE - 1)
+					break;
 
-			str[count++] = wParam;
+				if (wParam != VK_RETURN)
+				{
+					str[count++] = '\n';
+				}
+
+				endlCnt++;
+			}
+
+			if (wParam != VK_RETURN)
+				str[count++] = wParam;
+			else
+				str[count++] = '\n';
 		}
 
 		str[count] = NULL;
+		*/
 		InvalidateRect(hWnd, nullptr, true);
-
 		ReleaseDC(hWnd, hdc);
 	}break;
 
@@ -373,6 +419,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		GetClientRect(hWnd, &rtView);
 		break;
+
 
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
@@ -398,4 +445,12 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	return (INT_PTR)FALSE;
+}
+
+bool IsInCircle(LONG x, LONG y, LONG circleX, LONG circleY, int radius)
+{
+	//float dist = sqrt(pow(x, 2) - pow(circleX, 2) + pow(y, 2) - pow(circleY, 2));
+	float dist = sqrt(pow(y - circleY, 2) + pow(x - circleX, 2));
+
+	return (dist <= radius);
 }

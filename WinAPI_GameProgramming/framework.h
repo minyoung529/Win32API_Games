@@ -18,5 +18,6 @@
 #define	PROGRAM_TITLE	L"20116 게임프로그래밍 프로젝트"
 #define	WINSIZEX		1280
 #define	WINSIZEY		720
+#define MAX_LINE		10
 
 using namespace std;

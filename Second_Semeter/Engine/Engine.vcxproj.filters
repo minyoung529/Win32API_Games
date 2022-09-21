@@ -47,10 +47,13 @@
     <ClInclude Include="RootSignature.h">
       <Filter>소스 파일\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>리소스 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Shader.h">
+      <Filter>소스 파일\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBuffer.h">
+      <Filter>소스 파일\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
       <Filter>소스 파일\Resource</Filter>
     </ClInclude>
   </ItemGroup>
@@ -76,10 +79,13 @@
     <ClCompile Include="RootSignature.cpp">
       <Filter>소스 파일\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>리소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Shader.cpp">
+      <Filter>소스 파일\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstantBuffer.cpp">
+      <Filter>소스 파일\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
       <Filter>소스 파일\Resource</Filter>
     </ClCompile>
   </ItemGroup>

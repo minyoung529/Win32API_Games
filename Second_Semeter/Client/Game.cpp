@@ -38,10 +38,13 @@ void Game::Init(const WindowInfo& window)
 
 	mesh->Init(vec);
 	shader->Init(L"..\\Engine\\Default.hlsli");
+
+	meshTransform.offset = { 0.0f, 0.5f, 0.0f };
 }
 
 void Game::Update()
 {
+	mesh->SetTransform(meshTransform);
 }
 
 void Game::Render()

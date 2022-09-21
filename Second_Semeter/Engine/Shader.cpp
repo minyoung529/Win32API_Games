@@ -13,6 +13,7 @@ void Shader::Init(const wstring& path)
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
 		
 		// 12ÀÎ ÀÌÀ¯ => vertex => float3(4byte) * 3
+		// ¼ÎÀÌ´õ´Â ³ª´²¼­ ¾¸
 		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,12 , D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0}
 	};
 

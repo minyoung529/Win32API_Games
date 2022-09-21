@@ -3,6 +3,7 @@
 #include "SwapChain.h"
 #include "CommandQueue.h"
 #include "RootSignature.h"
+#include "ConstantBuffer.h"
 
 class Engine
 {
@@ -20,6 +21,7 @@ public:
 	shared_ptr<SwapChain> GetSwapChain() { return swapChain; };
 	shared_ptr<CommandQueue> GetCmdQueue() { return commandQueue; };
 	shared_ptr<RootSignature> GetRootSignature() { return rootSignature; };
+	shared_ptr<ConstantBuffer> GetConstantBuffer() { return constantBuffer; };
 
 private:
 	WindowInfo		m_window;
@@ -31,4 +33,5 @@ private:
 	shared_ptr<SwapChain> swapChain;
 	shared_ptr<CommandQueue> commandQueue;
 	shared_ptr<RootSignature> rootSignature;
+	shared_ptr<ConstantBuffer> constantBuffer;
 };

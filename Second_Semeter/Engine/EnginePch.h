@@ -64,6 +64,11 @@ struct Vertex
 	Vec4 color;
 };
 
+struct Transform
+{
+	Vec3 offset;
+};
+
 #define DEVICE			engine->GetDevice()->GetDevice()
 #define CMD_LIST		engine->GetCmdQueue()->GetCmdList()
 #define ROOT_SIGNATURE	engine->GetRootSignature()->GetSignature()

@@ -60,6 +60,7 @@ void CommandQueue::RenderBegin(const D3D12_VIEWPORT* vp, const D3D12_RECT* rect)
 
 	// 셰이더에게 보내줘야 하는 자료형
 	cmdList->SetGraphicsRootSignature(ROOT_SIGNATURE.Get());
+	engine->GetConstantBuffer()->Clear();
 
 	cmdList->ResourceBarrier(1, &barrier);
 
