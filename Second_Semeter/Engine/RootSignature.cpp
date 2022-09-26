@@ -1,13 +1,19 @@
 #include "pch.h"
 #include "RootSignature.h"
 
+// 루트시그니처
+// 상수 버퍼
+// 커맨드 큐
+
 void RootSignature::Init(ComPtr<ID3D12Device> device)
 {
 	// 셰이더에게 상수 버퍼를 알리기 위한 코드
 	// 상수 버퍼 하나 만들 것!
-	CD3DX12_ROOT_PARAMETER param[1];
+	CD3DX12_ROOT_PARAMETER param[2];
+
 	// 0번 -> b0에 바인딩 -> cbv(상수 버퍼 뷰가 됨)
 	param[0].InitAsConstantBufferView(0);
+	param[1].InitAsConstantBufferView(1);
 
 	// param의 길이, param을 넘겨줌
 	D3D12_ROOT_SIGNATURE_DESC sigDesc = CD3DX12_ROOT_SIGNATURE_DESC(_countof(param), param);

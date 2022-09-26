@@ -7,6 +7,7 @@ public:
 	void Render();
 
 	void SetTransform(const Transform& t) { transform = t; }
+	void SetColor(const Color& c) { color = c; }
 
 private:
 	ComPtr<ID3D12Resource>		vertexBuffer;
@@ -14,5 +15,6 @@ private:
 	uint32						vertexCount = 0;
 
 	Transform					transform = {};
+	Color						color = {};
 };
 

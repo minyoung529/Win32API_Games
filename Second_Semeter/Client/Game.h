@@ -13,4 +13,5 @@ private:
 	shared_ptr<class Shader>	shader;
 
 	Transform meshTransform;
+	Color color;
 };

@@ -38,7 +38,7 @@ void SwapChain::CreateSwapChain(const WindowInfo& window, ComPtr<IDXGIFactory> d
 	sd.SampleDesc.Quality = 0;
 	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;	// 후면 버퍼에 렌더링할 것
 	sd.BufferCount = SWAP_CHAIN_BUFFER_COUNT;			// 전면+후면 버퍼
-	sd.OutputWindow = window.hwnd;
+	sd.OutputWindow = window.hWnd;
 	sd.Windowed = window.windowed;
 	sd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;		// 전면후면버퍼 교체시 이전프레임 정보버림
 	sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;

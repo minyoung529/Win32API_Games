@@ -40,11 +40,27 @@ void Game::Init(const WindowInfo& window)
 	shader->Init(L"..\\Engine\\Default.hlsli");
 
 	meshTransform.offset = { 0.0f, 0.5f, 0.0f };
+	color.color = { 1.f,0.f,0.f,1.0f };
 }
 
 void Game::Update()
 {
+	engine->Update();
+
+	if (INPUT->GetButton(KEY_TYPE::W))
+		meshTransform.offset.y += 1.f * DELTATIME;
+
+	if (INPUT->GetButton(KEY_TYPE::A))
+		meshTransform.offset.x -= 1.f * DELTATIME;
+
+	if (INPUT->GetButton(KEY_TYPE::S))
+		meshTransform.offset.y -= 1.f * DELTATIME;
+
+	if (INPUT->GetButton(KEY_TYPE::D))
+		meshTransform.offset.x += 1.f * DELTATIME;
+
 	mesh->SetTransform(meshTransform);
+	mesh->SetColor(color);
 }
 
 void Game::Render()

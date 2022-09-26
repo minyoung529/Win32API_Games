@@ -48,6 +48,7 @@ void Mesh::Render()
 	CMD_LIST->IASetVertexBuffers(0, 1, &vertexBufferView);
 
 	engine->GetConstantBuffer()->PushData(0, &transform, sizeof(transform));
+	engine->GetConstantBuffer()->PushData(1, &color, sizeof(color));
 
 	CMD_LIST->DrawInstanced(vertexCount, 1, 0, 0);
 }

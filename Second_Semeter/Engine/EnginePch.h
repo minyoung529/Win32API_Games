@@ -47,7 +47,7 @@ using Matrix = XMMATRIX;
 // 각종 struct
 struct WindowInfo
 {
-	HWND	hwnd;		// 출력 윈도우
+	HWND	hWnd;		// 출력 윈도우
 	int32	width;		// 너비
 	int32	height;		// 높이
 	bool	windowed;	// 창모드 or 전체화면
@@ -69,8 +69,15 @@ struct Transform
 	Vec3 offset;
 };
 
+struct Color
+{
+	Vec4 color;
+};
+
 #define DEVICE			engine->GetDevice()->GetDevice()
 #define CMD_LIST		engine->GetCmdQueue()->GetCmdList()
 #define ROOT_SIGNATURE	engine->GetRootSignature()->GetSignature()
+#define INPUT			engine->GetInput()
+#define DELTATIME		engine->GetTimer()->GetDeltaTime();
 
 extern unique_ptr<class Engine> engine;

@@ -3,18 +3,37 @@
 
 #include "framework.h"
 #include "WinAPI_GameProgramming.h"
+#include <vector>
+#include <time.h>
 
 #define MAX_LOADSTRING 100
+
+#define RECT_MAKE(x, y, s) {x-s/2, y-s/2, x+s/2, y+s/2}
+#define RECT_DRAW(rt) Rectangle(hdc, rt.left, rt.top, rt.right, rt.bottom)
 
 // 전역 변수: 힙, 정적 변수와 같음, 데이터 영역
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 
+vector<RECT> vecBox;
+
 POINT g_ptObjPos = { 500, 300 };
 POINT g_ptObjScale = { 100,100 };
 
-POINT memoPos = { 0,0 };
+float moveSpeed = 20.f;
+POINT pos = { WINSIZEX / 2,WINSIZEY - 30 };
+RECT rtBox;
+
+enum class MOVE_DIR
+{
+	MOVE_LEFT,
+	MOVE_RIGHT,
+	MOVE_UP,
+	MOVE_DOWN,
+};
+
+MOVE_DIR moveDir;
 
 // 전방 선언 : 함수가 있음을 알리기 위함
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -163,168 +182,22 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	//static wstring str;
-	static wchar_t str[120];
-	static int count = 0, yPos = 0, endlCnt = 0;
-	static RECT rt = { 0,0,1000,1000 };
-	static SIZE size;
 	static bool flag = false;
-
-	static int x, y;
-
-	static RECT rtView;
+	static int x = 0, y = 0;
+	int radius = 30;
 	HDC hdc;
 
 	switch (message)
 	{
-	case WM_COMMAND:
-	{
-		int wmId = LOWORD(wParam);
-		// 메뉴 선택을 구문 분석합니다:
-		switch (wmId)
-		{
-		case IDM_ABOUT:
-			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-			break;
-		case IDM_EXIT:
-			DestroyWindow(hWnd);
-			break;
-		default:
-			return DefWindowProc(hWnd, message, wParam, lParam);
-		}
-	}
-	break;
-
-	// 커널 오브젝트 (운영체제가 관리하는 객체, 제어 불가)
-	// -> 핸들을 가지고 아이디값을 가져와서 제어
-
-	// H가 붙은 건 모두 핸들
 	case WM_PAINT: // 무효화 영역 (Invalidate Rect)
 	{
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hWnd, &ps);
 
-		// 숙제
-		/*
-		wchar_t temp[MAX_LINE + 1];
-		int endlIndex = 0;
-
-		for (int i = 0; i < 110; i++)
+		for (int i = 0; i < vecBox.size(); i++)
 		{
-			if (str[i] == '\n')
-				endlIndex = i + 1;
+			RECT_DRAW(vecBox[i]);
 		}
-
-		for (int i = 0; i <= MAX_LINE; i++)
-		{
-			temp[i] = str[i + endlIndex];
-		}
-
-		DrawText(hdc, str, wcslen(str), &rt, DT_TOP | DT_LEFT);
-		GetTextExtentPoint(hdc, temp, wcslen(temp), &size);
-
-		if (temp[0] == NULL)
-			SetCaretPos(0, endlCnt * 16);
-		else
-			SetCaretPos(size.cx, endlCnt * size.cy);
-
-		Ellipse(hdc, x - 20, y - 20, x + 20, y + 20);
-		*/
-		/*
-
-		// DC 만들어서 그 ID를 반환
-
-		// 커널 오브젝트를 가져오기 위해서~ divice context
-		// ID 중복을 피하기 위해서 핸들이 많다
-
-		// 기본 펜은 검은색, 기본 브러쉬는 하얀색
-
-		// 펜 만들어서 DC에 지급
-
-		//
-		//HPEN pen = CreatePen(PS_SOLID, 5, RGB(255, 143, 160));
-		//HPEN oldPen = (HPEN)SelectObject(hdc, pen);
-
-		//HBRUSH brush = CreateSolidBrush(RGB(254, 255, 92));
-		//HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, brush);
-
-		//// 사각형 출력
-		//Rectangle(hdc, 10, 10, 110, 100); // 그리기
-
-		//// TextOut
-		//wstring wstr = L"안뇽";
-		//TextOut(hdc, 200, 200, wstr.c_str(), wstr.length());
-
-		//// DrawText
-		//RECT rect = { 300, 300, 400, 400 };
-
-		//DrawText(hdc, L"안녕, 세상아!", 9, &rect, DT_SINGLELINE | DT_RIGHT);
-
-		//// 선 그리기
-		//MoveToEx(hdc, 100, 500, nullptr);
-		//LineTo(hdc, 300, 0);
-
-		//Ellipse(hdc, 50, 50, 150, 150);
-
-		//// 클라이언트 영역 재조정
-		//rect = { winPosX, winPosY, winPosX + WINSIZEX, winPosY + WINSIZEY };
-		//AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, TRUE);
-		//MoveWindow(hWnd, winPosX, winPosY, rect.right - rect.left, rect.bottom - rect.top, TRUE);
-
-		//// 16 x 9 격자 그리기
-		//for (int x = 0; x <= WINSIZEX; x += WINSIZEX / 16)
-		//{
-		//	MoveToEx(hdc, x, WINSIZEY, nullptr);
-		//	LineTo(hdc, x, 0);
-		//}
-
-		//for (int y = 0; y <= WINSIZEY; y += WINSIZEY / 9)
-		//{
-		//	MoveToEx(hdc, WINSIZEX, y, nullptr);
-		//	LineTo(hdc, 0, y);
-		//}
-
-		//int left = 100;
-		//int top = 100;
-
-		//for (int i = 0; i < 25; i++)
-		//{
-		//	if (i % 5 == 0 && i != 0)
-		//	{
-		//		left = 100;
-		//		top += 70;
-		//	}
-
-		//	if ((i / 5) % 2 == 0)
-		//	{
-		//		Rectangle(hdc, left, top, left + 50, top + 50);
-		//	}
-		//	else
-		//	{
-		//		Ellipse(hdc, left, top, left + 50, top + 50);
-		//	}
-
-		//	left += 70;
-		//}
-
-		//DeleteObject(pen);
-		//DeleteObject(brush);
-		//SelectObject(hdc, oldPen);
-		//*/
-
-		HBRUSH hBlueBrush = CreateSolidBrush(RGB(0, 0, 255));
-
-		if (flag)
-		{
-			//SelectObject(hdc, hBlueBrush);
-			Rectangle(hdc, x - 20, y - 20, x + 20, y + 20);
-		}
-
-		Ellipse(hdc, x - 20, y - 20, x + 20, y + 20);
-
-		/*Rectangle(hdc,
-			g_ptObjPos.x - g_ptObjScale.x / 2, g_ptObjPos.y - g_ptObjScale.y / 2,
-			g_ptObjPos.x + g_ptObjScale.x / 2, g_ptObjPos.y + g_ptObjScale.y / 2);*/
 
 		EndPaint(hWnd, &ps);
 	}
@@ -337,89 +210,43 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		KillTimer(hWnd, 1);
 		break;
 
-	case WM_KEYDOWN:
-	{
-		SetTimer(hWnd, 1, 100, NULL);
-	}break;
-
 	case WM_TIMER:
-		x += 40;
-		if (x + 20 > rtView.right)
-		{
-			x -= 40;
-		}
-		InvalidateRect(hWnd, nullptr, true);
-		break;
-
-	case WM_LBUTTONDOWN:
 	{
-		int mx = LOWORD(lParam);
-		int my = HIWORD(lParam);
-
-		if (IsInCircle(mx, my, x, y, 40))
-			flag = true;
-		else
-			flag = false;
-
 		InvalidateRect(hWnd, nullptr, true);
+
+		rtBox = RECT_MAKE(pos.x, pos.y, 50);
+		RECT rt;
+		rt.left = rand() % WINSIZEX - 30;
+		rt.right = rt.left += 30;
+
+		rt.top = -30;
+		rt.bottom = 0;
+
+		vecBox.push_back(rt);
+
+		for (int i = 0; i < vecBox.size(); i++)
+		{
+			vecBox[i].top += 10;
+			vecBox[i].bottom += 10;
+		}
 	}break;
 
-	case WM_KEYUP:
-		flag = false;
-		InvalidateRect(hWnd, nullptr, true);
-		break;
-
-		// 문자 입력시
-	case WM_CHAR:
+	case WM_MOUSEMOVE:
 	{
-		hdc = GetDC(hWnd);
-
-		/*
-		if (wParam == VK_BACK && count > 0)
+		if (flag)
 		{
-			str[count--] = NULL;
-
-			if (str[count] == '\n')
-			{
-				endlCnt--;
-			}
+			x = LOWORD(lParam);
+			y = HIWORD(lParam);
+			InvalidateRect(hWnd, nullptr, true);
 		}
-		else
-		{
-			if (((count - endlCnt) >= MAX_LINE && (count - endlCnt) % MAX_LINE == 0) || wParam == VK_RETURN)
-			{
-				if (endlCnt >= MAX_LINE - 1)
-					break;
-
-				if (wParam != VK_RETURN)
-				{
-					str[count++] = '\n';
-				}
-
-				endlCnt++;
-			}
-
-			if (wParam != VK_RETURN)
-				str[count++] = wParam;
-			else
-				str[count++] = '\n';
-		}
-
-		str[count] = NULL;
-		*/
-		InvalidateRect(hWnd, nullptr, true);
-		ReleaseDC(hWnd, hdc);
-	}break;
+	}
 
 	case WM_CREATE:
-		count = yPos = 0;
-		x = y = 20;
 		CreateCaret(hWnd, NULL, 2, 15);
 		ShowCaret(hWnd);
-
-		GetClientRect(hWnd, &rtView);
+		srand((unsigned int)time(nullptr));
+		SetTimer(hWnd, 1, 50, nullptr);
 		break;
-
 
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);

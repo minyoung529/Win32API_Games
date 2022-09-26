@@ -17,12 +17,25 @@ void Engine::Init(const WindowInfo& window)
 	swapChain = make_shared<SwapChain>();
 	rootSignature = make_shared<RootSignature>();
 	constantBuffer = make_shared<ConstantBuffer>();
+	input = make_shared<Input>();
+	timer = make_shared<Timer>();
 
 	device->Init();
 	commandQueue->Init(device->GetDevice(), swapChain);
 	swapChain->Init(window, device->GetDevice(), device->GetDXGI(), commandQueue->GetCmdQueue());
+	
 	rootSignature->Init(device->GetDevice());
 	constantBuffer->Init(sizeof(Transform), 256);
+
+	input->Init(window.hWnd);
+	timer->Init();
+}
+
+void Engine::Update()
+{
+	input->Update();
+	timer->Update();
+	ShowFps();
 }
 
 void Engine::Render()
@@ -51,6 +64,15 @@ void Engine::ResizeWindow(int32 width, int32 height)
 
 	RECT rect = { 0, 0, width, height };
 	::AdjustWindowRect(&rect, WS_EX_OVERLAPPEDWINDOW, false);
-	::SetWindowPos(m_window.hwnd, 0, 100, 100, width, height, 0);
+	::SetWindowPos(m_window.hWnd, 0, 100, 100, width, height, 0);
+}
 
+void Engine::ShowFps()
+{
+	uint32 fps = timer->GetFps();
+
+	WCHAR text[100] = TEXT("");
+	wsprintf(text, TEXT("FPS: %d"), fps);
+
+	SetWindowText(m_window.hWnd, text);
 }

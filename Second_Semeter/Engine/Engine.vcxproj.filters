@@ -15,11 +15,11 @@
     <Filter Include="소스 파일\Resource">
       <UniqueIdentifier>{23f5f1a7-4da1-4818-a8f9-8af053723612}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Utils">
-      <UniqueIdentifier>{1bbfabe6-4274-463b-965f-0924ec8d7150}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Shader">
       <UniqueIdentifier>{5485133a-952f-4c80-a5a4-bc783599ad58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Utils">
+      <UniqueIdentifier>{1bbfabe6-4274-463b-965f-0924ec8d7150}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +56,12 @@
     <ClInclude Include="Mesh.h">
       <Filter>소스 파일\Resource</Filter>
     </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>소스 파일\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>소스 파일\Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -87,6 +93,12 @@
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
       <Filter>소스 파일\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>소스 파일\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>소스 파일\Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
