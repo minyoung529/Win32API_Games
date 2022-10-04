@@ -9,7 +9,7 @@ public:
 	void Init(uint32 size, uint32 count);
 
 	void Clear();
-	void PushData(int32 rootParamIndex, void* buffer, uint32 size);
+	D3D12_CPU_DESCRIPTOR_HANDLE PushData(int32 rootParamIndex, void* buffer, uint32 size);
 
 	D3D12_GPU_VIRTUAL_ADDRESS GetGpuVirtualAddress(uint32 index);
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCpuHandle(uint32 index);

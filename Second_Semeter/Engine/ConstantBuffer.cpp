@@ -30,16 +30,20 @@ void ConstantBuffer::Clear()
 	m_currentIndex = 0;
 }
 
-void ConstantBuffer::PushData(int32 rootParamIndex, void* buffer, uint32 size)
+D3D12_CPU_DESCRIPTOR_HANDLE ConstantBuffer::PushData(int32 rootParamIndex, void* buffer, uint32 size)
 {
 	assert(m_currentIndex < m_elementCount);
 
 	::memcpy(&m_mapedBuffer[m_currentIndex * m_elementSize], buffer, size);
 
-	D3D12_GPU_VIRTUAL_ADDRESS address = GetGpuVirtualAddress(m_currentIndex);
-	CMD_LIST->SetGraphicsRootConstantBufferView(rootParamIndex, address);
+	// renderbegin에 있어서 필요 Xxx
+	//D3D12_GPU_VIRTUAL_ADDRESS address = GetGpuVirtualAddress(m_currentIndex);
+	//CMD_LIST->SetGraphicsRootConstantBufferView(rootParamIndex, address);
 
+	D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = GetCpuHandle(m_currentIndex);
 	m_currentIndex++;
+
+	return cpuHandle;
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS ConstantBuffer::GetGpuVirtualAddress(uint32 index)

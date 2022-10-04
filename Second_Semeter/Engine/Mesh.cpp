@@ -35,8 +35,13 @@ void Mesh::Render()
 	CMD_LIST->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	CMD_LIST->IASetVertexBuffers(0, 1, &m_vertexBufferView);
 
-	g_Engine->GetConstantBuf()->PushData(0, &m_transform, sizeof(m_transform));
-	g_Engine->GetConstantBuf()->PushData(1, &m_color, sizeof(m_color));
+	D3D12_CPU_DESCRIPTOR_HANDLE handle = g_Engine->GetConstantBuf()->PushData(0, &m_transform, sizeof(m_transform));
+	g_Engine->GetTableDescHeap()->SetCBV(handle, CBV_REGISTER::b0);
+
+	handle = g_Engine->GetConstantBuf()->PushData(1, &m_color, sizeof(m_color));
+	g_Engine->GetTableDescHeap()->SetCBV(handle, CBV_REGISTER::b1);
+
+	g_Engine->GetTableDescHeap()->CommitTable();
 
 	CMD_LIST->DrawInstanced(m_vertexCount, 1, 0, 0);
 }

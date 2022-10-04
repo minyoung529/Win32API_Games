@@ -56,6 +56,12 @@ void CommandQueue::RenderBegin(const D3D12_VIEWPORT* vp, const D3D12_RECT* rect)
 
 	m_cmdList->SetGraphicsRootSignature(ROOT_SIGNATURE.Get());
 	g_Engine->GetConstantBuf()->Clear();
+	g_Engine->GetTableDescHeap()->Clear();
+
+	// 중요!
+	// 모든 업데이트에 한 번만
+	ID3D12DescriptorHeap* descHeap = g_Engine->GetTableDescHeap()->GetDescriptorHeap().Get();
+	m_cmdList->SetDescriptorHeaps(1, &descHeap);
 
 	m_cmdList->ResourceBarrier(1, &barrier);
 	// Set the viewport and scissor rect. This needs to be reset whenever the command list is reset.

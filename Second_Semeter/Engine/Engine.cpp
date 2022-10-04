@@ -16,6 +16,7 @@ void Engine::Init(const WindowInfo& window)
 	m_swapChain = make_shared<SwapChain>();
 	m_rootSignature = make_shared<RootSignature>();
 	m_constantBuf = make_shared<ConstantBuffer>();
+	m_tableDescHeap = make_shared<TableDescriptorHeap>();
 
 	m_input = make_shared<Input>();
 	m_timer = make_shared<Timer>();
@@ -25,6 +26,7 @@ void Engine::Init(const WindowInfo& window)
 	m_swapChain->Init(window, m_device->GetDevice(), m_device->GetDXGI(), m_cmdQueue->GetCmdQueue());
 	m_rootSignature->Init(m_device->GetDevice());
 	m_constantBuf->Init(sizeof(Transform), 256);
+	m_tableDescHeap->Init(256);
 
 	m_input->Init(window.hwnd);
 	m_timer->Init();
