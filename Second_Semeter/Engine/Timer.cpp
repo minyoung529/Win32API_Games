@@ -3,26 +3,25 @@
 
 void Timer::Init()
 {
-	QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&frequency));
-	QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&prevCount));
+	::QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&m_frequency));
+	::QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&m_prevCount));
 }
 
 void Timer::Update()
 {
 	uint64 currentCount;
-	QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&currentCount));
+	::QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&currentCount));
 
-	deltaTime = (currentCount - prevCount) / static_cast<float>(frequency);
-	prevCount = currentCount;
+	m_deltaTime = (currentCount - m_prevCount) / static_cast<float>(m_frequency);
+	m_prevCount = currentCount;
 
-	frameCount++;
-	frameTime += deltaTime;
+	m_frameCount++;
+	m_frameTime += m_deltaTime;
 
-	if (frameTime >= 1.f)
+	if (m_frameTime > 1.0f)
 	{
-		fps = static_cast<uint32>(frameCount);
-
-		frameCount = 0;
-		frameTime = 0.f;
+		m_fps = static_cast<uint32>(m_frameCount / m_frameTime);
+		m_frameCount = 0;
+		m_frameTime = 0.0f;
 	}
 }

@@ -15,13 +15,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MathLibrary.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
+    <ClInclude Include="pch.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="MathLibrary2.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MathLibrary.h">
+    <ClCompile Include="pch.cpp">
       <Filter>소스 파일</Filter>
-    </ClInclude>
+    </ClCompile>
+    <ClCompile Include="MathLibrary2.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

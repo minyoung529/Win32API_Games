@@ -1,59 +1,47 @@
 #include "pch.h"
 #include "Input.h"
 
-void Input::Init(HWND hWnd)
+void Input::Init(HWND hwnd)
 {
-	this->hWnd = hWnd;
-	states.resize(KEY_TYPE_COUNT, KEY_STATE::NONE);
+	m_hwnd = hwnd;
+	m_states.resize(KEY_TYPE_COUNT, KEY_STATE::NONE);
 }
 
 void Input::Update()
 {
-	HWND hWnd = ::GetActiveWindow();
-
-	if (this->hWnd != hWnd)
+	HWND hwnd = ::GetActiveWindow();
+	if (m_hwnd != hwnd)
 	{
-		for (uint32 key = 0; key < KEY_TYPE_COUNT; key++)
-		{
-			states[key] = KEY_STATE::NONE;
-		}
-
+		for (uint32 key = 0; key < KEY_TYPE_COUNT; ++key)
+			m_states[key] = KEY_STATE::NONE;
 		return;
 	}
 
-	for (uint32 key = 0; key < KEY_TYPE_COUNT; key++)
+	for (uint32 key = 0; key < KEY_TYPE_COUNT; ++key)
 	{
-		// 키가 눌려있으면 true
-
-		if (GetAsyncKeyState(key) & 0x8000)
+		// 키가 눌려 있으면 true
+		if (::GetAsyncKeyState(key) & 0x8000)
 		{
-			KEY_STATE& state = states[key];
+			KEY_STATE& state = m_states[key];
 
-			// 이전이 누른 적이 있으면
+			// 이전 프레임에 키를 누른 상태인지 체크
 			if (state == KEY_STATE::PRESS || state == KEY_STATE::DOWN)
-			{
 				state = KEY_STATE::PRESS;
-			}
 			else
-			{
 				state = KEY_STATE::DOWN;
-			}
 		}
 		else
 		{
-			KEY_STATE& state = states[key];
+			KEY_STATE& state = m_states[key];
 
+			// 이전 프레임에 키를 누른 상태인지 체크
 			if (state == KEY_STATE::PRESS || state == KEY_STATE::DOWN)
-			{
 				state = KEY_STATE::UP;
-			}
 			else
-			{
 				state = KEY_STATE::NONE;
-			}
 		}
 	}
 
-	GetCursorPos(&mousePos);
-	ScreenToClient(hWnd, &mousePos);
+	::GetCursorPos(&m_mousePos);
+	::ScreenToClient(m_hwnd, &m_mousePos);
 }

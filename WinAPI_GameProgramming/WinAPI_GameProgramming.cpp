@@ -1,90 +1,76 @@
-﻿// 게임 프로그래밍 교과 과목으로 들은 Win32API 프로젝트
+﻿// 21Winapi.cpp : 애플리케이션에 대한 진입점을 정의합니다.
 //
 
 #include "framework.h"
 #include "WinAPI_GameProgramming.h"
+#include <math.h>
 #include <vector>
 #include <time.h>
-
 #define MAX_LOADSTRING 100
 
-#define RECT_MAKE(x, y, s) {x-s/2, y-s/2, x+s/2, y+s/2}
-#define RECT_DRAW(rt) Rectangle(hdc, rt.left, rt.top, rt.right, rt.bottom)
-
-// 전역 변수: 힙, 정적 변수와 같음, 데이터 영역
+// 전역 변수:
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
+#define RECT_MAKE(x,y,s) { x-s/2, y-s/2, x+s/2, y+s/2}
+#define RECT_DRAW(rt) Rectangle(hdc, rt.left, rt.top, rt.right, rt.bottom)
 
+int delay = 50;
+
+int score = 0;
+
+// 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
+POINT g_ptPos1 = { WINSIZEX / 2 , WINSIZEY - 85 };
+RECT g_rtBox1;
 vector<RECT> vecBox;
-
-POINT g_ptObjPos = { 500, 300 };
-POINT g_ptObjScale = { 100,100 };
-
-float moveSpeed = 20.f;
-POINT pos = { WINSIZEX / 2,WINSIZEY - 30 };
-RECT rtBox;
 
 enum class MOVE_DIR
 {
-	MOVE_LEFT,
-	MOVE_RIGHT,
-	MOVE_UP,
-	MOVE_DOWN,
+	MOVE_LEFT, MOVE_RIGHT, MOVE_UP, MOVE_DONW
 };
+MOVE_DIR eMoveDir;
+float fMoveSpeed = 20;
 
-MOVE_DIR moveDir;
-
-// 전방 선언 : 함수가 있음을 알리기 위함
+// 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
-bool				IsInCircle(LONG x, LONG y, LONG circleX, LONG circleY, int radius);
 
-// 물리메모리 주소는 다르지만, 가상메모리 주소는 같아서 instance 값이 같음
-// 따라서 PrevInstnace가 필요 없어짐!
-
-// 윈도우 만들고, 메세지를 전송함
-int APIENTRY wWinMain(/*이거 입력되는 인자임 >*/ _In_ HINSTANCE hInstance,
-	/*이거 필요 없음 >*/       _In_opt_ HINSTANCE hPrevInstance,
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
+	_In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPWSTR    lpCmdLine,
-	/*윈도우가 보일지 안 보일지*/_In_ int       nCmdShow)
+	_In_ int       nCmdShow)
 {
-	// 이거 필요 없음
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
+
+
+	// TODO: 여기에 코드를 입력합니다.
 
 	// 전역 문자열을 초기화합니다.
 	LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
 	LoadStringW(hInstance, IDC_WINAPIGAMEPROGRAMMING, szWindowClass, MAX_LOADSTRING);
-
-	// 창 등록
 	MyRegisterClass(hInstance);
-
-	// 창 만들고 보여주고 업데이트!
+	srand((unsigned int)time(NULL));
 	// 애플리케이션 초기화를 수행합니다:
 	if (!InitInstance(hInstance, nCmdShow))
 	{
 		return FALSE;
 	}
 
-	// 메뉴 단축키화
 	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_WINAPIGAMEPROGRAMMING));
 
 	MSG msg;
-	//msg.message == WM_QUIT인 경우 프로그램 종료!
 
-	// ** 기본 메시지 루프! **
+	// 기본 메시지 루프입니다:
 	while (GetMessage(&msg, nullptr, 0, 0))
 	{
-		// 단축키 안 쓸 거면 조건문 없애도 된다
+		// msg.message == WM_QUIT 인 경우 프로그램 종료!
 		if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
 		{
-			TranslateMessage(&msg);
-
-			// WndProc로 메세지 전달함
-			DispatchMessage(&msg);
+			TranslateMessage(&msg); // 입력에 대한 메시지 함수
+			DispatchMessage(&msg);  // 메시지 전달
 		}
 	}
 
@@ -100,27 +86,24 @@ int APIENTRY wWinMain(/*이거 입력되는 인자임 >*/ _In_ HINSTANCE hInstan
 //
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
-	// 윈도우 구조체
 	WNDCLASSEXW wcex;
 
 	wcex.cbSize = sizeof(WNDCLASSEX);
 
-	wcex.style = CS_HREDRAW | CS_VREDRAW;                                          // 가로 세로 달라지면 다시 그리겠다는 뜻
-
-	wcex.lpfnWndProc = WndProc;                                                          // 콜백 함수, 운영체제가 호출함
+	wcex.style = CS_HREDRAW | CS_VREDRAW;
+	wcex.lpfnWndProc = WndProc;
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = 0;
-	wcex.hInstance = hInstance;                                                        // 프로그램의 주소
-	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_WINAPIGAMEPROGRAMMING));
-	wcex.hCursor = LoadCursor(nullptr, IDC_CROSS);                                   // 커서 아이콘
-	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);/*GetStockObject(BLACK_BRUSH);*/        // 배경 색
-	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_WINAPIGAMEPROGRAMMING);                      // 위에 메뉴 (파일, 도움말) nullptr로 바꾸면 없어짐!
-	wcex.lpszClassName = szWindowClass;                                                    // 클래스 이름 (윈도우창의 이름?)
-	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));             // 작은 아이콘
+	wcex.hInstance = hInstance;
+	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDC_WINAPIGAMEPROGRAMMING));
+	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	wcex.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
+	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_WINAPIGAMEPROGRAMMING);
+	wcex.lpszClassName = szWindowClass;
+	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
 	return RegisterClassExW(&wcex);
 }
-
 //
 //   함수: InitInstance(HINSTANCE, int)
 //
@@ -131,32 +114,27 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //        이 함수를 통해 인스턴스 핸들을 전역 변수에 저장하고
 //        주 프로그램 창을 만든 다음 표시합니다.
 //
+int Resolutionx = GetSystemMetrics(SM_CXSCREEN);
+int Resolutiony = GetSystemMetrics(SM_CYSCREEN);
 
-int resolutionX = GetSystemMetrics(SM_CXSCREEN);
-int resolutionY = GetSystemMetrics(SM_CYSCREEN);
-
-int winPosX = (resolutionX - WINSIZEX) / 2;
-int winPosY = (resolutionY - WINSIZEY) / 2;
-
+int Winposx = Resolutionx / 2 - WINSIZEX / 2;
+int Winposy = Resolutiony / 2 - WINSIZEY / 2;
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 	hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
-	// 윈도우 창 만들어짐
-	HWND hWnd = CreateWindowW
-	(
-		szWindowClass,           // 키 값
-		szTitle,
-		WS_OVERLAPPEDWINDOW,     // 윈도우 스타일
-		winPosX,                 // 중요! 윈도우 화면 좌측 상단 좌표 X
-		winPosY,                 // 윈도우 화면 좌측 상단 좌표 y
-		WINSIZEX,                // 윈도우 가로 사이즈
-		WINSIZEY,                // 세로 사이즈
-		nullptr,
-		nullptr,
-		hInstance,
-		nullptr
-	);
+	HWND hWnd = CreateWindowW(
+		szWindowClass
+		, szTitle
+		, WS_OVERLAPPEDWINDOW
+		, Winposx       // 윈도우 화면 좌측 상단 좌표 x
+		, Winposy                   // 윈도우 화면 좌측 상단 좌표 y
+		, WINSIZEX            // 윈도우 가로 사이즈
+		, WINSIZEY                   // 윈도우 세로 사이즈
+		, nullptr
+		, nullptr
+		, hInstance
+		, nullptr);
 
 	if (!hWnd)
 	{
@@ -182,72 +160,113 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	static bool flag = false;
-	static int x = 0, y = 0;
-	int radius = 30;
 	HDC hdc;
-
+	PAINTSTRUCT ps;
 	switch (message)
 	{
-	case WM_PAINT: // 무효화 영역 (Invalidate Rect)
+	case WM_CREATE:
+		SetTimer(hWnd, 1, 10, NULL);
+		srand((unsigned int)time(nullptr));
+		break;
+	case WM_TIMER:
 	{
-		PAINTSTRUCT ps;
-		HDC hdc = BeginPaint(hWnd, &ps);
+		InvalidateRect(hWnd, nullptr, true);
+		g_rtBox1 = RECT_MAKE(g_ptPos1.x, g_ptPos1.y, 50);
+
+		if (delay == 50)
+		{
+			RECT rt;
+			rt.left = rand() % (WINSIZEX - 30);
+			rt.right = rt.left + 30;
+			rt.top = -30;
+			rt.bottom = 0;
+			vecBox.push_back(rt); // 비가 내리듯이 내릴거야.
+			delay = rand() % 50;
+		}
+		else
+			delay++;
+
+		vector<RECT>::iterator iter;
+
+		for (iter = vecBox.begin(); iter != vecBox.end(); iter++)
+		{
+			RECT rt;
+			iter->top += 10;
+			iter->bottom += 10;
+
+			if (iter->top > WINSIZEY)
+			{
+				vecBox.erase(iter);
+				score += 50;
+				break;
+			}
+
+			if (IntersectRect(&rt, &g_rtBox1, &(*iter)))
+			{
+				score -= 100;
+				vecBox.erase(iter);
+				break;
+			}
+		}
+	}
+	break;
+	case WM_PAINT:
+	{
+		hdc = BeginPaint(hWnd, &ps);
+
+		RECT_DRAW(g_rtBox1);
 
 		for (int i = 0; i < vecBox.size(); i++)
 		{
 			RECT_DRAW(vecBox[i]);
 		}
 
+		/*
+		char scoreBuffer[32];
+		_itoa_s(score, scoreBuffer, 10);
+		string str = string(scoreBuffer);
+		TextOutA(hdc, 10, 10, str.c_str(), str.length());
+		*/
+
 		EndPaint(hWnd, &ps);
 	}
 	break;
 
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		HideCaret(hWnd);
-		DestroyCaret();
-		KillTimer(hWnd, 1);
+	case WM_KEYDOWN:
+		switch (wParam)
+		{
+		case VK_LEFT:
+			g_ptPos1.x -= (g_rtBox1.left > 0) ? fMoveSpeed : 0;
+			break;
+
+		case VK_RIGHT:
+			g_ptPos1.x += (g_rtBox1.right <= WINSIZEX - fMoveSpeed) ? fMoveSpeed : 0;
+			break;
+		}
+
+		InvalidateRect(hWnd, nullptr, true);
 		break;
 
-	case WM_TIMER:
+	case WM_COMMAND:
 	{
-		InvalidateRect(hWnd, nullptr, true);
-
-		rtBox = RECT_MAKE(pos.x, pos.y, 50);
-		RECT rt;
-		rt.left = rand() % WINSIZEX - 30;
-		rt.right = rt.left += 30;
-
-		rt.top = -30;
-		rt.bottom = 0;
-
-		vecBox.push_back(rt);
-
-		for (int i = 0; i < vecBox.size(); i++)
+		int wmId = LOWORD(wParam);
+		// 메뉴 선택을 구문 분석합니다:
+		switch (wmId)
 		{
-			vecBox[i].top += 10;
-			vecBox[i].bottom += 10;
-		}
-	}break;
-
-	case WM_MOUSEMOVE:
-	{
-		if (flag)
-		{
-			x = LOWORD(lParam);
-			y = HIWORD(lParam);
-			InvalidateRect(hWnd, nullptr, true);
+		case IDM_ABOUT:
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+			break;
+		case IDM_EXIT:
+			DestroyWindow(hWnd);
+			break;
+		default:
+			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
 	}
-
-	case WM_CREATE:
-		CreateCaret(hWnd, NULL, 2, 15);
-		ShowCaret(hWnd);
-		srand((unsigned int)time(nullptr));
-		SetTimer(hWnd, 1, 50, nullptr);
+	break;
+	case WM_DESTROY:
+		PostQuitMessage(0);
 		break;
-
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
@@ -272,12 +291,4 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	return (INT_PTR)FALSE;
-}
-
-bool IsInCircle(LONG x, LONG y, LONG circleX, LONG circleY, int radius)
-{
-	//float dist = sqrt(pow(x, 2) - pow(circleX, 2) + pow(y, 2) - pow(circleY, 2));
-	float dist = sqrt(pow(y - circleY, 2) + pow(x - circleX, 2));
-
-	return (dist <= radius);
 }

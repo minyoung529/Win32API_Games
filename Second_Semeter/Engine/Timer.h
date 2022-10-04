@@ -1,4 +1,5 @@
 #pragma once
+
 class Timer
 {
 public:
@@ -6,17 +7,17 @@ public:
 	void Update();
 
 public:
-	uint32 GetFps() { return fps; }
-	float GetDeltaTime() { return deltaTime; }
+	uint32 GetFps() { return m_fps; }
+	float GetDeltaTime() { return m_deltaTime; }
 
 private:
-	uint64	frequency = 0;
-	uint64	prevCount = 0;
-	float	deltaTime = 0.f;
+	uint64	m_frequency = 0;
+	uint64	m_prevCount = 0;
+	float	m_deltaTime = 0.0f;
 
 private:
-	uint32	frameCount = 0;
-	float	frameTime = 0.f;
-	uint32	fps = 0;
-
+	uint32	m_frameCount = 0;
+	float	m_frameTime = 0.0f;
+	uint32	m_fps = 0;
 };
+

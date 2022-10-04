@@ -13,7 +13,7 @@ enum class KEY_TYPE
 	D = 'D',
 
 	LBUTTON = VK_LBUTTON,
-	RBUTTON = VK_RBUTTON
+	RBUTTON = VK_RBUTTON,
 };
 
 enum class KEY_STATE
@@ -34,22 +34,22 @@ enum
 class Input
 {
 public:
-	void Init(HWND hWnd);
+	void Init(HWND hwnd);
 	void Update();
 
 public:
-	bool GetButton(KEY_TYPE key) { return (GetState(key) == KEY_STATE::PRESS); }
-	bool GetButtonDown(KEY_TYPE key) { return (GetState(key) == KEY_STATE::DOWN); }
-	bool GetButtonUp(KEY_TYPE key) { return (GetState(key) == KEY_STATE::UP); }
+	bool GetButton(KEY_TYPE key) { return GetState(key) == KEY_STATE::PRESS; }
+	bool GetButtonDown(KEY_TYPE key) { return GetState(key) == KEY_STATE::DOWN; }
+	bool GetButtonUp(KEY_TYPE key) { return GetState(key) == KEY_STATE::UP; }
 
-	const POINT& GetMousePos() { return mousePos; }
-
-private:
-	inline KEY_STATE GetState(KEY_TYPE key) { return states[static_cast<uint8>(key)]; }
+	const POINT& GetMousePos() { return m_mousePos;  }
 
 private:
-	HWND hWnd;
-	vector<KEY_STATE> states;
-	POINT mousePos = {};
+	inline KEY_STATE GetState(KEY_TYPE key) { return m_states[static_cast<uint8>(key)]; }
+
+private:
+	HWND m_hwnd;
+	vector<KEY_STATE> m_states;
+	POINT m_mousePos = {};
 };
 

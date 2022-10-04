@@ -1,32 +1,27 @@
 #include "pch.h"
 #include "RootSignature.h"
 
-// 루트시그니처
-// 상수 버퍼
-// 커맨드 큐
-
 void RootSignature::Init(ComPtr<ID3D12Device> device)
 {
-	// 셰이더에게 상수 버퍼를 알리기 위한 코드
-	// 상수 버퍼 하나 만들 것!
-	CD3DX12_ROOT_PARAMETER param[2];
+	CD3DX12_DESCRIPTOR_RANGE ranges[] =
+	{
+		// 상수 버퍼를 가리키는 
+		CD3DX12_DESCRIPTOR_RANGE(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, CBV_REGISTER_COUNT, 0), // b0~b4
+	};
 
-	// 0번 -> b0에 바인딩 -> cbv(상수 버퍼 뷰가 됨)
-	param[0].InitAsConstantBufferView(0);
-	param[1].InitAsConstantBufferView(1);
+	CD3DX12_ROOT_PARAMETER param[1];
 
-	// param의 길이, param을 넘겨줌
+	// 테이블 만들기
+	param[0].InitAsDescriptorTable(_countof(ranges), ranges);
+
 	D3D12_ROOT_SIGNATURE_DESC sigDesc = CD3DX12_ROOT_SIGNATURE_DESC(_countof(param), param);
-
-	// 정점에 정보만 주겠다
 	sigDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
 	ComPtr<ID3DBlob> blobSignature;
 	ComPtr<ID3DBlob> blobError;
 
-	// 루트 시그니쳐 초기화
 	::D3D12SerializeRootSignature(&sigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &blobSignature, &blobError);
 
-	// 생성
-	device->CreateRootSignature(0, blobSignature->GetBufferPointer(), blobSignature->GetBufferSize(), IID_PPV_ARGS(&signature));
+	device->CreateRootSignature(0, blobSignature->GetBufferPointer(), blobSignature->GetBufferSize(), IID_PPV_ARGS(&m_signature));
+
 }

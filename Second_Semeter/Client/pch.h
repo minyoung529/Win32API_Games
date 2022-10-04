@@ -2,10 +2,8 @@
 #define PCH_H
 
 #pragma comment(lib, "Engine.lib")
-#pragma comment(lib, "MathLibrary.lib")
+#pragma comment(lib, "MathLibrary2.lib")
 
 #include "EnginePch.h"
-#include "MathLibrary.h"
-using namespace MathLibrary;
 
 #endif // PCH_H

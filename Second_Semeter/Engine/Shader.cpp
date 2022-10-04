@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Shader.h"
-#include "engine.h"
+#include "Engine.h"
 
 void Shader::Init(const wstring& path)
 {
@@ -9,48 +9,38 @@ void Shader::Init(const wstring& path)
 
 	D3D12_INPUT_ELEMENT_DESC desc[] =
 	{
-		// float3
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
-		
-		// 12인 이유 => vertex => float3(4byte) * 3
-		// 셰이더는 나눠서 씀
-		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,12 , D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0}
+		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
 	};
 
-	pipelineDesc.InputLayout = { desc, _countof(desc) };
-	pipelineDesc.pRootSignature = ROOT_SIGNATURE.Get();
+	m_pipelineDesc.InputLayout = { desc , _countof(desc) };
+	m_pipelineDesc.pRootSignature = ROOT_SIGNATURE.Get();
 
-	// 거의 기본값
-	// 경계를 흐릿하게 해줌
-	pipelineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	pipelineDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-	pipelineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-	pipelineDesc.SampleMask = UINT_MAX;
-	pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	pipelineDesc.NumRenderTargets = 1;
-	pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-	pipelineDesc.SampleDesc.Count = 1;
+	m_pipelineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	m_pipelineDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+	m_pipelineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+	m_pipelineDesc.SampleMask = UINT_MAX;
+	m_pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	m_pipelineDesc.NumRenderTargets = 1;
+	m_pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+	m_pipelineDesc.SampleDesc.Count = 1;
 
-	// 파이프라인 세팅
-	DEVICE->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
+	DEVICE->CreateGraphicsPipelineState(&m_pipelineDesc, IID_PPV_ARGS(&m_pipelineState));
 }
 
 void Shader::Render()
 {
-	// 파이프라인 설정해줌
-	CMD_LIST->SetPipelineState(pipelineState.Get());
+	CMD_LIST->SetPipelineState(m_pipelineState.Get());
 }
 
 void Shader::CreateShader(const wstring& path, const string& name, const string& version, ComPtr<ID3DBlob>& blob, D3D12_SHADER_BYTECODE& shaderByteCode)
 {
 	uint32 compileFlag = 0;
-
 #ifdef _DEBUG
 	compileFlag = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
-
-	if (FAILED(::D3DCompileFromFile(path.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
-		name.c_str(), version.c_str(), compileFlag, 0, &blob, &errBlob)))
+	if (FAILED(::D3DCompileFromFile(path.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE
+		, name.c_str(), version.c_str(), compileFlag, 0, &blob, &m_errBlob)))
 	{
 		::MessageBoxA(nullptr, "Shader Create Failed !", nullptr, MB_OK);
 	}
@@ -59,10 +49,10 @@ void Shader::CreateShader(const wstring& path, const string& name, const string&
 
 void Shader::CreateVertexShader(const wstring& path, const string& name, const string& version)
 {
-	CreateShader(path, name, version, vsBlob, pipelineDesc.VS);
+	CreateShader(path, name, version, m_vsBlob, m_pipelineDesc.VS);
 }
 
 void Shader::CreatePixelShader(const wstring& path, const string& name, const string& version)
 {
-	CreateShader(path, name, version, psBlob, pipelineDesc.PS);
+	CreateShader(path, name, version, m_psBlob, m_pipelineDesc.PS);
 }

@@ -8,7 +8,7 @@
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
-WindowInfo windowInfo;                         // 윈도우 정보
+WindowInfo gWindowInfo;                         // 윈도우 정보
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
@@ -43,12 +43,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
 
     MSG msg;
-    windowInfo.width = 800;
-    windowInfo.height = 600;
-    windowInfo.windowed = true;
+    gWindowInfo.width = 800;
+    gWindowInfo.height = 600;
+    gWindowInfo.windowed = true;
 
     unique_ptr<Game> game = make_unique<Game>();
-    game->Init(windowInfo);
+    game->Init(gWindowInfo);
 
     // 기본 메시지 루프입니다:
     while (true)
@@ -129,7 +129,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
 
-   windowInfo.hWnd = hWnd;
+   gWindowInfo.hwnd = hWnd;
 
    return TRUE;
 }

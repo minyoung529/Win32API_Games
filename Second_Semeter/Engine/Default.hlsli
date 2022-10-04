@@ -1,6 +1,3 @@
-// GPU의 레지스터를 쓰겠다
-// b0 => 상수 버퍼의 인덱스 세팅
-// 루트 시그니처
 cbuffer TEST_B0 : register(b0)
 {
     float3 offset0;
@@ -8,7 +5,7 @@ cbuffer TEST_B0 : register(b0)
 
 cbuffer TEST_B1 : register(b1)
 {
-    float4 color1;
+    float4 offset1;
 };
 
 struct VS_IN
@@ -27,11 +24,9 @@ VS_OUT VS_Main(VS_IN input)
 {
     VS_OUT output = (VS_OUT)0;
 
-    // GPU가 연산을 해서 빠르다
     input.pos += offset0;
     output.pos = float4(input.pos, 1.f);
-
-    input.color += color1;
+    input.color += offset1;
     output.color = input.color;
 
     return output;

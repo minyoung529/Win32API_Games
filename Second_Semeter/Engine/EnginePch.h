@@ -47,15 +47,27 @@ using Matrix = XMMATRIX;
 // 각종 struct
 struct WindowInfo
 {
-	HWND	hWnd;		// 출력 윈도우
+	HWND	hwnd;		// 출력 윈도우
 	int32	width;		// 너비
 	int32	height;		// 높이
 	bool	windowed;	// 창모드 or 전체화면
 };
 
+enum class CBV_REGISTER
+{
+	b0,
+	b1,
+	b2,
+	b3,
+	b4,
+
+	END
+};
+
 enum
 {
-	SWAP_CHAIN_BUFFER_COUNT = 2
+	SWAP_CHAIN_BUFFER_COUNT = 2,
+	CBV_REGISTER_COUNT = CBV_REGISTER::END
 };
 
 struct Vertex
@@ -71,13 +83,14 @@ struct Transform
 
 struct Color
 {
-	Vec4 color;
+	Vec4 offset;
 };
 
-#define DEVICE			engine->GetDevice()->GetDevice()
-#define CMD_LIST		engine->GetCmdQueue()->GetCmdList()
-#define ROOT_SIGNATURE	engine->GetRootSignature()->GetSignature()
-#define INPUT			engine->GetInput()
-#define DELTATIME		engine->GetTimer()->GetDeltaTime();
+#define DEVICE			g_Engine->GetDevice()->GetDevice()
+#define CMD_LIST		g_Engine->GetCmdQueue()->GetCmdList()
+#define ROOT_SIGNATURE	g_Engine->GetRootSignature()->GetSignature()
 
-extern unique_ptr<class Engine> engine;
+#define INPUT			g_Engine->GetInput()
+#define DELTA_TIME		g_Engine->GetTimer()->GetDeltaTime()
+
+extern unique_ptr<class Engine> g_Engine;

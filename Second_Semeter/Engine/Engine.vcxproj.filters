@@ -15,11 +15,11 @@
     <Filter Include="소스 파일\Resource">
       <UniqueIdentifier>{23f5f1a7-4da1-4818-a8f9-8af053723612}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Shader">
-      <UniqueIdentifier>{5485133a-952f-4c80-a5a4-bc783599ad58}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Utils">
       <UniqueIdentifier>{1bbfabe6-4274-463b-965f-0924ec8d7150}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Shader">
+      <UniqueIdentifier>{e7942477-ef71-4850-a8f8-18f5091bf95f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -47,14 +47,14 @@
     <ClInclude Include="RootSignature.h">
       <Filter>소스 파일\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>소스 파일\Resource</Filter>
+    </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>소스 파일\Resource</Filter>
     </ClInclude>
     <ClInclude Include="ConstantBuffer.h">
       <Filter>소스 파일\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>소스 파일\Resource</Filter>
     </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>소스 파일\Engine</Filter>
@@ -85,14 +85,14 @@
     <ClCompile Include="RootSignature.cpp">
       <Filter>소스 파일\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>소스 파일\Resource</Filter>
+    </ClCompile>
     <ClCompile Include="Shader.cpp">
       <Filter>소스 파일\Resource</Filter>
     </ClCompile>
     <ClCompile Include="ConstantBuffer.cpp">
       <Filter>소스 파일\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>소스 파일\Resource</Filter>
     </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>소스 파일\Engine</Filter>

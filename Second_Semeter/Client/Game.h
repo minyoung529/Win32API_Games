@@ -9,9 +9,9 @@ public:
 	void Release();
 
 private:
-	shared_ptr<class Mesh>		mesh;
-	shared_ptr<class Shader>	shader;
+	shared_ptr<class Mesh>		m_mesh;
+	shared_ptr<class Shader>	m_shader;
 
-	Transform meshTransform;
-	Color color;
+	Transform m_meshTrans;
 };
+

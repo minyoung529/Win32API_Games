@@ -1,8 +1,7 @@
 #pragma once
 
-#ifndef MYMATH_EXPORTS
+#ifdef MYMATH_EXPORTS
 #define MYMATH_DECLSPEC __declspec(dllexport)
-
 #else
 #define MYMATH_DECLSPEC __declspec(dllimport)
 #endif // CREATEDLL_EXPORTS
