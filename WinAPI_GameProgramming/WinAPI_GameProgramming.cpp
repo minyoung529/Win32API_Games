@@ -15,14 +15,21 @@ WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름�
 #define RECT_MAKE(x,y,s) { x-s/2, y-s/2, x+s/2, y+s/2}
 #define RECT_DRAW(rt) Rectangle(hdc, rt.left, rt.top, rt.right, rt.bottom)
 
-int delay = 50;
+POINT g_ptMouse;
 
+int delay = 50;
 int score = 0;
+int level = 0;
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 POINT g_ptPos1 = { WINSIZEX / 2 , WINSIZEY - 85 };
 RECT g_rtBox1;
-vector<RECT> vecBox;
+struct tagBox
+{
+	RECT rt;
+	float fSpeed;
+};
+vector<tagBox> vecBox;
 
 enum class MOVE_DIR
 {
@@ -64,6 +71,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	MSG msg;
 
 	// 기본 메시지 루프입니다:
+
+	// GetMessage > 대기
+	// PeekMessage > 메세지를 받지 않은 상태에서!!
 	while (GetMessage(&msg, nullptr, 0, 0))
 	{
 		// msg.message == WM_QUIT 인 경우 프로그램 종료!
@@ -168,42 +178,61 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		SetTimer(hWnd, 1, 10, NULL);
 		srand((unsigned int)time(nullptr));
 		break;
+
+	case WM_MOUSEMOVE:
+		g_ptMouse.x = LOWORD(lParam);
+		g_ptMouse.y = HIWORD(lParam);
+	break;
+
 	case WM_TIMER:
 	{
 		InvalidateRect(hWnd, nullptr, true);
+		level = score / 100 + 1;
 		g_rtBox1 = RECT_MAKE(g_ptPos1.x, g_ptPos1.y, 50);
 
 		if (delay == 50)
 		{
-			RECT rt;
-			rt.left = rand() % (WINSIZEX - 30);
-			rt.right = rt.left + 30;
-			rt.top = -30;
-			rt.bottom = 0;
-			vecBox.push_back(rt); // 비가 내리듯이 내릴거야.
+			tagBox box;
+			box.rt.left = rand() % (WINSIZEX - 30);
+			box.rt.right = box.rt.left + 30;
+			box.rt.top = -30;
+			box.rt.bottom = 0;
+
+			box.fSpeed = rand() % 11 + 5;
+
+			vecBox.push_back(box); // 비가 내리듯이 내릴거야.
 			delay = rand() % 50;
 		}
 		else
 			delay++;
 
-		vector<RECT>::iterator iter;
+		vector<tagBox>::iterator iter;
 
 		for (iter = vecBox.begin(); iter != vecBox.end(); iter++)
 		{
-			RECT rt;
-			iter->top += 10;
-			iter->bottom += 10;
+			iter->rt.top += iter->fSpeed;
+			iter->rt.bottom += iter->fSpeed;
 
-			if (iter->top > WINSIZEY)
+			RECT rt;
+			RECT rtIter = iter->rt;
+
+			if (iter->rt.top > WINSIZEY)
 			{
 				vecBox.erase(iter);
 				score += 50;
 				break;
 			}
 
-			if (IntersectRect(&rt, &g_rtBox1, &(*iter)))
+			if (IntersectRect(&rt, &g_rtBox1, &rtIter))
 			{
 				score -= 100;
+				vecBox.erase(iter);
+				break;
+			}
+
+			else if (PtInRect(&rtIter, g_ptMouse))
+			{
+				score += 300;
 				vecBox.erase(iter);
 				break;
 			}
@@ -218,15 +247,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		for (int i = 0; i < vecBox.size(); i++)
 		{
-			RECT_DRAW(vecBox[i]);
+			RECT_DRAW(vecBox[i].rt);
 		}
 
-		/*
 		char scoreBuffer[32];
+		wchar_t levelBuffer[32];
+		// 방법 1
 		_itoa_s(score, scoreBuffer, 10);
 		string str = string(scoreBuffer);
 		TextOutA(hdc, 10, 10, str.c_str(), str.length());
-		*/
+
+		// 방법 2
+		//wsprintf();	// api용
+		swprintf_s(levelBuffer, L"레벨: %d", level);	// c 함수
+		TextOut(hdc, 10, 30, levelBuffer, wcslen(levelBuffer));
 
 		EndPaint(hWnd, &ps);
 	}
@@ -269,8 +303,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
-	}
-	return 0;
+}
+return 0;
 }
 
 // 정보 대화 상자의 메시지 처리기입니다.
