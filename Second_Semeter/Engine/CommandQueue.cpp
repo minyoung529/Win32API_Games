@@ -20,10 +20,11 @@ void CommandQueue::Init(ComPtr<ID3D12Device> device, shared_ptr<SwapChain> swapC
 	queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
 
 	device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_cmdQueue));
-
 	device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_cmdAlloc));
-
 	device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_cmdAlloc.Get(), nullptr, IID_PPV_ARGS(&m_cmdList));
+
+	device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_resCmdAlloc));
+	device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_resCmdAlloc.Get(), nullptr, IID_PPV_ARGS(&m_resCmdList));
 
 	// cmdList 명령 목록
 	m_cmdList->Close();
@@ -58,8 +59,6 @@ void CommandQueue::RenderBegin(const D3D12_VIEWPORT* vp, const D3D12_RECT* rect)
 	g_Engine->GetConstantBuf()->Clear();
 	g_Engine->GetTableDescHeap()->Clear();
 
-	// 중요!
-	// 모든 업데이트에 한 번만
 	ID3D12DescriptorHeap* descHeap = g_Engine->GetTableDescHeap()->GetDescriptorHeap().Get();
 	m_cmdList->SetDescriptorHeaps(1, &descHeap);
 
@@ -75,10 +74,13 @@ void CommandQueue::RenderBegin(const D3D12_VIEWPORT* vp, const D3D12_RECT* rect)
 
 void CommandQueue::RenderEnd()
 {
-	D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+	D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition
+	(
 		m_swapChain->GetBackRTVBuffer().Get(),
 		D3D12_RESOURCE_STATE_RENDER_TARGET, // 외주 결과물
-		D3D12_RESOURCE_STATE_PRESENT); // 화면 출력
+		D3D12_RESOURCE_STATE_PRESENT // 화면 출력
+	); 
+
 	m_cmdList->ResourceBarrier(1, &barrier);
 	m_cmdList->Close();
 	// 커맨드 리스트 수행
@@ -90,4 +92,20 @@ void CommandQueue::RenderEnd()
 	// so we do not have to wait per frame.
 	WaitSync();
 	m_swapChain->SwapIndex();
+}
+
+void CommandQueue::FlushResourceCommandQueue()
+{
+	// 렌더 프레임을 타지 않기 위해
+	// 새로운 리소스 리스트 만듦
+
+	m_resCmdList->Close();
+
+	ID3D12CommandList* cmdListArr[] = { m_resCmdList.Get() };
+	m_cmdQueue->ExecuteCommandLists(_countof(cmdListArr), cmdListArr);
+
+	WaitSync();
+
+	m_resCmdAlloc->Reset();
+	m_resCmdList->Reset(m_resCmdAlloc.Get(), nullptr);
 }

@@ -2,7 +2,6 @@
 #define PCH_H
 
 #pragma comment(lib, "Engine.lib")
-#pragma comment(lib, "MathLibrary2.lib")
 
 #include "EnginePch.h"
 

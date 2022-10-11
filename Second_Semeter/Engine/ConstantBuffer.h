@@ -19,15 +19,13 @@ private:
 	void CreateView();
 
 private:
-	// constant buffer
 	ComPtr<ID3D12Resource>		m_cbvBuffer;
 	BYTE* m_mapedBuffer = nullptr;
 	uint32 m_elementSize = 0;
 	uint32 m_elementCount = 0;
 	uint32 m_currentIndex = 0;
 
-	// descriptor heap
 	ComPtr<ID3D12DescriptorHeap>	m_cbvHeap;
-	D3D12_CPU_DESCRIPTOR_HANDLE		m_cpuHandlerBegin = {};
+	D3D12_CPU_DESCRIPTOR_HANDLE		m_cpuHandleBegin = {};
 	uint32							m_handleIncrementSize = 0;
 };

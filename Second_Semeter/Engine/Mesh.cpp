@@ -2,10 +2,35 @@
 #include "Mesh.h"
 #include "Engine.h"
 
-void Mesh::Init(vector<Vertex>& vec)
+void Mesh::Init(const vector<Vertex>& vertexBuffer, const vector<uint32>& indexBuffer)
 {
-	m_vertexCount = static_cast<uint32>(vec.size());
+	CreateVertexBuffer(vertexBuffer);
+	CreateIndexBuffer(indexBuffer);
+}
 
+void Mesh::Render()
+{
+	CMD_LIST->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	CMD_LIST->IASetVertexBuffers(0, 1, &m_vertexBufferView);
+	CMD_LIST->IASetIndexBuffer(&m_indexBufferView);
+
+	D3D12_CPU_DESCRIPTOR_HANDLE handle = g_Engine->GetConstantBuf()->PushData(0, &m_transform, sizeof(m_transform));
+	g_Engine->GetTableDescHeap()->SetCBV(handle, CBV_REGISTER::b0);
+
+	handle = g_Engine->GetConstantBuf()->PushData(1, &m_color, sizeof(m_color));
+	g_Engine->GetTableDescHeap()->SetCBV(handle, CBV_REGISTER::b1);
+
+	g_Engine->GetTableDescHeap()->CommitTable();
+
+	// VertexBuffer ·»´õ¸µ ¿ë
+	//CMD_LIST->DrawInstanced(m_vertexCount, 1, 0, 0);
+
+	CMD_LIST->DrawIndexedInstanced(m_indexCount, 1, 0, 0, 0);
+}
+
+void Mesh::CreateVertexBuffer(const vector<Vertex>& buffer)
+{
+	m_vertexCount = static_cast<uint32>(buffer.size());
 	uint32 bufferSize = m_vertexCount * sizeof(Vertex);
 
 	D3D12_HEAP_PROPERTIES heapProperty = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
@@ -22,7 +47,7 @@ void Mesh::Init(vector<Vertex>& vec)
 	void* vertexDataBuffer = nullptr;
 	CD3DX12_RANGE readRange(0, 0);
 	m_vertexBuffer->Map(0, &readRange, &vertexDataBuffer);
-	::memcpy(vertexDataBuffer, &vec[0], bufferSize);
+	::memcpy(vertexDataBuffer, &buffer[0], bufferSize);
 	m_vertexBuffer->Unmap(0, nullptr);
 
 	m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
@@ -30,18 +55,29 @@ void Mesh::Init(vector<Vertex>& vec)
 	m_vertexBufferView.SizeInBytes = bufferSize;
 }
 
-void Mesh::Render()
+void Mesh::CreateIndexBuffer(const vector<uint32>& buffer)
 {
-	CMD_LIST->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	CMD_LIST->IASetVertexBuffers(0, 1, &m_vertexBufferView);
+	m_indexCount = static_cast<uint32>(buffer.size());
+	uint32 bufferSize = m_indexCount * sizeof(uint32);
 
-	D3D12_CPU_DESCRIPTOR_HANDLE handle = g_Engine->GetConstantBuf()->PushData(0, &m_transform, sizeof(m_transform));
-	g_Engine->GetTableDescHeap()->SetCBV(handle, CBV_REGISTER::b0);
+	D3D12_HEAP_PROPERTIES heapProperty = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+	D3D12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Buffer(bufferSize);
 
-	handle = g_Engine->GetConstantBuf()->PushData(1, &m_color, sizeof(m_color));
-	g_Engine->GetTableDescHeap()->SetCBV(handle, CBV_REGISTER::b1);
+	DEVICE->CreateCommittedResource(
+		&heapProperty,
+		D3D12_HEAP_FLAG_NONE,
+		&desc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&m_indexBuffer));
 
-	g_Engine->GetTableDescHeap()->CommitTable();
+	void* indexDataBuffer = nullptr;
+	CD3DX12_RANGE readRange(0, 0);
+	m_indexBuffer->Map(0, &readRange, &indexDataBuffer);
+	::memcpy(indexDataBuffer, &buffer[0], bufferSize);
+	m_indexBuffer->Unmap(0, nullptr);
 
-	CMD_LIST->DrawInstanced(m_vertexCount, 1, 0, 0);
+	m_indexBufferView.BufferLocation = m_indexBuffer->GetGPUVirtualAddress();
+	m_indexBufferView.Format = DXGI_FORMAT_R32_UINT;
+	m_indexBufferView.SizeInBytes = bufferSize;
 }
