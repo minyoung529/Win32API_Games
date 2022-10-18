@@ -69,7 +69,12 @@ void CommandQueue::RenderBegin(const D3D12_VIEWPORT* vp, const D3D12_RECT* rect)
 	// Specify the buffers we are going to render to.
 	D3D12_CPU_DESCRIPTOR_HANDLE backBufferView = m_swapChain->GetBackRTV();
 	m_cmdList->ClearRenderTargetView(backBufferView, Colors::LightSteelBlue, 0, nullptr);
-	m_cmdList->OMSetRenderTargets(1, &backBufferView, FALSE, nullptr);
+
+	D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = g_Engine->GetDepthStencileBuffer()->GetDSVCpuHandle();
+	m_cmdList->OMSetRenderTargets(1, &backBufferView, FALSE, &depthStencilView);
+
+	// 누가 먼저일지 모르기때문에 항상 clear
+	m_cmdList->ClearDepthStencilView(depthStencilView, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
 void CommandQueue::RenderEnd()

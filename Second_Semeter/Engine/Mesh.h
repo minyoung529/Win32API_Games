@@ -1,5 +1,7 @@
 #pragma once
 
+class Texture;
+
 class Mesh
 {
 public:
@@ -8,6 +10,7 @@ public:
 
 	void SetTransform(const Transform& t) { m_transform = t; }
 	void SetColor(const Color& c) { m_color = c; }
+	void SetTexture(shared_ptr<Texture> tex) { m_tex = tex; }
 
 private:
 	void CreateVertexBuffer(const vector<Vertex>& buffer);
@@ -24,5 +27,6 @@ private:
 
 	Transform					m_transform = {};
 	Color						m_color = {};
+	shared_ptr<Texture>			m_tex;
 };
 

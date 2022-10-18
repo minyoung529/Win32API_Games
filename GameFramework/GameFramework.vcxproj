@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{1ebee3db-1a59-44ab-bb36-72c57e3f55b7}</ProjectGuid>
-    <RootNamespace>WinAPIGameProgramming</RootNamespace>
+    <ProjectGuid>{d28b92e0-be72-4eca-b88f-20078eb511c1}</ProjectGuid>
+    <RootNamespace>GameFramework</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -88,6 +88,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -116,6 +118,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -139,20 +143,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BWindow.h" />
+    <ClInclude Include="Core.h" />
+    <ClInclude Include="Define.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="GameFramework.h" />
+    <ClInclude Include="KeyManager.h" />
+    <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="WinAPI_GameProgramming.h" />
+    <ClInclude Include="TimeManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WinAPI_GameProgramming.cpp" />
+    <ResourceCompile Include="GameFramework.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="WinAPI_GameProgramming.rc" />
-  </ItemGroup>
-  <ItemGroup>
+    <Image Include="GameFramework.ico" />
     <Image Include="small.ico" />
-    <Image Include="WinAPI_GameProgramming.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BWindow.cpp" />
+    <ClCompile Include="Core.cpp" />
+    <ClCompile Include="KeyManager.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="TimeManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

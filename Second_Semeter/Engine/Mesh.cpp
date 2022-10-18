@@ -20,6 +20,7 @@ void Mesh::Render()
 	handle = g_Engine->GetConstantBuf()->PushData(1, &m_color, sizeof(m_color));
 	g_Engine->GetTableDescHeap()->SetCBV(handle, CBV_REGISTER::b1);
 
+	g_Engine->GetTableDescHeap()->SetSRV(m_tex->GetCpuHandle(), SRV_REGISTER::t0);
 	g_Engine->GetTableDescHeap()->CommitTable();
 
 	// VertexBuffer ·»´õ¸µ ¿ë

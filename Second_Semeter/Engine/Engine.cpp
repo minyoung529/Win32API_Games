@@ -5,7 +5,6 @@
 void Engine::Init(const WindowInfo& window)
 {
 	m_window = window;
-	ResizeWindow(window.width, window.height);
 
 	// 그려질 화면의 크기 설정
 	m_viewport = { 0, 0, static_cast<FLOAT>(window.width), static_cast<FLOAT>(window.height), 0.0f, 1.0f };
@@ -17,6 +16,7 @@ void Engine::Init(const WindowInfo& window)
 	m_rootSignature = make_shared<RootSignature>();
 	m_constantBuf = make_shared<ConstantBuffer>();
 	m_tableDescHeap = make_shared<TableDescriptorHeap>();
+	m_depthStencileBuffer = make_shared<DepthStencilBuffer>();
 
 	m_input = make_shared<Input>();
 	m_timer = make_shared<Timer>();
@@ -27,9 +27,12 @@ void Engine::Init(const WindowInfo& window)
 	m_rootSignature->Init(m_device->GetDevice());
 	m_constantBuf->Init(sizeof(Transform), 256);
 	m_tableDescHeap->Init(256);
+	m_depthStencileBuffer->Init(window);
 
 	m_input->Init(window.hwnd);
 	m_timer->Init();
+
+	ResizeWindow(window.width, window.height);
 }
 
 void Engine::Update()
@@ -68,6 +71,8 @@ void Engine::ResizeWindow(int32 width, int32 height)
 	RECT rect = { 0, 0, width, height };
 	::AdjustWindowRect(&rect, WS_EX_OVERLAPPEDWINDOW, false);
 	::SetWindowPos(m_window.hwnd, 0, 100, 100, width, height, 0);
+
+	m_depthStencileBuffer->Init(m_window);
 }
 
 void Engine::ShowFps()

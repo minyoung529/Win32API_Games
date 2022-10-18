@@ -15,7 +15,6 @@ void TableDescriptorHeap::Init(uint32 count)
 
 	m_handleSize = DEVICE->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	m_groupSize = m_handleSize * REGISTER_COUNT;
-
 }
 
 void TableDescriptorHeap::Clear()
@@ -39,7 +38,6 @@ void TableDescriptorHeap::SetSRV(D3D12_CPU_DESCRIPTOR_HANDLE srcHandle, SRV_REGI
 	uint32 destRange = 1;
 	uint32 srcRange = 1;
 	DEVICE->CopyDescriptors(1, &destHandle, &destRange, 1, &srcHandle, &srcRange, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
 }
 
 void TableDescriptorHeap::CommitTable()

@@ -11,6 +11,7 @@ void Shader::Init(const wstring& path)
 	{
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
 		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
+		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 28/*12+16*/, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
 	};
 
 	m_pipelineDesc.InputLayout = { desc , _countof(desc) };
@@ -18,8 +19,7 @@ void Shader::Init(const wstring& path)
 
 	m_pipelineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 	m_pipelineDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-	m_pipelineDesc.DepthStencilState.DepthEnable = FALSE;
-	m_pipelineDesc.DepthStencilState.StencilEnable = FALSE;
+	m_pipelineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 	m_pipelineDesc.SampleMask = UINT_MAX;
 	m_pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	m_pipelineDesc.NumRenderTargets = 1;

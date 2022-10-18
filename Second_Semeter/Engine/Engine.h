@@ -5,9 +5,11 @@
 #include "RootSignature.h"
 #include "ConstantBuffer.h"
 #include "TableDescriptorHeap.h"
+#include "DepthStencilBuffer.h"
 
 #include "Input.h"
 #include "Timer.h"
+#include "Texture.h"
 
 class Engine
 {
@@ -29,6 +31,7 @@ public:
 	shared_ptr<RootSignature> GetRootSignature() { return m_rootSignature; }
 	shared_ptr<ConstantBuffer> GetConstantBuf() { return m_constantBuf; }
 	shared_ptr<TableDescriptorHeap> GetTableDescHeap() { return m_tableDescHeap; }
+	shared_ptr<DepthStencilBuffer> GetDepthStencileBuffer() { return m_depthStencileBuffer; };
 
 	shared_ptr<Input> GetInput() { return m_input; }
 	shared_ptr<Timer> GetTimer() { return m_timer; }
@@ -45,6 +48,7 @@ private:
 	shared_ptr<RootSignature> m_rootSignature;
 	shared_ptr<ConstantBuffer> m_constantBuf;
 	shared_ptr<TableDescriptorHeap> m_tableDescHeap;
+	shared_ptr<DepthStencilBuffer> m_depthStencileBuffer;
 
 	shared_ptr<Input> m_input;
 	shared_ptr<Timer> m_timer;
