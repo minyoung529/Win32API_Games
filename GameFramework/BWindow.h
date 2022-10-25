@@ -15,7 +15,7 @@ public:
 	void				WindowUpdate();
 	int					MessageLoop();
 
-private:
+protected:
 	HWND				m_hWnd;
 	HINSTANCE			m_hInstnace;
 

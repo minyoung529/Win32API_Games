@@ -20,6 +20,9 @@
     <Filter Include="Engine\03. Managers">
       <UniqueIdentifier>{e5732257-dc3d-4b9e-be47-872f7a174c86}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\04.Objects">
+      <UniqueIdentifier>{8f188864-867e-4037-a350-6279c623b97f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -52,6 +55,9 @@
     <ClInclude Include="BWindow.h">
       <Filter>Engine\02. Core</Filter>
     </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Engine\04.Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameFramework.rc">
@@ -79,6 +85,9 @@
     </ClCompile>
     <ClCompile Include="BWindow.cpp">
       <Filter>Engine\02. Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Engine\04.Objects</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

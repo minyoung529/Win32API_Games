@@ -1,4 +1,5 @@
 #pragma once
+#include "BWindow.h"
 
 // 동적 싱글톤
 /* 싱글톤 1
@@ -33,7 +34,7 @@ private:
 
 // 정적 싱글톤
 /* 2번째 싱글톤 */
-class Core
+class Core : public BWindow
 {
 public:
 	SINGLE(Core);
@@ -41,4 +42,17 @@ public:
 private:
 	Core();
 	~Core();
+
+private:
+	POINT	m_ptResolution;	// 메인 윈도우 해상도
+	HDC		m_hdc;				// 메인 윈도우에 Draw할 DC
+
+
+public:
+	int		Init(HWND hWnd, POINT ptResolution);
+	void	Progress();
+
+private:
+	void	Update();
+	void	Render();
 };

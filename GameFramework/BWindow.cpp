@@ -1,7 +1,10 @@
 #include "pch.h"
 #include "BWindow.h"
+#include "Core.h"
 
-BWindow::BWindow()
+BWindow::BWindow():
+	m_hWnd(0),
+	m_hInstnace(0)
 {
 }
 
@@ -17,15 +20,15 @@ ATOM BWindow::MyRegisterClass()
 	wcex.cbSize = sizeof(WNDCLASSEX);
 
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
-	wcex.lpfnWndProc = WndProc;
+	wcex.lpfnWndProc = BWindow::WndProc;
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = 0;
 	wcex.hInstance = m_hInstnace;
 	wcex.hIcon = LoadIcon(m_hInstnace, MAKEINTRESOURCE(IDI_GAMEFRAMEWORK));
 	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_GAMEFRAMEWORK);
-	wcex.lpszClassName = L"안녕안녕요";
+	wcex.lpszMenuName = nullptr;
+	wcex.lpszClassName = WINDOW_NAME;
 	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
 	return RegisterClassExW(&wcex);
@@ -35,15 +38,8 @@ LRESULT BWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
-	case WM_PAINT:
-	{
-		PAINTSTRUCT ps;
-		HDC hdc = BeginPaint(hWnd, &ps);
-		EndPaint(hWnd, &ps);
-	}
-	break;
 	case WM_DESTROY:
-		PostQuitMessage(0);
+		PostQuitMessage(0);	// WM_QUIT
 		break;
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
@@ -60,12 +56,19 @@ int BWindow::Run(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 	this->WindowShow(nCmdShow);
 	this->WindowUpdate();
 
+	// Core 예외처리
+	if (FAILED(Core::GetInst()->Init(m_hWnd, POINT{1280, 720})))
+	{
+		MessageBox(m_hWnd, L"Core 객체 초기화 실패", L"ERROR", MB_OK);
+		return FALSE;
+	}
+
 	return this->MessageLoop();
 }
 
 void BWindow::WindowCreate()
 {
-	m_hWnd = CreateWindowW(L"안녕ㅇ안녕요", L"하이하이욤", WS_OVERLAPPEDWINDOW,
+	m_hWnd = CreateWindowW(WINDOW_NAME, L"민영'ㄴ Game Framework", WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, m_hInstnace, nullptr);
 }
 
@@ -82,6 +85,7 @@ void BWindow::WindowUpdate()
 int BWindow::MessageLoop()
 {
 	MSG msg;
+	memset(&msg, 0, sizeof(msg));
 
 	while (true)
 	{
@@ -97,6 +101,7 @@ int BWindow::MessageLoop()
 		{
 			// 우리의 게임 루프
 			// 여기가 더 많이 돌아간다!
+			Core::GetInst()->Progress();
 		}
 	}
 
