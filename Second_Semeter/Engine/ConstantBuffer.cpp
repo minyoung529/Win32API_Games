@@ -15,8 +15,10 @@ ConstantBuffer::~ConstantBuffer()
     }
 }
 
-void ConstantBuffer::Init(uint32 size, uint32 count)
+void ConstantBuffer::Init(CBV_REGISTER reg, uint32 size, uint32 count)
 {
+    m_reg = reg;
+
     // 상수버프 : 256 바이트 배수로 만들어야 해..
     m_elementSize = (size + 255) & ~255;
     m_elementCount = count;
@@ -30,17 +32,16 @@ void ConstantBuffer::Clear()
     m_currentIndex = 0;
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE ConstantBuffer::PushData(int32 rootParamIndex, void* buffer, uint32 size)
+void ConstantBuffer::PushData(void* buffer, uint32 size)
 {
     assert(m_currentIndex < m_elementCount);
 
     ::memcpy(&m_mapedBuffer[m_currentIndex * m_elementSize], buffer, size);
 
     D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = GetCpuHandle(m_currentIndex);
+    g_Engine->GetTableDescHeap()->SetCBV(cpuHandle, m_reg);
 
     m_currentIndex++;
-
-    return cpuHandle;
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS ConstantBuffer::GetGpuVirtualAddress(uint32 index)

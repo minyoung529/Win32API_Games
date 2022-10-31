@@ -29,7 +29,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -85,8 +85,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Output\</OutDir>
-    <IncludePath>$(SolutionDir)Engine\;$(SolutionDir)Library\Include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Output\;$(SolutionDir)Library\Lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Library\Include\;$(SolutionDir)Engine\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Library\Lib\;$(SolutionDir)Output\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>

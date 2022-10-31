@@ -20,11 +20,14 @@ void CommandQueue::Init(ComPtr<ID3D12Device> device, shared_ptr<SwapChain> swapC
 	queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
 
 	device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_cmdQueue));
+
 	device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_cmdAlloc));
+
 	device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_cmdAlloc.Get(), nullptr, IID_PPV_ARGS(&m_cmdList));
 
-	device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_resCmdAlloc));
-	device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_resCmdAlloc.Get(), nullptr, IID_PPV_ARGS(&m_resCmdList));
+	device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_rescmdAlloc));
+
+	device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_rescmdAlloc.Get(), nullptr, IID_PPV_ARGS(&m_rescmdList));
 
 	// cmdList 명령 목록
 	m_cmdList->Close();
@@ -56,7 +59,10 @@ void CommandQueue::RenderBegin(const D3D12_VIEWPORT* vp, const D3D12_RECT* rect)
 		D3D12_RESOURCE_STATE_RENDER_TARGET); // 외주 결과물
 
 	m_cmdList->SetGraphicsRootSignature(ROOT_SIGNATURE.Get());
-	g_Engine->GetConstantBuf()->Clear();
+	
+	CONST_BUFFER(CONSTANT_BUFFER_TYPE::TRANSFORM)->Clear();
+	CONST_BUFFER(CONSTANT_BUFFER_TYPE::MATERIAL)->Clear();
+
 	g_Engine->GetTableDescHeap()->Clear();
 
 	ID3D12DescriptorHeap* descHeap = g_Engine->GetTableDescHeap()->GetDescriptorHeap().Get();
@@ -70,22 +76,18 @@ void CommandQueue::RenderBegin(const D3D12_VIEWPORT* vp, const D3D12_RECT* rect)
 	D3D12_CPU_DESCRIPTOR_HANDLE backBufferView = m_swapChain->GetBackRTV();
 	m_cmdList->ClearRenderTargetView(backBufferView, Colors::LightSteelBlue, 0, nullptr);
 
-	D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = g_Engine->GetDepthStencileBuffer()->GetDSVCpuHandle();
-	m_cmdList->OMSetRenderTargets(1, &backBufferView, FALSE, &depthStencilView);
+	D3D12_CPU_DESCRIPTOR_HANDLE depthStencileView = g_Engine->GetDepthStencileBuffer()->GetDSVCpuHandle();
+	m_cmdList->OMSetRenderTargets(1, &backBufferView, FALSE, &depthStencileView);
 
-	// 누가 먼저일지 모르기때문에 항상 clear
-	m_cmdList->ClearDepthStencilView(depthStencilView, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	m_cmdList->ClearDepthStencilView(depthStencileView, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
 void CommandQueue::RenderEnd()
 {
-	D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition
-	(
+	D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
 		m_swapChain->GetBackRTVBuffer().Get(),
 		D3D12_RESOURCE_STATE_RENDER_TARGET, // 외주 결과물
-		D3D12_RESOURCE_STATE_PRESENT // 화면 출력
-	); 
-
+		D3D12_RESOURCE_STATE_PRESENT); // 화면 출력
 	m_cmdList->ResourceBarrier(1, &barrier);
 	m_cmdList->Close();
 	// 커맨드 리스트 수행
@@ -101,16 +103,13 @@ void CommandQueue::RenderEnd()
 
 void CommandQueue::FlushResourceCommandQueue()
 {
-	// 렌더 프레임을 타지 않기 위해
-	// 새로운 리소스 리스트 만듦
+	m_rescmdList->Close();
 
-	m_resCmdList->Close();
-
-	ID3D12CommandList* cmdListArr[] = { m_resCmdList.Get() };
+	ID3D12CommandList* cmdListArr[] = { m_rescmdList.Get() };
 	m_cmdQueue->ExecuteCommandLists(_countof(cmdListArr), cmdListArr);
 
 	WaitSync();
 
-	m_resCmdAlloc->Reset();
-	m_resCmdList->Reset(m_resCmdAlloc.Get(), nullptr);
+	m_rescmdAlloc->Reset();
+	m_rescmdList->Reset(m_rescmdAlloc.Get(), nullptr);
 }

@@ -18,8 +18,4 @@ public:
 protected:
 	HWND				m_hWnd;
 	HINSTANCE			m_hInstnace;
-
-public:
-	const HWND&			GetHwndHandle() { return m_hWnd; }
-	const HINSTANCE&	etHInstanceHandle() { return m_hInstnace; }
 };

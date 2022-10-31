@@ -1,4 +1,5 @@
 #pragma once
+class GameObject;
 
 class Game
 {
@@ -9,10 +10,6 @@ public:
 	void Release();
 
 private:
-	shared_ptr<class Mesh>		m_mesh;
-	shared_ptr<class Shader>	m_shader;
-	shared_ptr<class Texture>	m_texture;
-
-	Transform m_meshTrans;
+	shared_ptr<GameObject> m_gameObj;
 };
 

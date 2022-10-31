@@ -27,7 +27,7 @@ enum class KEY_STATE
 
 enum
 {
-	KEY_TYPE_COUNT = static_cast<int32>(UINT8_MAX + 1),
+	KEY_TYPE_COUNT = static_cast<int32>(UINT8_MAX+1),
 	KEY_STATE_COUNT = static_cast<int32>(KEY_STATE::END),
 };
 
@@ -42,7 +42,7 @@ public:
 	bool GetButtonDown(KEY_TYPE key) { return GetState(key) == KEY_STATE::DOWN; }
 	bool GetButtonUp(KEY_TYPE key) { return GetState(key) == KEY_STATE::UP; }
 
-	const POINT& GetMousePos() { return m_mousePos; }
+	const POINT& GetMousePos() { return m_mousePos;  }
 
 private:
 	inline KEY_STATE GetState(KEY_TYPE key) { return m_states[static_cast<uint8>(key)]; }

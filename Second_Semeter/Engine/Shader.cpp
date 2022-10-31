@@ -11,7 +11,7 @@ void Shader::Init(const wstring& path)
 	{
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
 		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
-		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 28/*12+16*/, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
+		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 28, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
 	};
 
 	m_pipelineDesc.InputLayout = { desc , _countof(desc) };
@@ -23,8 +23,9 @@ void Shader::Init(const wstring& path)
 	m_pipelineDesc.SampleMask = UINT_MAX;
 	m_pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	m_pipelineDesc.NumRenderTargets = 1;
-	m_pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+	m_pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;	
 	m_pipelineDesc.SampleDesc.Count = 1;
+	m_pipelineDesc.DSVFormat = g_Engine->GetDepthStencileBuffer()->GetDSVFormat();
 
 	DEVICE->CreateGraphicsPipelineState(&m_pipelineDesc, IID_PPV_ARGS(&m_pipelineState));
 }

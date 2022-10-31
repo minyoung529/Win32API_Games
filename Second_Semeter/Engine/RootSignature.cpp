@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "engine.h"
 #include "RootSignature.h"
+#include "Engine.h"
 
 void RootSignature::Init(ComPtr<ID3D12Device> device)
 {
@@ -11,7 +11,6 @@ void RootSignature::Init(ComPtr<ID3D12Device> device)
 void RootSignature::CreateSamplerDesc()
 {
 	m_samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
-
 }
 
 void RootSignature::CreateRootSignature()

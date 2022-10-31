@@ -15,3 +15,4 @@ private:
 	ComPtr<ID3D12RootSignature> m_signature;
 	D3D12_STATIC_SAMPLER_DESC	m_samplerDesc;
 };
+

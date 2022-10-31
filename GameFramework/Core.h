@@ -49,6 +49,10 @@ private:
 
 
 public:
+	const HWND& GetHwndHandle() { return m_hWnd; }
+	const HINSTANCE& etHInstanceHandle() { return m_hInstnace; }
+
+public:
 	int		Init(HWND hWnd, POINT ptResolution);
 	void	Progress();
 

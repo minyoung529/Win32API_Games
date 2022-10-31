@@ -5,11 +5,11 @@
 #include "RootSignature.h"
 #include "ConstantBuffer.h"
 #include "TableDescriptorHeap.h"
-#include "DepthStencilBuffer.h"
+#include "Texture.h"
+#include "DepthStencileBuffer.h"
 
 #include "Input.h"
 #include "Timer.h"
-#include "Texture.h"
 
 class Engine
 {
@@ -23,18 +23,23 @@ public:
 public:
 	void ResizeWindow(int32 width, int32 height);
 	void ShowFps();
+	void CreateConstantBuffer(CBV_REGISTER reg, uint32 bufferSize, uint32 count);
 
 public:
 	shared_ptr<Device> GetDevice() { return m_device; }
 	shared_ptr<SwapChain> GetSwapChain() { return m_swapChain; }
 	shared_ptr<CommandQueue> GetCmdQueue() { return m_cmdQueue; }
 	shared_ptr<RootSignature> GetRootSignature() { return m_rootSignature; }
-	shared_ptr<ConstantBuffer> GetConstantBuf() { return m_constantBuf; }
 	shared_ptr<TableDescriptorHeap> GetTableDescHeap() { return m_tableDescHeap; }
-	shared_ptr<DepthStencilBuffer> GetDepthStencileBuffer() { return m_depthStencileBuffer; };
+	shared_ptr<DepthStencileBuffer> GetDepthStencileBuffer() { return m_depthStencileBuffer; }
 
 	shared_ptr<Input> GetInput() { return m_input; }
 	shared_ptr<Timer> GetTimer() { return m_timer; }
+
+	shared_ptr<ConstantBuffer> GetConstantBuffer(CONSTANT_BUFFER_TYPE type) 
+	{ 
+		return m_constantBuffers[static_cast<uint8>(type)]; 
+	}
 
 private:
 	WindowInfo		m_window;
@@ -46,11 +51,12 @@ private:
 	shared_ptr<SwapChain> m_swapChain;
 	shared_ptr<CommandQueue> m_cmdQueue;
 	shared_ptr<RootSignature> m_rootSignature;
-	shared_ptr<ConstantBuffer> m_constantBuf;
 	shared_ptr<TableDescriptorHeap> m_tableDescHeap;
-	shared_ptr<DepthStencilBuffer> m_depthStencileBuffer;
+	shared_ptr<DepthStencileBuffer> m_depthStencileBuffer;
 
 	shared_ptr<Input> m_input;
 	shared_ptr<Timer> m_timer;
+
+	vector<shared_ptr<ConstantBuffer>> m_constantBuffers;
 };
 

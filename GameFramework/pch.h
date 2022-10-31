@@ -2,3 +2,4 @@
 #include "Define.h"
 #include "framework.h"
 #include "resource.h"
+#include "Vector2.h"

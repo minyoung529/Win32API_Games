@@ -21,6 +21,9 @@
     <Filter Include="소스 파일\Shader">
       <UniqueIdentifier>{e7942477-ef71-4850-a8f8-18f5091bf95f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\GameObject">
+      <UniqueIdentifier>{d7a1e0b4-461e-465a-94c1-928463ae694d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -68,8 +71,26 @@
     <ClInclude Include="Texture.h">
       <Filter>소스 파일\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="DepthStencilBuffer.h">
+    <ClInclude Include="DepthStencileBuffer.h">
       <Filter>소스 파일\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>소스 파일\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>소스 파일\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshRenderer.h">
+      <Filter>소스 파일\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>소스 파일\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="MonoBehaviour.h">
+      <Filter>소스 파일\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>소스 파일\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -115,8 +136,26 @@
     <ClCompile Include="Texture.cpp">
       <Filter>소스 파일\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="DepthStencilBuffer.cpp">
+    <ClCompile Include="DepthStencileBuffer.cpp">
       <Filter>소스 파일\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>소스 파일\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>소스 파일\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshRenderer.cpp">
+      <Filter>소스 파일\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>소스 파일\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="MonoBehaviour.cpp">
+      <Filter>소스 파일\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>소스 파일\GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

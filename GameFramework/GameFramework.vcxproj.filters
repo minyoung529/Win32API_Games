@@ -58,6 +58,9 @@
     <ClInclude Include="Object.h">
       <Filter>Engine\04.Objects</Filter>
     </ClInclude>
+    <ClInclude Include="Vector2.h">
+      <Filter>Engine\01. Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameFramework.rc">
@@ -88,6 +91,9 @@
     </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>Engine\04.Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector2.cpp">
+      <Filter>Engine\01. Header</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

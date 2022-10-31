@@ -1,6 +1,6 @@
 #pragma once
 
-// std::byte 사용하지 않음
+// std::byte 사용하지 않음.
 #define _HAS_STD_BYTE 0
 
 // 각종 include 
@@ -12,9 +12,8 @@
 #include <array>
 #include <list>
 #include <map>
+#include <filesystem>
 using namespace std;
-
-#include<filesystem>
 namespace fs = std::filesystem;
 
 // directX include
@@ -70,8 +69,8 @@ struct WindowInfo
 
 enum class CBV_REGISTER : uint8
 {
-	b0, // transform
-	b1, // color
+	b0,
+	b1,
 	b2,
 	b3,
 	b4,
@@ -106,7 +105,7 @@ struct Vertex
 	Vec2 uv;
 };
 
-struct Transform
+struct TransformParams
 {
 	Vec3 offset;
 };
@@ -123,5 +122,7 @@ struct Color
 
 #define INPUT				g_Engine->GetInput()
 #define DELTA_TIME			g_Engine->GetTimer()->GetDeltaTime()
+
+#define CONST_BUFFER(type)	g_Engine->GetConstantBuffer(type)
 
 extern unique_ptr<class Engine> g_Engine;

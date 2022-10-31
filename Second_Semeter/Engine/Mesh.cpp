@@ -1,11 +1,16 @@
 #include "pch.h"
 #include "Mesh.h"
 #include "Engine.h"
+#include "Material.h"
 
 void Mesh::Init(const vector<Vertex>& vertexBuffer, const vector<uint32>& indexBuffer)
 {
 	CreateVertexBuffer(vertexBuffer);
 	CreateIndexBuffer(indexBuffer);
+}
+
+void Mesh::Update()
+{
 }
 
 void Mesh::Render()
@@ -14,17 +19,7 @@ void Mesh::Render()
 	CMD_LIST->IASetVertexBuffers(0, 1, &m_vertexBufferView);
 	CMD_LIST->IASetIndexBuffer(&m_indexBufferView);
 
-	D3D12_CPU_DESCRIPTOR_HANDLE handle = g_Engine->GetConstantBuf()->PushData(0, &m_transform, sizeof(m_transform));
-	g_Engine->GetTableDescHeap()->SetCBV(handle, CBV_REGISTER::b0);
-
-	handle = g_Engine->GetConstantBuf()->PushData(1, &m_color, sizeof(m_color));
-	g_Engine->GetTableDescHeap()->SetCBV(handle, CBV_REGISTER::b1);
-
-	g_Engine->GetTableDescHeap()->SetSRV(m_tex->GetCpuHandle(), SRV_REGISTER::t0);
 	g_Engine->GetTableDescHeap()->CommitTable();
-
-	// VertexBuffer ·»´õ¸µ ¿ë
-	//CMD_LIST->DrawInstanced(m_vertexCount, 1, 0, 0);
 
 	CMD_LIST->DrawIndexedInstanced(m_indexCount, 1, 0, 0, 0);
 }
