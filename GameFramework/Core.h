@@ -44,13 +44,14 @@ private:
 	~Core();
 
 private:
-	POINT	m_ptResolution;	// 메인 윈도우 해상도
-	HDC		m_hdc;				// 메인 윈도우에 Draw할 DC
-
+	POINT		m_ptResolution;	// 메인 윈도우 해상도
+	HDC			m_hdc;				// 메인 윈도우에 Draw할 DC
+	HDC			m_memDC;
+	HBITMAP		m_hBit;
 
 public:
-	const HWND& GetHwndHandle() { return m_hWnd; }
-	const HINSTANCE& etHInstanceHandle() { return m_hInstnace; }
+	const HWND&			GetHwndHandle() { return m_hWnd; }
+	const HINSTANCE&	GetHInstanceHandle() { return m_hInstnace; }
 
 public:
 	int		Init(HWND hWnd, POINT ptResolution);
