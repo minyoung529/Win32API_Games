@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Engine.h"
 #include "Material.h"
+#include "SceneManager.h"
 
 void Engine::Init(const WindowInfo& window)
 {
@@ -38,6 +39,7 @@ void Engine::Init(const WindowInfo& window)
 
 void Engine::Update()
 {
+	GET_SINGLE(SceneManager)->Update();
 	m_input->Update();
 	m_timer->Update();
 
@@ -49,7 +51,7 @@ void Engine::Render()
 	m_cmdQueue->RenderBegin(&m_viewport, &m_scissorRect);
 
 	// ·»´õ¸µ
-
+	GET_SINGLE(SceneManager)->Render();
 
 	m_cmdQueue->RenderEnd();
 }

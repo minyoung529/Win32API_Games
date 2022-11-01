@@ -18,8 +18,8 @@ public:
 	shared_ptr<Material> GetMaterial(){ return m_material; };
 
 public:
-	void Update();
-	void Render();
+	virtual void Update() override;
+	virtual void Render() override;
 
 private:
 	shared_ptr<Mesh> m_mesh;

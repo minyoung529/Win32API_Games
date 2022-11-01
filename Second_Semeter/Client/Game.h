@@ -10,6 +10,6 @@ public:
 	void Release();
 
 private:
-	shared_ptr<GameObject> m_gameObj;
+	shared_ptr<class Scene> m_sampleScene;
 };
 

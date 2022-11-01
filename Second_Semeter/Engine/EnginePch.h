@@ -115,6 +115,19 @@ struct Color
 	Vec4 offset;
 };
 
+#define DECLARE_SINGLE(type)	\
+private:						\
+	type() {}					\
+	~type() {}					\
+public:							\
+	static type* GetInstance()	\
+	{							\
+		static type instance;	\
+		return &instance;		\
+	}
+
+#define GET_SINGLE(type)		type::GetInstance()
+
 #define DEVICE				g_Engine->GetDevice()->GetDevice()
 #define CMD_LIST			g_Engine->GetCmdQueue()->GetCmdList()
 #define RESOURCE_CMD_LIST	g_Engine->GetCmdQueue()->GetResourceCmdList()

@@ -6,14 +6,23 @@
 #include "Material.h"
 #include "GameObject.h"
 #include "MeshRenderer.h"
+#include "Scene.h"
+#include "Transform.h"
+#include "SceneManager.h"
+#include "PlayerController.h"
 
 void Game::Init(const WindowInfo& window)
 {
+	m_sampleScene = make_shared<Scene>();
 	g_Engine->Init(window);
 
-	m_gameObj = make_shared<GameObject>();
-	m_gameObj->Init();
-	
+	shared_ptr<GameObject> gameObj = make_shared<GameObject>();
+	gameObj->Init();
+
+	gameObj->AddComponent(make_shared<Transform>());
+	shared_ptr<Transform> transform = gameObj->GetTransform();
+	transform->SetPosition({ 0.f,0.0f,0.f });
+
 	vector<Vertex> vec(3);
 	vec[0].pos = Vec3(0.0f, 0.5f, 0.5f);
 	vec[0].color = Vec4(1.f, 0.f, 0.f, 1.f);
@@ -24,7 +33,7 @@ void Game::Init(const WindowInfo& window)
 	vec[2].pos = Vec3(-0.5f, -0.5f, 0.5f);
 	vec[2].color = Vec4(0.f, 0.f, 1.f, 1.f);
 	vec[2].uv = Vec2(0.f, 1.f);
-	
+
 	vector<uint32> indexVec;
 	{
 		indexVec.push_back(0);
@@ -40,7 +49,7 @@ void Game::Init(const WindowInfo& window)
 
 		meshRenderer->SetMesh(mesh);
 	}
-	
+
 	{
 		shared_ptr<Shader> shader = make_shared<Shader>();
 		shared_ptr<Texture> texture = make_shared<Texture>();
@@ -57,22 +66,25 @@ void Game::Init(const WindowInfo& window)
 		meshRenderer->SetMaterial(material);
 	}
 
-	m_gameObj->AddComponent(meshRenderer);
+	gameObj->AddComponent(meshRenderer);
+	gameObj->AddComponent(make_shared<PlayerController>());
+
+	m_sampleScene->AddGameObject(gameObj);
+
+	GET_SINGLE(SceneManager)->RegisterScene(L"SampleScene", m_sampleScene);
+	GET_SINGLE(SceneManager)->LoadScene(L"SampleScene");
 }
 
 void Game::Update()
 {
 	g_Engine->Update();
-
-	m_gameObj->Update();
-	m_gameObj->LateUpdate();
 }
 
 void Game::Render()
 {
 	g_Engine->RenderBegin();
 
-	m_gameObj->Render();
+	g_Engine->Render();
 
 	g_Engine->RenderEnd();
 }

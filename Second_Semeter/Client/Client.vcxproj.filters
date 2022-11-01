@@ -15,6 +15,9 @@
     <Filter Include="소스 파일\Utils">
       <UniqueIdentifier>{99dcfab1-dde2-459f-801d-5912c7147af2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Script">
+      <UniqueIdentifier>{4b69d79f-1482-4452-ace4-75572cfec2f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -34,6 +37,9 @@
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>소스 파일\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerController.h">
+      <Filter>소스 파일\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -58,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>소스 파일\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerController.cpp">
+      <Filter>소스 파일\Script</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

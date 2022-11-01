@@ -2,6 +2,7 @@
 #include "MeshRenderer.h"
 #include "Mesh.h"
 #include "Material.h"
+#include "Transform.h"
 
 MeshRenderer::MeshRenderer() : Component(COMPONENT_TYPE::MESHRENDERER)
 {
@@ -22,6 +23,8 @@ void MeshRenderer::Update()
 
 void MeshRenderer::Render()
 {
+	GetTransform()->PushData();
+
 	if (m_material)
 		m_material->Render();
 
