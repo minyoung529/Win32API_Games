@@ -82,11 +82,7 @@ void Game::Update()
 
 void Game::Render()
 {
-	g_Engine->RenderBegin();
-
 	g_Engine->Render();
-
-	g_Engine->RenderEnd();
 }
 
 void Game::Release()

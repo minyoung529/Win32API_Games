@@ -11,5 +11,5 @@ public:
 	Vector2(int x, int y);
 	Vector2(long x, long y);
 	Vector2(float x, float y);
+	Vector2(POINT pt);
 };
-

@@ -23,6 +23,18 @@
     <Filter Include="Engine\04.Objects">
       <UniqueIdentifier>{8f188864-867e-4037-a350-6279c623b97f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\05.Scene">
+      <UniqueIdentifier>{7261a7c1-4714-4246-8c02-f978183526e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\05.Scene\Scene_Start">
+      <UniqueIdentifier>{7cbe301e-00db-4259-948e-4ebf755f30b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\04.Objects\Monster">
+      <UniqueIdentifier>{b0aedd3c-dcb1-4392-8601-3fe9a4b73973}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\04.Objects\Player">
+      <UniqueIdentifier>{2eea9470-821a-4fd8-89bd-04c376c0d1b7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -61,6 +73,24 @@
     <ClInclude Include="Vector2.h">
       <Filter>Engine\01. Header</Filter>
     </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Engine\05.Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Engine\05.Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene_Start.h">
+      <Filter>Engine\05.Scene\Scene_Start</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Engine\04.Objects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>Engine\04.Objects\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>Engine\04.Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameFramework.rc">
@@ -94,6 +124,24 @@
     </ClCompile>
     <ClCompile Include="Vector2.cpp">
       <Filter>Engine\01. Header</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Engine\05.Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Engine\05.Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene_Start.cpp">
+      <Filter>Engine\05.Scene\Scene_Start</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Engine\04.Objects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>Engine\04.Objects\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Engine\04.Objects</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

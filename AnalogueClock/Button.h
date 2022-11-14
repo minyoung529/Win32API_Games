@@ -4,77 +4,27 @@
 class Button
 {
 protected:
-	COLORREF color;
-	POINT pos;
-	int width;
-	int height;
-	RECT rect;
-	bool toggle;
+	COLORREF m_color;	// 버튼 색상
+	POINT m_pos;		// 버튼 센터 포지션
+	POINT m_scale;		// 버튼 스케일 (가로, 세로)
+	RECT m_rect;		// 버튼 렉트
+	bool m_toggle;		// 토글
 
 public:
-	Button()
-	{
-		color = RGB(0, 0, 0);
-		memset(&pos, NULL, sizeof(pos));
-		width = 20;
-		height = 15;
-		toggle = false;
-
-		SetRect();
-	}
-
-	Button(COLORREF color, POINT pos, int width, int height) :
-		color(color), pos(pos), width(width), height(height), toggle(false)
-	{
-		SetRect();
-	}
+	Button();
+	Button(COLORREF color, POINT pos, POINT scale);
 
 	virtual ~Button() {}
 
 public:
-	void Update(HDC hdc, HWND hWnd)
-	{
-		POINT mousePoint;
-		GetCursorPos(&mousePoint);
-		ScreenToClient(hWnd, &mousePoint);
-
-		// 마우스와 충돌 감지
-		if (PtInRect(&rect, mousePoint))
-		{
-			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
-			{
-				//InvalidateRect(hWnd, nullptr, true);
-
-				toggle = !toggle;
-				OnClickButton();
-			}
-		}
-
-		Render(hdc);
-	}
-
-	virtual void Render(HDC hdc)
-	{
-		COLORREF buttonColor = (toggle) ? RGB(150, 150, 150) : color;
-		HBRUSH hBlueBrush = CreateSolidBrush(buttonColor);
-		HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, hBlueBrush);
-
-		Rectangle(hdc, rect.left, rect.top, rect.right, rect.bottom);
-
-		SelectObject(hdc, oldBrush);
-		DeleteObject(hBlueBrush);
-	}
+	void Init(HWND hWnd);
+	void Update(HWND hWnd);
+	virtual void Render(HDC hdc);
 
 	// 버튼이 눌렸을 때
+	// 자식이 정의
 	virtual void OnClickButton() = 0;
 
 private:
-	// 버튼 Rect 설정
-	void SetRect()
-	{
-		rect.left = pos.x - width;
-		rect.right = pos.x + width;
-		rect.top = pos.y - height;
-		rect.bottom = pos.y + height;
-	}
+	void SetRect();		// Rect 초기세팅
 };

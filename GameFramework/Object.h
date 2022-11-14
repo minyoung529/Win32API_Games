@@ -1,6 +1,10 @@
 #pragma once
 class Object
 {
+public:
+	Object();
+	virtual ~Object();
+
 private:
 	Vector2		m_ptPos;
 	Vector2		m_ptScale;
@@ -13,6 +17,6 @@ public:
 	const Vector2& GetScale() { return m_ptScale; }
 
 public:
-	Object();
-	~Object();
+	virtual void Update() = 0;
+	virtual void Render(HDC hdc);
 };

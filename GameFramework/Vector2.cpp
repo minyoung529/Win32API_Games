@@ -26,3 +26,10 @@ Vector2::Vector2(float x, float y) :
 	y(y)
 {
 }
+
+Vector2::Vector2(POINT pt)
+	:x((float)pt.x)
+	,y((float)pt.y)
+{
+
+}

@@ -48,12 +48,12 @@ void Engine::Update()
 
 void Engine::Render()
 {
-	m_cmdQueue->RenderBegin(&m_viewport, &m_scissorRect);
+	RenderBegin();
 
 	// ·»´õ¸µ
 	GET_SINGLE(SceneManager)->Render();
 
-	m_cmdQueue->RenderEnd();
+	RenderEnd();
 }
 
 void Engine::RenderBegin()

@@ -1,83 +1,46 @@
 #pragma once
 #include "framework.h"
+#include "Define.h"
 
-// 상태 온오프 플래그
-#define	HOUR			1
-#define	MINUTE			2
-#define	SECOND			4
-#define	SOUND			8
-
-// 반지름에 따른 시곗바늘 비율
-#define HOUR_RATIO		0.3f
-#define MINUTE_RATIO	0.6f
-#define SECOND_RATIO	0.7f
-
-
-#define	STARTPOSX(pos, x, radius)	(pos.x - (((x) * radius) / 10))
-#define	STARTPOSY(pos, x, radius)	(pos.y - (((y) * radius) / 10))
+class Hand;
 
 class Clock
 {
 private:
-	int radius;
-	POINT pos;
-	int clockState = HOUR | MINUTE | SECOND;
+	int m_radius;			// 시계의 반지름
+	POINT m_position;		// 현재 센터 위치
+	int m_clockState = HOUR | MINUTE | SECOND | SOUND;	// 비트마스크 (현 상태: 시침, 분침, 초침, 사운드 모든 걸 표현)
+
+	Hand* m_hourHand;		// 시침 객체
+	Hand* m_minuteHand;		// 분침 객체
+	Hand* m_secondHand;		// 초침 객체
 
 public:
-	Clock() : radius(0)
-	{
-		memset(&pos, 0, sizeof(pos));
-	}
-
-	Clock(int radius, POINT scale) : radius(radius)
-	{
-		pos.x = scale.x * 0.5f;
-		pos.y = scale.y * 0.5f;
-	}
-
-	Clock(int radius, POINT scale, int clockState) : Clock(radius, scale)
-	{
-		this->clockState = clockState;
-	}
-
-	virtual ~Clock() {}
+	Clock();
+	Clock(int radius, POINT position);
+	~Clock();
 
 public:
-	void RenderClock(SYSTEMTIME time, HDC hdc)
+	void Init();
+	void RenderClock(SYSTEMTIME time, HDC hdc);			// 시계 출력
+	void PlaySound(SYSTEMTIME time);					// 사운드
+
+	void AddClockState(int state)						// 시계 상태 더하기
 	{
-		RenderCircle(hdc);
-		RenderGraduation(hdc);
-
-		if (clockState & SECOND)
-			RenderSecond(time, hdc);
-
-		if (clockState & MINUTE)
-			RenderMinute(time, hdc);
-
-		if (clockState & HOUR)
-			RenderHour(time, hdc);
-
-		RenderNumber(hdc);
+		m_clockState |= state;
 	}
 
-	void PlaySound(SYSTEMTIME time);
-
-	void AddClockState(int state)
+	void RemoveClockState(int state)					// 시계 상태 빼기
 	{
-		clockState |= state;
-	}
-
-	void RemoveClockState(int state)
-	{
-		clockState ^= state;
+		m_clockState ^= state;
 	}
 
 private:
-	void RenderHour(SYSTEMTIME systemTime, HDC hdc);
-	void RenderSecond(SYSTEMTIME systemTime, HDC hdc);
-	void RenderMinute(SYSTEMTIME systemTime, HDC hdc);
+	void RenderHour(SYSTEMTIME systemTime, HDC hdc);	// 시침 출력
+	void RenderMinute(SYSTEMTIME systemTime, HDC hdc);	// 분침 출력
+	void RenderSecond(SYSTEMTIME systemTime, HDC hdc);	// 초침 출력
 
-	void RenderGraduation(HDC hdc);
-	void RenderNumber(HDC hdc);
-	void RenderCircle(HDC hdc);
+	void RenderGraduation(HDC hdc);						// 눈금 출력
+	void RenderNumber(HDC hdc);							// 숫자 출력
+	void RenderCircle(HDC hdc);							// 시계 원 출력
 };

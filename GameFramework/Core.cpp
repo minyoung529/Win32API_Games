@@ -3,6 +3,7 @@
 #include "Object.h"
 #include "TimeManager.h"
 #include "KeyManager.h"
+#include "SceneManager.h"
 
 Core::Core() :
 	m_ptResolution({}),
@@ -19,8 +20,6 @@ Core::~Core()
 	DeleteObject(m_hBit);
 }
 
-Object g_Obj;
-
 int Core::Init(HWND hWnd, POINT ptResolution)
 {
 	m_hWnd = hWnd;
@@ -31,11 +30,11 @@ int Core::Init(HWND hWnd, POINT ptResolution)
 	m_hBit = CreateCompatibleBitmap(m_hdc, m_ptResolution.x, m_ptResolution.y);
 	SelectObject(m_memDC, m_hBit);
 
+	// ===== Manager 초기화 ======
 	TimeManager::GetInst()->Init();
 	KeyManager::GetInst()->Init();
-
-	g_Obj.SetPos(Vector2(m_ptResolution.x / 2, m_ptResolution.y / 2));
-	g_Obj.SetScale(Vector2(100, 100));
+	SceneManager::GetInst()->Init();
+	// ===== Manager 초기화 ======
 
 	// 해상도 맞게 조절
 	RECT rt = { 0,0,ptResolution.x, ptResolution.y };
@@ -48,44 +47,22 @@ int Core::Init(HWND hWnd, POINT ptResolution)
 
 void Core::Progress()
 {
-	TimeManager::GetInst()->Update();
 	Update();
 	Render();
 }
 
 void Core::Update()
 {
-	Vector2 pos = g_Obj.GetPos();
-
-	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
-	{
-		pos.x -= 100 * DT;
-	}
-
-	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
-	{
-		pos.x += 100 * DT;
-	}
-
-	g_Obj.SetPos(pos);
+	TimeManager::GetInst()->Update();
+	KeyManager::GetInst()->Update();
+	SceneManager::GetInst()->Update();
 }
 
 void Core::Render()
 {
-	//Rectangle(m_memDC, -1, -1, m_ptResolution.x + 1, m_ptResolution.y + 1);
 	PatBlt(m_memDC, 0, 0, m_ptResolution.x, m_ptResolution.y, BLACKNESS);
-
-	Vector2 pos = g_Obj.GetPos();
-	Vector2 scale = g_Obj.GetScale();
-
-	Rectangle
-	(
-		m_memDC,
-		(int)(pos.x - scale.x / 2.f),
-		(int)(pos.y - scale.y / 2.f),
-		(int)(pos.x + scale.x / 2.f),
-		(int)(pos.y + scale.y / 2.f)
-	);
+	
+	SceneManager::GetInst()->Render(m_memDC);
 
 	BitBlt(m_hdc, 0, 0, m_ptResolution.x, m_ptResolution.y,
 		m_memDC, 0, 0, SRCCOPY);

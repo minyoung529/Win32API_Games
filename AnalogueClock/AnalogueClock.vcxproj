@@ -142,14 +142,23 @@
     <ClInclude Include="AnalogueClock.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Clock.h" />
+    <ClInclude Include="Define.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="ClockToggle.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="Hand.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="ToggleManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnalogueClock.cpp" />
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="Clock.cpp" />
+    <ClCompile Include="ClockToggle.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Hand.cpp" />
+    <ClCompile Include="ToggleManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="AnalogueClock.rc" />

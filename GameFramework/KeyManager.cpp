@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "KeyManager.h"
+#include "Core.h"
 
 int g_arrVK[(int)KEY::LAST] =
 {
@@ -29,4 +30,55 @@ void KeyManager::Init()
 
 void KeyManager::Update()
 {
+	HWND hWnd = GetFocus();
+
+	// Æ÷Ä¿½Ì X
+	if (hWnd == nullptr)
+	{
+		for (int i = 0; i < (int)KEY::LAST; i++)
+		{
+			m_vecKey[i].bPrevCheck = false;
+			
+			if (m_vecKey[i].eState == KEY_STATE::HOLD || m_vecKey[i].eState == KEY_STATE::TAP)
+			{
+				m_vecKey[i].eState = KEY_STATE::AWAY;
+			}
+			else if (m_vecKey[i].eState == KEY_STATE::AWAY)
+			{
+				m_vecKey[i].eState = KEY_STATE::NONE;
+			}
+		}
+		return;
+	}
+
+	for (int i = 0; i < (int)KEY::LAST; i++)
+	{
+		if (GetAsyncKeyState(g_arrVK[i]))
+		{
+			// ÀÌÀü¿¡ ´­·ÈÀ½
+			if (m_vecKey[i].bPrevCheck)
+			{
+				m_vecKey[i].eState = KEY_STATE::HOLD;
+			}
+			else
+			{
+				m_vecKey[i].eState = KEY_STATE::TAP;
+			}
+
+			m_vecKey[i].bPrevCheck = true;
+		}
+		else
+		{
+			if (m_vecKey[i].bPrevCheck)
+			{
+				m_vecKey[i].eState = KEY_STATE::AWAY;
+			}
+			else
+			{
+				m_vecKey[i].eState = KEY_STATE::NONE;
+			}
+
+			m_vecKey[i].bPrevCheck = false;
+		}
+	}
 }

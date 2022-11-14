@@ -37,7 +37,7 @@ private:
 class Core : public BWindow
 {
 public:
-	SINGLE(Core);
+	SINGLE(Core)
 	
 private:
 	Core();
@@ -52,12 +52,12 @@ private:
 public:
 	const HWND&			GetHwndHandle() { return m_hWnd; }
 	const HINSTANCE&	GetHInstanceHandle() { return m_hInstnace; }
-
+	POINT& GetResolution() { return m_ptResolution; }
 public:
-	int		Init(HWND hWnd, POINT ptResolution);
-	void	Progress();
+	int				Init(HWND hWnd, POINT ptResolution);
+	void			Progress();
 
 private:
-	void	Update();
-	void	Render();
+	virtual void	Update();
+	virtual void	Render();
 };

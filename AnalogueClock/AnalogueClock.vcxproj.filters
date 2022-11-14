@@ -16,6 +16,12 @@
     <Filter Include="소스 파일\Toggle">
       <UniqueIdentifier>{b6e44eb3-91d0-45c9-8de5-6b0be2b7cb10}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Main">
+      <UniqueIdentifier>{5dd3eed9-7e8c-4c52-a35f-b8797a0c0133}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Clock">
+      <UniqueIdentifier>{d5a7f2f3-32cf-4969-acaa-baf0c8be456b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -27,9 +33,6 @@
     <ClInclude Include="Resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Clock.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Button.h">
       <Filter>소스 파일\Toggle</Filter>
     </ClInclude>
@@ -39,13 +42,43 @@
     <ClInclude Include="AnalogueClock.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Define.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>소스 파일\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Clock.h">
+      <Filter>소스 파일\Clock</Filter>
+    </ClInclude>
+    <ClInclude Include="ToggleManager.h">
+      <Filter>소스 파일\Toggle</Filter>
+    </ClInclude>
+    <ClInclude Include="Hand.h">
+      <Filter>소스 파일\Clock</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnalogueClock.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>소스 파일\Main</Filter>
     </ClCompile>
     <ClCompile Include="Clock.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\Clock</Filter>
+    </ClCompile>
+    <ClCompile Include="ToggleManager.cpp">
+      <Filter>소스 파일\Toggle</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>소스 파일\Toggle</Filter>
+    </ClCompile>
+    <ClCompile Include="Hand.cpp">
+      <Filter>소스 파일\Clock</Filter>
+    </ClCompile>
+    <ClCompile Include="ClockToggle.cpp">
+      <Filter>소스 파일\Toggle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
