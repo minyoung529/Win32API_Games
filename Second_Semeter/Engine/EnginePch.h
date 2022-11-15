@@ -108,7 +108,7 @@ struct Vertex
 
 struct TransformParams
 {
-	Vec3 offset;
+	Matrix matWVP;
 };
 
 struct Color

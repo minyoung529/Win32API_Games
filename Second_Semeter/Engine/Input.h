@@ -11,6 +11,8 @@ enum class KEY_TYPE
 	A = 'A',
 	S = 'S',
 	D = 'D',
+	Q = 'Q',
+	E = 'E',
 
 	LBUTTON = VK_LBUTTON,
 	RBUTTON = VK_RBUTTON,

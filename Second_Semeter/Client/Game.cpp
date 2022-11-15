@@ -10,6 +10,8 @@
 #include "Transform.h"
 #include "SceneManager.h"
 #include "PlayerController.h"
+#include "Camera.h"
+#include "CameraController.h"
 
 void Game::Init(const WindowInfo& window)
 {
@@ -21,7 +23,8 @@ void Game::Init(const WindowInfo& window)
 
 	gameObj->AddComponent(make_shared<Transform>());
 	shared_ptr<Transform> transform = gameObj->GetTransform();
-	transform->SetPosition({ 0.f,0.0f,0.f });
+	transform->SetLocalPosition(Vec3::Zero);
+	transform->SetLocalScale(Vec3::One * 10.f);
 
 	vector<Vertex> vec(3);
 	vec[0].pos = Vec3(0.0f, 0.5f, 0.5f);
@@ -70,6 +73,16 @@ void Game::Init(const WindowInfo& window)
 	gameObj->AddComponent(make_shared<PlayerController>());
 
 	m_sampleScene->AddGameObject(gameObj);
+
+#pragma region Camera
+	shared_ptr<GameObject> camera = make_shared<GameObject>();
+	camera->AddComponent(make_shared<Transform>());
+	camera->AddComponent(make_shared<Camera>());
+	camera->AddComponent(make_shared<CameraController>());
+	camera->GetTransform()->SetLocalPosition(Vec3(0.f, 10.f, -10.f));
+
+	m_sampleScene->AddGameObject(camera);
+#pragma endregion
 
 	GET_SINGLE(SceneManager)->RegisterScene(L"SampleScene", m_sampleScene);
 	GET_SINGLE(SceneManager)->LoadScene(L"SampleScene");

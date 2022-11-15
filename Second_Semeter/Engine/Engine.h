@@ -26,6 +26,7 @@ public:
 	void CreateConstantBuffer(CBV_REGISTER reg, uint32 bufferSize, uint32 count);
 
 public:
+	const WindowInfo& GetWindow() { return m_window; }
 	shared_ptr<Device> GetDevice() { return m_device; }
 	shared_ptr<SwapChain> GetSwapChain() { return m_swapChain; }
 	shared_ptr<CommandQueue> GetCmdQueue() { return m_cmdQueue; }
