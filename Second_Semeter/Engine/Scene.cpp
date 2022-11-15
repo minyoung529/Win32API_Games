@@ -1,3 +1,4 @@
+#include "Scene.h"
 #include "pch.h"
 #include "Scene.h"
 #include "GameObject.h"
@@ -35,6 +36,15 @@ void Scene::LateUpdate()
 	{
 		if (gameObject)
 			gameObject->LateUpdate();
+	}
+}
+
+void Scene::FinalUpdate()
+{
+	for (const shared_ptr<GameObject> gameObject : m_gameObjects)
+	{
+		if (gameObject)
+			gameObject->FinalUpdate();
 	}
 }
 

@@ -1,3 +1,4 @@
+#include "GameObject.h"
 #include "pch.h"
 #include "GameObject.h"
 #include "Transform.h"
@@ -90,6 +91,15 @@ void GameObject::LateUpdate()
 	{
 		if (script)
 			script->LateUpdate();
+	}
+}
+
+void GameObject::FinalUpdate()
+{
+	for (shared_ptr<Component>& component : m_components)
+	{
+		if (component)
+			component->FinalUpdate();
 	}
 }
 

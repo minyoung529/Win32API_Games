@@ -9,6 +9,7 @@ void SceneManager::Update()
 
 	m_activeScene->Update();
 	m_activeScene->LateUpdate();
+	m_activeScene->FinalUpdate();
 }
 
 void SceneManager::Render()

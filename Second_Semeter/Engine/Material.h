@@ -30,8 +30,7 @@ public:
 	void SetTexture(uint8 index, shared_ptr<Texture> texture) { m_textures[index] = texture; }
 
 public:
-	void Update();
-	void Render();
+	void PushData();
 
 private:
 	MaterialParams m_params;

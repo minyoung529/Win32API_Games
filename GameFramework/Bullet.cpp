@@ -3,7 +3,8 @@
 #include "TimeManager.h"
 
 Bullet::Bullet()
-	: m_fDir(1.f)
+	: m_ftheta(M_PI / 4.f)
+	, m_vDir(Vector2(1.f, 1.f))
 
 {
 }
@@ -15,7 +16,8 @@ Bullet::~Bullet()
 void Bullet::Update()
 {
 	Vector2	vPos = GetPos();
-	vPos.y += 600.f * FDT * m_fDir;
+	vPos.x += 600.f * FDT * m_vDir.x;
+	vPos.y += 600.f * FDT * m_vDir.y;
 	SetPos(vPos);
 }
 

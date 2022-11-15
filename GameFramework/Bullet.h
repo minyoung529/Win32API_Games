@@ -3,7 +3,8 @@
 class Bullet : public Object
 {
 private:
-	int m_fDir;
+	float m_ftheta;
+	Vector2 m_vDir;
 
 public:
 	Bullet();
@@ -14,9 +15,15 @@ public:
 	virtual void Render(HDC hdc) override;
 
 public:
-	void SetDir(bool _b)
+	void SetDir(float theta)
 	{
-		m_fDir = (_b) ? -1.f : 1.f;
+		m_ftheta = theta;
+	}
+
+	void SetDir(Vector2 dir)
+	{
+		m_vDir = dir;
+		m_vDir.Normalize();
 	}
 };
 

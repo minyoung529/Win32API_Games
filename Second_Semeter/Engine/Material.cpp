@@ -3,7 +3,7 @@
 #include "Engine.h"
 #include "Shader.h"
 
-void Material::Update()
+void Material::PushData()
 {
 	// CBV ¾÷·Îµå
 	CONST_BUFFER(CONSTANT_BUFFER_TYPE::MATERIAL)->PushData(&m_params, sizeof(m_params));
@@ -17,9 +17,6 @@ void Material::Update()
 		SRV_REGISTER reg = SRV_REGISTER(static_cast<uint8>(SRV_REGISTER::t0) + i);
 		g_Engine->GetTableDescHeap()->SetSRV(m_textures[i]->GetCpuHandle(), reg);
 	}
-}
 
-void Material::Render()
-{
 	m_shader->Render();
 }

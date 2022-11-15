@@ -14,11 +14,6 @@ MeshRenderer::~MeshRenderer()
 
 void MeshRenderer::Update()
 {
-	if (m_material)
-		m_material->Update();
-
-	if (m_mesh)
-		m_mesh->Update();
 }
 
 void MeshRenderer::Render()
@@ -26,7 +21,7 @@ void MeshRenderer::Render()
 	GetTransform()->PushData();
 
 	if (m_material)
-		m_material->Render();
+		m_material->PushData();
 
 	if (m_mesh)
 		m_mesh->Render();
