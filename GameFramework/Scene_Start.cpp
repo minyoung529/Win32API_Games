@@ -4,6 +4,8 @@
 #include "Player.h"
 #include "Monster.h"
 #include "Core.h"
+#include "Image.h"
+#include "PathManager.h"
 
 Scene_Start::Scene_Start()
 {

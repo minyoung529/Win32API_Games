@@ -20,6 +20,7 @@ private:
 public:
 	void Init();
 	void Update();
+	void Render();
 
 	double GetDT() { return m_dDt; }
 	float GetFDT() { return (float)m_dDt; }

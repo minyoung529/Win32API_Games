@@ -53,6 +53,8 @@ public:
 	const HWND&			GetHwndHandle() { return m_hWnd; }
 	const HINSTANCE&	GetHInstanceHandle() { return m_hInstnace; }
 	POINT& GetResolution() { return m_ptResolution; }
+	const HDC& GetMainDC() { return m_hdc; }
+
 public:
 	int				Init(HWND hWnd, POINT ptResolution);
 	void			Progress();

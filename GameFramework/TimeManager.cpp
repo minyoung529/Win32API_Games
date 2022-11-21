@@ -32,6 +32,10 @@ void TimeManager::Update()
 	m_dAcc += m_dDt;
 
 	m_llprevCount = m_llCurCount;
+}
+
+void TimeManager::Render()
+{
 	++m_iCallCount;
 
 	if (m_dAcc >= 1)

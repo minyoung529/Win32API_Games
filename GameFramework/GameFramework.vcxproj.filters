@@ -35,6 +35,15 @@
     <Filter Include="Engine\04.Objects\Player">
       <UniqueIdentifier>{2eea9470-821a-4fd8-89bd-04c376c0d1b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\06.Resource">
+      <UniqueIdentifier>{6a8a4e6d-a717-4669-a05a-2dfdce56f72f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\06.Resource\Image">
+      <UniqueIdentifier>{6372562b-9331-44ae-b7a5-9b7af3914aab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\06.Resource\Sound">
+      <UniqueIdentifier>{e692a1c6-6825-4eb8-b0b1-a980012d9d01}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -91,6 +100,21 @@
     <ClInclude Include="Bullet.h">
       <Filter>Engine\04.Objects</Filter>
     </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>Engine\06.Resource\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>Engine\06.Resource\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Res.h">
+      <Filter>Engine\06.Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="PathManager.h">
+      <Filter>Engine\03. Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Engine\03. Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameFramework.rc">
@@ -142,6 +166,21 @@
     </ClCompile>
     <ClCompile Include="Bullet.cpp">
       <Filter>Engine\04.Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>Engine\06.Resource\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>Engine\06.Resource\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Res.cpp">
+      <Filter>Engine\06.Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="PathManager.cpp">
+      <Filter>Engine\03. Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Engine\03. Managers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

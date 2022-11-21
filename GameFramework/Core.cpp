@@ -4,6 +4,7 @@
 #include "TimeManager.h"
 #include "KeyManager.h"
 #include "SceneManager.h"
+#include "PathManager.h"
 
 Core::Core() :
 	m_ptResolution({}),
@@ -33,6 +34,7 @@ int Core::Init(HWND hWnd, POINT ptResolution)
 	// ===== Manager 초기화 ======
 	TimeManager::GetInst()->Init();
 	KeyManager::GetInst()->Init();
+	PathManager::GetInst()->Init();
 	SceneManager::GetInst()->Init();
 	// ===== Manager 초기화 ======
 
@@ -60,10 +62,13 @@ void Core::Update()
 
 void Core::Render()
 {
-	PatBlt(m_memDC, 0, 0, m_ptResolution.x, m_ptResolution.y, BLACKNESS);
+	PatBlt(m_memDC, 0, 0, m_ptResolution.x, m_ptResolution.y, WHITENESS);
 	
 	SceneManager::GetInst()->Render(m_memDC);
 
 	BitBlt(m_hdc, 0, 0, m_ptResolution.x, m_ptResolution.y,
 		m_memDC, 0, 0, SRCCOPY);
+
+	// 제목에 dt 띄우는 함수
+	// TimeManager::GetInst()->Render();
 }

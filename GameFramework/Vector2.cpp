@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Vector2.h"
-#include <assert.h>
 
 Vector2::Vector2() : x(0.f), y(0.f)
 {
