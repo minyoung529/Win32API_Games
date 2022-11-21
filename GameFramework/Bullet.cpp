@@ -1,12 +1,21 @@
 #include "pch.h"
 #include "Bullet.h"
 #include "TimeManager.h"
+#include "PathManager.h"
+#include "Image.h"
 
 Bullet::Bullet()
 	: m_ftheta(M_PI / 4.f)
 	, m_vDir(Vector2(1.f, 1.f))
+	, m_pImage(nullptr)
 
 {
+	// Image ·Îµù
+	wstring strFilePath = PathManager::GetInst()->GetResPath();
+	strFilePath += L"Image\\Bullet.bmp";
+
+	m_pImage = new Image();
+	m_pImage->Load(strFilePath);
 }
 
 Bullet::~Bullet()
@@ -23,17 +32,17 @@ void Bullet::Update()
 
 void Bullet::Render(HDC hdc)
 {
-	Vector2 position = GetPos();
-	Vector2 scale = GetScale();
+	int width = (int)m_pImage->GetWidth();
+	int height = (int)m_pImage->GetHeight();
+	Vector2 pos = GetPos();
 
-	Ellipse
+	TransparentBlt
 	(
 		hdc,
-		(int)(position.x - scale.x / 2.f),
-		(int)(position.y - scale.y / 2.f),
-		(int)(position.x + scale.x / 2.f),
-		(int)(position.y + scale.y / 2.f)
+		(int)(pos.x - (float)(width / 2)),
+		(int)(pos.y - (float)(height / 2)),
+		width, height,
+		m_pImage->GetDC(),
+		0, 0, width, height, RGB(255, 0, 255)
 	);
-
-	SetScale(scale);
 }

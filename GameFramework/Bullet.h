@@ -1,10 +1,13 @@
 #pragma once
 #include "Object.h"
+class Image;
+
 class Bullet : public Object
 {
 private:
 	float m_ftheta;
 	Vector2 m_vDir;
+	Image* m_pImage;
 
 public:
 	Bullet();
