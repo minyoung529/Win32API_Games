@@ -16,6 +16,8 @@
 using namespace std;
 namespace fs = std::filesystem;
 
+#include <fstream>
+
 // directX include
 #include "d3dx12.h"
 #include "SimpleMath.h"

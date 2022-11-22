@@ -59,6 +59,95 @@ void Game::Init(const WindowInfo& window)
 	}
 #pragma endregion 
 
+#pragma region Sphere
+	{
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3::One * 10.f);
+		sphere->GetTransform()->SetLocalPosition(Vec3(-10.f, 10.f, 10.f));
+
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadSphereMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = make_shared<Shader>();
+			shared_ptr<Texture> texture = make_shared<Texture>();
+			shader->Init(L"..\\Engine\\Default.hlsli");
+			texture->Init(L"..\\Resources\\Texture\\SpongeBob.jpg");
+
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+
+		sphere->AddComponent(meshRenderer);
+		m_sampleScene->AddGameObject(sphere);
+	}
+#pragma endregion 
+
+#pragma region Plane
+	{
+		shared_ptr<GameObject> plane = make_shared<GameObject>();
+		plane->AddComponent(make_shared<Transform>());
+		plane->GetTransform()->SetLocalScale(Vec3::One);
+		plane->GetTransform()->SetLocalPosition(Vec3::Zero);
+
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadPlaneMesh(100.f, 100.f, 50, 50);
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = make_shared<Shader>();
+			shared_ptr<Texture> texture = make_shared<Texture>();
+			shader->Init(L"..\\Engine\\Default.hlsli");
+			texture->Init(L"..\\Resources\\Texture\\Default.png");
+
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+
+		plane->AddComponent(meshRenderer);
+		m_sampleScene->AddGameObject(plane);
+	}
+#pragma endregion 
+
+#pragma region Model
+	{
+		shared_ptr<GameObject> plane = make_shared<GameObject>();
+		plane->AddComponent(make_shared<Transform>());
+		plane->GetTransform()->SetLocalScale(Vec3::One);
+		plane->GetTransform()->SetLocalPosition(Vec3(0.f, 5.f, 0.f));
+
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadMeshFile(L"..\\Resources\\Models\\car.txt", L"Skull");
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = make_shared<Shader>();
+			shared_ptr<Texture> texture = make_shared<Texture>();
+			shader->Init(L"..\\Engine\\Default.hlsli");
+			texture->Init(L"..\\Resources\\Texture\\SpongeBob.jpg");
+
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+
+		plane->AddComponent(meshRenderer);
+		m_sampleScene->AddGameObject(plane);
+	}
+#pragma endregion 
+
+
+
 	GET_SINGLE(SceneManager)->RegisterScene(L"SampleScene", m_sampleScene);
 	GET_SINGLE(SceneManager)->LoadScene(L"SampleScene");
 }
