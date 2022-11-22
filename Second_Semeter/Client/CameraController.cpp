@@ -31,13 +31,31 @@ void CameraController::LateUpdate()
 
 	GetTransform()->SetLocalPosition(pos);
 
-	Vec3 rot = GetTransform()->GetLocalRotation();
-
 	if (INPUT->GetButton(KEY_TYPE::Q))
-		rot.y += DELTA_TIME * 0.5f;
+	{
+		Vec3 rot = GetTransform()->GetLocalRotation();
+		rot.x += DELTA_TIME * 0.5f;
+		GetTransform()->SetLocalRotation(rot);
+	}
 
 	if (INPUT->GetButton(KEY_TYPE::E))
-		rot.y -= DELTA_TIME * 0.5f;
+	{
+		Vec3 rot = GetTransform()->GetLocalRotation();
+		rot.x -= DELTA_TIME * 0.5f;
+		GetTransform()->SetLocalRotation(rot);
+	}
 
-	GetTransform()->SetLocalRotation(rot);
+	if (INPUT->GetButton(KEY_TYPE::Z))
+	{
+		Vec3 rot = GetTransform()->GetLocalRotation();
+		rot.y += DELTA_TIME * 0.5f;
+		GetTransform()->SetLocalRotation(rot);
+	}
+
+	if (INPUT->GetButton(KEY_TYPE::C))
+	{
+		Vec3 rot = GetTransform()->GetLocalRotation();
+		rot.y -= DELTA_TIME * 0.5f;
+		GetTransform()->SetLocalRotation(rot);
+	}
 }

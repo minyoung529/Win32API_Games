@@ -1,9 +1,14 @@
 #pragma once
+#include "Object.h"
 
 class Material;
 
-class Mesh
+class Mesh : public Object
 {
+public:
+	Mesh();
+	virtual ~Mesh();
+
 public:
 	void Init(const vector<Vertex>& vertexBuffer, const vector<uint32>& indexBuffer);
 	void Update();

@@ -12,4 +12,10 @@ private:
 private:
 	ResourceManager();
 	~ResourceManager();
+
+public:
+	Image* ImgLoad(const wstring& _strKey, const wstring& _strRelativePath);
+
+public:
+	Image* ImgFind(const wstring& _strKey);
 };

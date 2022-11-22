@@ -44,6 +44,9 @@
     <Filter Include="Engine\06.Resource\Sound">
       <UniqueIdentifier>{e692a1c6-6825-4eb8-b0b1-a980012d9d01}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\07.Component">
+      <UniqueIdentifier>{0635c471-ba7d-4f99-af9a-ea63a4d42a90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -115,6 +118,9 @@
     <ClInclude Include="ResourceManager.h">
       <Filter>Engine\03. Managers</Filter>
     </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>Engine\07.Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameFramework.rc">
@@ -181,6 +187,9 @@
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Engine\03. Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>Engine\07.Component</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -15,9 +15,6 @@ void PathManager::Init()
 {
 	GetCurrentDirectory(255, m_szResPath);
 
-	// 경로 확인용
-	// SetWindowText(Core::GetInst()->GetHwndHandle(), m_szResPath);
-
 	int length = wcslen(m_szResPath);
 
 	// 상위 폴더
@@ -32,6 +29,6 @@ void PathManager::Init()
 
 	wcscat_s(m_szResPath, 255, L"\\bin\\Res\\");
 
-	 SetWindowText(Core::GetInst()->GetHwndHandle(), m_szResPath);
+	SetWindowText(Core::GetInst()->GetHwndHandle(), m_szResPath);
 
 }

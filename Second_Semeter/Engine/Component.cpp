@@ -2,7 +2,7 @@
 #include "Component.h"
 #include "GameObject.h"
 
-Component::Component(COMPONENT_TYPE type) : m_type(type)
+Component::Component(COMPONENT_TYPE type) : Object(OBJECT_TYPE::COMPONENT), m_type(type)
 {
 }
 

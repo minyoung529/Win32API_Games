@@ -3,7 +3,8 @@
 
 Object::Object() :
 	m_ptPos{},
-	m_ptScale{}
+	m_ptScale{},
+	m_pCollider(nullptr)
 {
 }
 

@@ -8,6 +8,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_ LPWSTR    lpCmdLine,
 	_In_ int       nCmdShow)
 {
+	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | )
+
 	BWindow window;
 	window.Run(hInstance, lpCmdLine, nCmdShow);
 }

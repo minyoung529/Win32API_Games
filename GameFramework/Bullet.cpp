@@ -3,6 +3,7 @@
 #include "TimeManager.h"
 #include "PathManager.h"
 #include "Image.h"
+#include "ResourceManager.h"
 
 Bullet::Bullet()
 	: m_ftheta(M_PI / 4.f)
@@ -10,12 +11,7 @@ Bullet::Bullet()
 	, m_pImage(nullptr)
 
 {
-	// Image ·Îµù
-	wstring strFilePath = PathManager::GetInst()->GetResPath();
-	strFilePath += L"Image\\Bullet.bmp";
-
-	m_pImage = new Image();
-	m_pImage->Load(strFilePath);
+	m_pImage = ResourceManager::GetInst()->ImgLoad(L"BulletImg", L"Image\\Bullet.bmp");
 }
 
 Bullet::~Bullet()

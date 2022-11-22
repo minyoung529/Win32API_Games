@@ -6,26 +6,16 @@
 #include "SceneManager.h"
 #include "Scene.h"
 #include "Bullet.h"
+#include "ResourceManager.h"
 #include "Image.h"
-#include "PathManager.h"
 
-Player::Player()
-	: m_pImage(nullptr)
+Player::Player() : m_pImage(nullptr)
 {
-	// Image ·Îµù
-	wstring strFilePath = PathManager::GetInst()->GetResPath();
-	strFilePath += L"Image\\planem.bmp";
-
-	m_pImage = new Image();
-	m_pImage->Load(strFilePath);
+	m_pImage = ResourceManager::GetInst()->ImgLoad(L"PlayerImg", L"Image\\planem.bmp");
 }
 
 Player::~Player()
 {
-	if (m_pImage)
-	{
-		delete m_pImage;
-	}
 }
 
 void Player::Update()

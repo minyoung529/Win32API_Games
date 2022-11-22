@@ -1,4 +1,5 @@
 #pragma once
+#include "Object.h"
 
 class Transform;
 class GameObject;
@@ -18,7 +19,7 @@ enum
 	FIXED_COMPONENT_COUNT = static_cast<uint8>(COMPONENT_TYPE::END) - 1
 };
 
-class Component
+class Component : public Object
 {
 public:
 	Component(COMPONENT_TYPE type);

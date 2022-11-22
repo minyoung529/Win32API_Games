@@ -1,9 +1,11 @@
 #pragma once
 #include "Component.h"
+#include "Object.h"
+
 class MonoBehaviour;
 class Transform;
 
-class GameObject : public enable_shared_from_this<GameObject>
+class GameObject : public Object, public enable_shared_from_this<GameObject>
 {
 public:
 	GameObject();

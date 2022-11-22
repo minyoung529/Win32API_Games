@@ -1,4 +1,7 @@
 #pragma once
+
+class Collider;
+
 class Object
 {
 public:
@@ -8,6 +11,7 @@ public:
 private:
 	Vector2		m_ptPos;
 	Vector2		m_ptScale;
+	Collider*	m_pCollider;
 
 public:
 	void SetPos(Vector2 pos) { m_ptPos = pos; }
