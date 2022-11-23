@@ -44,3 +44,15 @@ void Scene::Render(HDC hdc)
 		}
 	}
 }
+
+void Scene::FinalUpdate()
+{
+	for (UINT i = 0; i < (UINT)GROUP_TYPE::END; i++)
+	{
+		// size_t > size()ΏΝ ΕλΐΟ
+		for (size_t j = 0; j < m_vecObj[i].size(); j++)
+		{
+			m_vecObj[i][j]->FinalUpdate();
+		}
+	}
+}

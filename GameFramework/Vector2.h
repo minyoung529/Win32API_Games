@@ -1,4 +1,6 @@
 #pragma once
+#include<assert.h>
+
 class Vector2
 {
 public:
@@ -15,4 +17,22 @@ public:
 
 	float Length();
 	Vector2& Normalize();
+
+	const Vector2& operator+ (const Vector2& v)
+	{
+		return Vector2(v.x + x, v.y + y);
+	}
+	const Vector2& operator* (const Vector2& v)
+	{
+		return Vector2(v.x * x, v.y * y);
+	}
+	const Vector2& operator/ (const Vector2& v)
+	{
+		//assert(!(v.x == 0.f || v. == 0.f));
+		return Vector2(x / v.x, y / v.y);
+	}
+	const Vector2& operator- (const Vector2& v)
+	{
+		return Vector2(x - v.x, y - v.y);
+	}
 };

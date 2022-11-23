@@ -27,6 +27,7 @@ public:
 	virtual void Exit() abstract;
 	void Update();
 	void Render(HDC hdc);
+	void FinalUpdate();
 
 public:
 	// inline: 클래스 내부에서 정의해서 함수 호출 비용을 줄임, 디버깅 용이

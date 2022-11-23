@@ -23,4 +23,8 @@ public:
 public:
 	virtual void Update() = 0;
 	virtual void Render(HDC hdc);
+
+	void CreateCollider();
+	virtual void FinalUpdate() final;
+	void Component_Render(HDC hdc);
 };

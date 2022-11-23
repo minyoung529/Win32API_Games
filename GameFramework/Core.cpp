@@ -10,7 +10,9 @@ Core::Core() :
 	m_ptResolution({}),
 	m_hdc(0),
 	m_memDC(0),
-	m_hBit(0)
+	m_hBit(0),
+	m_arrBrush{},
+	m_arrPen{}
 {
 }
 
@@ -30,6 +32,8 @@ int Core::Init(HWND hWnd, POINT ptResolution)
 	m_memDC = CreateCompatibleDC(m_hdc);
 	m_hBit = CreateCompatibleBitmap(m_hdc, m_ptResolution.x, m_ptResolution.y);
 	SelectObject(m_memDC, m_hBit);
+
+	CreateBrushPen();
 
 	// ===== Manager ÃÊ±âÈ­ ======
 	TimeManager::GetInst()->Init();
@@ -51,6 +55,10 @@ void Core::Progress()
 {
 	Update();
 	Render();
+}
+
+void Core::CreateBrushPen()
+{
 }
 
 void Core::Update()

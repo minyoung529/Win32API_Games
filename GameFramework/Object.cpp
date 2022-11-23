@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Object.h"
+#include "Collider.h"
 
 Object::Object() :
 	m_ptPos{},
@@ -10,6 +11,8 @@ Object::Object() :
 
 Object::~Object()
 {
+	if (m_pCollider)
+		delete m_pCollider;
 }
 
 
@@ -28,4 +31,25 @@ void Object::Render(HDC hdc)
 	);
 
 	SetScale(scale);
+	Component_Render(hdc);
+}
+
+void Object::Component_Render(HDC hdc)
+{
+	if (m_pCollider)
+	{
+		m_pCollider->Render(hdc);
+	}
+}
+
+void Object::CreateCollider()
+{
+	m_pCollider = new Collider;
+	m_pCollider->m_pOwner = this;
+}
+
+void Object::FinalUpdate()
+{
+	if (m_pCollider)
+		m_pCollider->FinalUpdate();
 }

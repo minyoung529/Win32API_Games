@@ -12,6 +12,7 @@
 Player::Player() : m_pImage(nullptr)
 {
 	m_pImage = ResourceManager::GetInst()->ImgLoad(L"PlayerImg", L"Image\\planem.bmp");
+	CreateCollider();
 }
 
 Player::~Player()
@@ -78,6 +79,8 @@ void Player::Render(HDC hdc)
 		m_pImage->GetDC(),
 		0, 0, width, height, RGB(255, 0, 255)
 	);
+
+	Component_Render(hdc);
 }
 
 void Player::CreateBullet()

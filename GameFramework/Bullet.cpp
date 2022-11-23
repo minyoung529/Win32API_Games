@@ -12,6 +12,7 @@ Bullet::Bullet()
 
 {
 	m_pImage = ResourceManager::GetInst()->ImgLoad(L"BulletImg", L"Image\\Bullet.bmp");
+	CreateCollider();
 }
 
 Bullet::~Bullet()
@@ -41,4 +42,6 @@ void Bullet::Render(HDC hdc)
 		m_pImage->GetDC(),
 		0, 0, width, height, RGB(255, 0, 255)
 	);
+
+	Component_Render(hdc);
 }

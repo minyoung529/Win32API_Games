@@ -48,6 +48,8 @@ private:
 	HDC			m_hdc;				// 메인 윈도우에 Draw할 DC
 	HDC			m_memDC;
 	HBITMAP		m_hBit;
+	HBRUSH		m_arrBrush[(UINT)BRUSH_TYPE::END];
+	HPEN		m_arrPen[(UINT)PEN_TYPE::GREEN];
 
 public:
 	const HWND&			GetHwndHandle() { return m_hWnd; }
@@ -58,6 +60,7 @@ public:
 public:
 	int				Init(HWND hWnd, POINT ptResolution);
 	void			Progress();
+	void			CreateBrushPen();
 
 private:
 	virtual void	Update();

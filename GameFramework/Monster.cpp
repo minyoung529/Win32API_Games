@@ -8,6 +8,7 @@ Monster::Monster()
 	, m_vCenterPos(Vector2(0, 0))
 	, m_fDir(1.f)
 {
+	CreateCollider();
 }
 
 Monster::~Monster()
