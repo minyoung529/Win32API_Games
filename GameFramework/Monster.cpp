@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Monster.h"
 #include "TimeManager.h"
+#include "Collider.h"
 
 Monster::Monster()
 	: m_fSpeed(100.f)
@@ -9,6 +10,7 @@ Monster::Monster()
 	, m_fDir(1.f)
 {
 	CreateCollider();
+	GetCollider()->SetScale(Vector2(40.f, 40.f));
 }
 
 Monster::~Monster()

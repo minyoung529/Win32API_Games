@@ -5,6 +5,7 @@
 #include "KeyManager.h"
 #include "SceneManager.h"
 #include "PathManager.h"
+#include "CollisionManager.h"
 
 Core::Core() :
 	m_ptResolution({}),
@@ -21,6 +22,11 @@ Core::~Core()
 	ReleaseDC(m_hWnd, m_hdc);
 	DeleteDC(m_memDC);
 	DeleteObject(m_hBit);
+
+	for (int i = 0; i < (UINT)PEN_TYPE::END; i++)
+	{
+		DeleteObject(m_arrPen[i]);
+	}
 }
 
 int Core::Init(HWND hWnd, POINT ptResolution)
@@ -57,26 +63,31 @@ void Core::Progress()
 	Render();
 }
 
-void Core::CreateBrushPen()
-{
-}
-
 void Core::Update()
 {
 	TimeManager::GetInst()->Update();
 	KeyManager::GetInst()->Update();
 	SceneManager::GetInst()->Update();
+	CollisionManager::GetInst()->Update();
 }
 
 void Core::Render()
 {
 	PatBlt(m_memDC, 0, 0, m_ptResolution.x, m_ptResolution.y, WHITENESS);
-	
+
 	SceneManager::GetInst()->Render(m_memDC);
 
 	BitBlt(m_hdc, 0, 0, m_ptResolution.x, m_ptResolution.y,
 		m_memDC, 0, 0, SRCCOPY);
 
 	// 제목에 dt 띄우는 함수
-	// TimeManager::GetInst()->Render();
+	TimeManager::GetInst()->Render();
+}
+
+void Core::CreateBrushPen()
+{
+	m_arrBrush[(UINT)BRUSH_TYPE::HOLLOW] = (HBRUSH)GetStockObject(HOLLOW_BRUSH);
+	m_arrPen[(UINT)PEN_TYPE::RED] = CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
+	m_arrPen[(UINT)PEN_TYPE::GREEN] = CreatePen(PS_SOLID, 1, RGB(0, 255, 0));
+	m_arrPen[(UINT)PEN_TYPE::BLUE] = CreatePen(PS_SOLID, 1, RGB(0, 0, 255));
 }

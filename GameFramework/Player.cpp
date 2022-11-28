@@ -8,11 +8,13 @@
 #include "Bullet.h"
 #include "ResourceManager.h"
 #include "Image.h"
+#include "Collider.h"
 
 Player::Player() : m_pImage(nullptr)
 {
 	m_pImage = ResourceManager::GetInst()->ImgLoad(L"PlayerImg", L"Image\\planem.bmp");
 	CreateCollider();
+	GetCollider()->SetScale(Vector2(50.f, 70.f));
 }
 
 Player::~Player()

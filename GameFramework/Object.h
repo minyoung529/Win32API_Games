@@ -11,7 +11,7 @@ public:
 private:
 	Vector2		m_ptPos;
 	Vector2		m_ptScale;
-	Collider*	m_pCollider;
+	Collider* m_pCollider;
 
 public:
 	void SetPos(Vector2 pos) { m_ptPos = pos; }
@@ -20,6 +20,7 @@ public:
 	const Vector2& GetPos() { return m_ptPos; }
 	const Vector2& GetScale() { return m_ptScale; }
 
+	Collider* GetCollider() { return m_pCollider; }
 public:
 	virtual void Update() = 0;
 	virtual void Render(HDC hdc);

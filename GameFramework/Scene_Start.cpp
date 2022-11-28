@@ -6,6 +6,7 @@
 #include "Core.h"
 #include "Image.h"
 #include "PathManager.h"
+#include "CollisionManager.h"
 
 Scene_Start::Scene_Start()
 {
@@ -39,9 +40,11 @@ void Scene_Start::Enter()
 
 		AddObject(monster, GROUP_TYPE::MONSTER);
 	}
+
+	CollisionManager::GetInst()->CheckGroup(GROUP_TYPE::PLAYER, GROUP_TYPE::MONSTER);
 }
 
 void Scene_Start::Exit()
 {
-
+	CollisionManager::GetInst()->CheckReset();
 }

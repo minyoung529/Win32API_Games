@@ -16,11 +16,14 @@ private:
 	wstring			m_strName;
 
 public:
-	void SetName(const wstring& _strName)
-	{
-		m_strName = _strName;
-	}
+	void SetName(const wstring& _strName) { m_strName = _strName; }
+	
 	const wstring& GetName() { return m_strName; }
+	
+	const vector<Object*>& GetGroupObject(GROUP_TYPE _eType)
+	{
+		return m_vecObj[(UINT)_eType];
+	}
 
 public:
 	virtual void Enter() abstract;

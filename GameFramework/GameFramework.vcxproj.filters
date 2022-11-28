@@ -47,6 +47,9 @@
     <Filter Include="Engine\07.Component">
       <UniqueIdentifier>{0635c471-ba7d-4f99-af9a-ea63a4d42a90}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\08.Module">
+      <UniqueIdentifier>{55167011-4c9a-48a4-b983-df9eda310580}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -121,6 +124,10 @@
     <ClInclude Include="Collider.h">
       <Filter>Engine\07.Component</Filter>
     </ClInclude>
+    <ClInclude Include="SelectGDI.h" />
+    <ClInclude Include="CollisionManager.h">
+      <Filter>Engine\03. Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameFramework.rc">
@@ -190,6 +197,10 @@
     </ClCompile>
     <ClCompile Include="Collider.cpp">
       <Filter>Engine\07.Component</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectGDI.cpp" />
+    <ClCompile Include="CollisionManager.cpp">
+      <Filter>Engine\03. Managers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
