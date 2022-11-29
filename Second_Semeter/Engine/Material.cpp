@@ -3,7 +3,7 @@
 #include "Engine.h"
 #include "Shader.h"
 
-Material::Material() : Object(OBJECT_TYPE::MATERIAL)
+Material::Material(): Object(OBJECT_TYPE::MATERIAL)
 {
 }
 

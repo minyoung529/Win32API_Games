@@ -15,6 +15,7 @@ private:
 	Vector2 m_vScale;		// 크기
 	UINT m_id;				// 충돌체 고유 ID
 	static UINT g_iNextID;	// 
+	bool m_iCheck;
 
 	friend class Object;
 
@@ -31,8 +32,9 @@ public:
 	void SetOffsetPos(Vector2 _vPos) { m_vOffsetPos = _vPos; }
 	void SetScale(Vector2 _vScale) { m_vScale = _vScale; }
 	Vector2 GetOffsetPos() { return m_vOffsetPos; }
-	Vector2 GetSclae() { return m_vScale; }
+	Vector2 GetScale() { return m_vScale; }
 	UINT GetID() { return m_id; }
+	Vector2 GetFinalPos() { return m_vFinalPos; }
 
 public:
 	Collider& operator= (Collider& origin) = delete;

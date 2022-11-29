@@ -1,5 +1,4 @@
 #pragma once
-#include "Scene.h"
 
 class Scene;
 
@@ -19,7 +18,7 @@ public:
 	shared_ptr<Scene> GetActiveScene() { return m_activeScene; }
 
 private:
-	shared_ptr<Scene> m_activeScene;
+	shared_ptr<Scene>				m_activeScene;
 	map<wstring, shared_ptr<Scene>> m_sceneContainer;
 };
 

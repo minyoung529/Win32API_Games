@@ -1,5 +1,4 @@
 #pragma once
-class GameObject;
 
 class Game
 {
@@ -10,6 +9,6 @@ public:
 	void Release();
 
 private:
-	shared_ptr<class Scene> m_sampleScene;
+	shared_ptr<class Scene> m_SampleScene;
 };
 

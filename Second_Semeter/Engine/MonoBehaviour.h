@@ -7,4 +7,3 @@ public:
 	MonoBehaviour();
 	virtual ~MonoBehaviour();
 };
-

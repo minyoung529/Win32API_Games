@@ -4,11 +4,11 @@ enum class OBJECT_TYPE : uint8
 {
 	NONE,
 	GAMEOBJECT,
+	COMPONENT,
 	MATERIAL,
 	MESH,
 	SHADER,
 	TEXTURE,
-	COMPONENT,
 
 	END
 };
@@ -24,10 +24,10 @@ public:
 	Object(OBJECT_TYPE type);
 	virtual ~Object();
 
-public:
 	OBJECT_TYPE GetType() { return m_objectType; }
+
+	void SetName(const wstring& name) { m_name = name; }
 	const wstring& GetName() { return m_name; }
-	void SetName(const wstring& str) { m_name = str; }
 
 protected:
 	friend class Resources;
@@ -37,6 +37,5 @@ protected:
 private:
 	OBJECT_TYPE m_objectType = OBJECT_TYPE::NONE;
 	wstring m_name;
-
 };
 

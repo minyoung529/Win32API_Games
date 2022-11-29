@@ -1,7 +1,7 @@
 #pragma once
 #include "MonoBehaviour.h"
 
-class CameraController: public MonoBehaviour
+class CameraController : public MonoBehaviour
 {
 public:
 	CameraController();
@@ -11,6 +11,7 @@ public:
 	virtual void LateUpdate() override;
 
 private:
-	float m_speed = 10.f;
+	float	m_speed = 10.f;
+
 };
 

@@ -1,11 +1,13 @@
-#include "Scene.h"
 #include "pch.h"
 #include "Scene.h"
+#include "Engine.h"
+#include "ConstantBuffer.h"
 #include "GameObject.h"
+#include "Light.h"
 
 void Scene::Awake()
 {
-	for (const shared_ptr<GameObject> gameObject : m_gameObjects)
+	for (const shared_ptr<GameObject>& gameObject : m_gameObjects)
 	{
 		if (gameObject)
 			gameObject->Awake();
@@ -14,7 +16,7 @@ void Scene::Awake()
 
 void Scene::Start()
 {
-	for (const shared_ptr<GameObject> gameObject : m_gameObjects)
+	for (const shared_ptr<GameObject>& gameObject : m_gameObjects)
 	{
 		if (gameObject)
 			gameObject->Start();
@@ -23,7 +25,7 @@ void Scene::Start()
 
 void Scene::Update()
 {
-	for (const shared_ptr<GameObject> gameObject : m_gameObjects)
+	for (const shared_ptr<GameObject>& gameObject : m_gameObjects)
 	{
 		if (gameObject)
 			gameObject->Update();
@@ -32,7 +34,7 @@ void Scene::Update()
 
 void Scene::LateUpdate()
 {
-	for (const shared_ptr<GameObject> gameObject : m_gameObjects)
+	for (const shared_ptr<GameObject>& gameObject : m_gameObjects)
 	{
 		if (gameObject)
 			gameObject->LateUpdate();
@@ -41,7 +43,7 @@ void Scene::LateUpdate()
 
 void Scene::FinalUpdate()
 {
-	for (const shared_ptr<GameObject> gameObject : m_gameObjects)
+	for (const shared_ptr<GameObject>& gameObject : m_gameObjects)
 	{
 		if (gameObject)
 			gameObject->FinalUpdate();
@@ -50,11 +52,31 @@ void Scene::FinalUpdate()
 
 void Scene::Render()
 {
-	for (const shared_ptr<GameObject> gameObject : m_gameObjects)
+	PushLightData();
+
+	for (const shared_ptr<GameObject>& gameObject : m_gameObjects)
 	{
 		if (gameObject)
 			gameObject->Render();
 	}
+}
+
+void Scene::PushLightData()
+{
+	LightParams lightParams = {};
+
+	for (auto& gameObject : m_gameObjects)
+	{
+		if (gameObject->GetLight() == nullptr)
+			continue;
+
+		const LightInfo& lightInfo = gameObject->GetLight()->GetLightInfo();
+
+		lightParams.lights[lightParams.lightCount] = lightInfo;
+		lightParams.lightCount++;
+	}
+
+	CONST_BUFFER(CONSTANT_BUFFER_TYPE::GLOBAL)->PushGlobalData(&lightParams, sizeof(lightParams));
 }
 
 void Scene::AddGameObject(shared_ptr<GameObject> gameObject)

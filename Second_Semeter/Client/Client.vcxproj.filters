@@ -16,7 +16,7 @@
       <UniqueIdentifier>{99dcfab1-dde2-459f-801d-5912c7147af2}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\Script">
-      <UniqueIdentifier>{4b69d79f-1482-4452-ace4-75572cfec2f3}</UniqueIdentifier>
+      <UniqueIdentifier>{be1610aa-ae81-46d1-b914-74d5906f25b3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -40,9 +40,6 @@
     </ClInclude>
     <ClInclude Include="PlayerController.h">
       <Filter>소스 파일\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Engine\SimpleMath.h">
-      <Filter>소스 파일\Utils</Filter>
     </ClInclude>
     <ClInclude Include="CameraController.h">
       <Filter>소스 파일\Script</Filter>
@@ -74,16 +71,8 @@
     <ClCompile Include="PlayerController.cpp">
       <Filter>소스 파일\Script</Filter>
     </ClCompile>
-    <ClCompile Include="..\Engine\SimpleMath.cpp">
-      <Filter>소스 파일\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="CameraController.cpp">
       <Filter>소스 파일\Script</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Engine\SimpleMath.inl">
-      <Filter>소스 파일\Utils</Filter>
-    </None>
   </ItemGroup>
 </Project>

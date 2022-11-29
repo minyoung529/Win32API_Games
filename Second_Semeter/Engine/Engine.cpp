@@ -2,6 +2,7 @@
 #include "Engine.h"
 #include "Material.h"
 #include "SceneManager.h"
+#include "Light.h"
 
 void Engine::Init(const WindowInfo& window)
 {
@@ -31,29 +32,31 @@ void Engine::Init(const WindowInfo& window)
 	m_input->Init(window.hwnd);
 	m_timer->Init();
 
-	CreateConstantBuffer(CBV_REGISTER::b0, sizeof(TransformParams), 256);
-	CreateConstantBuffer(CBV_REGISTER::b1, sizeof(MaterialParams), 256);
+	CreateConstantBuffer(CBV_REGISTER::b0, sizeof(LightParams), 1);
+	CreateConstantBuffer(CBV_REGISTER::b1, sizeof(TransformParams), 256);
+	CreateConstantBuffer(CBV_REGISTER::b2, sizeof(MaterialParams), 256);
 
 	ResizeWindow(window.width, window.height);
 }
 
 void Engine::Update()
 {
-	GET_SINGLE(SceneManager)->Update();
 	m_input->Update();
 	m_timer->Update();
+
+	GET_SINGLE(SceneManager)->Update();
 
 	ShowFps();
 }
 
 void Engine::Render()
 {
-	RenderBegin();
+	m_cmdQueue->RenderBegin(&m_viewport, &m_scissorRect);
 
 	// ·»´õ¸µ
 	GET_SINGLE(SceneManager)->Render();
 
-	RenderEnd();
+	m_cmdQueue->RenderEnd();
 }
 
 void Engine::RenderBegin()

@@ -12,11 +12,13 @@
 #include <array>
 #include <list>
 #include <map>
-#include <filesystem>
 using namespace std;
+
+#include <filesystem>
 namespace fs = std::filesystem;
 
 #include <fstream>
+
 
 // directX include
 #include "d3dx12.h"
@@ -96,15 +98,19 @@ enum class SRV_REGISTER : uint8
 enum
 {
 	SWAP_CHAIN_BUFFER_COUNT = 2,
-	CBV_REGISTER_COUNT = CBV_REGISTER::END,
-	SRV_REGISTER_COUNT = static_cast<uint8>(SRV_REGISTER::END) - CBV_REGISTER_COUNT,
+	CBV_VIEW_REGISTER_COUNT = 1, // b0
+	CBV_REGISTER_COUNT = static_cast<uint8>(CBV_REGISTER::END) - CBV_VIEW_REGISTER_COUNT,
+	SRV_REGISTER_COUNT = static_cast<uint8>(SRV_REGISTER::END) - CBV_REGISTER_COUNT ,
 	REGISTER_COUNT = CBV_REGISTER_COUNT + SRV_REGISTER_COUNT,
 };
 
 struct Vertex
 {
 	Vertex() {}
-	Vertex(Vec3 p, Vec2 u, Vec3 n, Vec3 t) : pos(p), uv(u), normal(n), tangent(t) {}
+	Vertex(Vec3 p, Vec2 u, Vec3 n, Vec3 t) 
+		: pos(p), uv(u), normal(n), tangent(t)
+	{
+	}
 
 	Vec3 pos;
 	Vec2 uv;
@@ -114,26 +120,27 @@ struct Vertex
 
 struct TransformParams
 {
+	Matrix matWorld;
+	Matrix matView;
+	Matrix matProjection;
+	Matrix matWV;
 	Matrix matWVP;
 };
 
-struct Color
-{
-	Vec4 offset;
-};
+// ½Ì±ÛÅæ µðÆÄÀÎ
+#define DECLARE_SINGLE(type)		\
+private:							\
+	type() {}						\
+	~type() {}						\
+public:								\
+	static type* GetInstance()		\
+	{								\
+		static type instance;		\
+		return &instance;			\
+	}								\
 
-#define DECLARE_SINGLE(type)	\
-private:						\
-	type() {}					\
-	~type() {}					\
-public:							\
-	static type* GetInstance()	\
-	{							\
-		static type instance;	\
-		return &instance;		\
-	}
+#define GET_SINGLE(type)			type::GetInstance()
 
-#define GET_SINGLE(type)		type::GetInstance()
 
 #define DEVICE				g_Engine->GetDevice()->GetDevice()
 #define CMD_LIST			g_Engine->GetCmdQueue()->GetCmdList()

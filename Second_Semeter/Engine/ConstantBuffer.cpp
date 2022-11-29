@@ -44,6 +44,13 @@ void ConstantBuffer::PushData(void* buffer, uint32 size)
     m_currentIndex++;
 }
 
+void ConstantBuffer::PushGlobalData(void* buffer, uint32 size)
+{
+    assert(m_elementSize == ((size + 255) & ~255));
+    ::memcpy(&m_mapedBuffer[0], buffer, size);
+    CMD_LIST->SetGraphicsRootConstantBufferView(1, GetGpuVirtualAddress(0));
+}
+
 D3D12_GPU_VIRTUAL_ADDRESS ConstantBuffer::GetGpuVirtualAddress(uint32 index)
 {
     D3D12_GPU_VIRTUAL_ADDRESS objCBAddress = m_cbvBuffer->GetGPUVirtualAddress();

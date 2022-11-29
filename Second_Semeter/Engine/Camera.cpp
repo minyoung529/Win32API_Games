@@ -3,12 +3,11 @@
 #include "Engine.h"
 #include "Transform.h"
 
-Matrix Camera::s_matView;
-Matrix Camera::s_matProjection;
+Matrix Camera::s_MatView;
+Matrix Camera::s_MatProjection;
 
 Camera::Camera() : Component(COMPONENT_TYPE::CAMERA)
 {
-
 }
 
 Camera::~Camera()
@@ -24,14 +23,10 @@ void Camera::FinalUpdate()
 	float height = static_cast<float>(g_Engine->GetWindow().height);
 
 	if (m_type == PROJECTION_TYPE::PERSPECTIVE)
-	{
 		m_matProjection = ::XMMatrixPerspectiveFovLH(m_fov, width / height, m_near, m_far);
-	}
 	else
-	{
-		m_matProjection = ::XMMatrixOrthographicLH(width * m_scale, height * m_scale, m_far, m_far);
-	}
+		m_matProjection = ::XMMatrixOrthographicLH(width * m_scale, height * m_scale, m_near, m_far);
 
-	s_matView = m_matView;
-	s_matProjection = m_matProjection;
+	s_MatView = m_matView;
+	s_MatProjection = m_matProjection;
 }

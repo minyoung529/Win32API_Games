@@ -120,5 +120,17 @@ void CollisionManager::CollisionGroupUpdate(GROUP_TYPE left, GROUP_TYPE right)
 
 bool CollisionManager::IsCollision(Collider* left, Collider* right)
 {
+	Vector2 leftPos = left->GetFinalPos();
+	Vector2 rightPos = right->GetFinalPos();
+
+	Vector2 leftScale = left->GetScale();
+	Vector2 rightScale = right->GetScale();
+
+	if (abs(rightPos.x - leftPos.x) < (leftScale.x + rightScale.x) / 2.f
+	 && abs(rightPos.y - leftPos.y) < (leftScale.y + rightScale.y) / 2.f)
+	{
+		return true;
+	}
+
 	return false;
 }

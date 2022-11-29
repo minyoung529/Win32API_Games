@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "PlayerController.h"
 #include "Transform.h"
-#include "engine.h"
+#include "Engine.h"
 
 PlayerController::PlayerController()
 {
@@ -17,13 +17,10 @@ void PlayerController::Update()
 
 	if (INPUT->GetButton(KEY_TYPE::UP))
 		pos.y += m_speed * DELTA_TIME;
-
 	if (INPUT->GetButton(KEY_TYPE::DOWN))
 		pos.y -= m_speed * DELTA_TIME;
-
 	if (INPUT->GetButton(KEY_TYPE::LEFT))
 		pos.x -= m_speed * DELTA_TIME;
-
 	if (INPUT->GetButton(KEY_TYPE::RIGHT))
 		pos.x += m_speed * DELTA_TIME;
 

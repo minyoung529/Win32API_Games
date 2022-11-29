@@ -1,13 +1,9 @@
 #include "pch.h"
 #include "Resources.h"
 
-/// <summary>
-/// Å¥ºê ±×¸®±â
-/// </summary>
 shared_ptr<Mesh> Resources::LoadCubeMesh()
 {
 	shared_ptr<Mesh> findMesh = Get<Mesh>(L"Cube");
-
 	if (findMesh)
 		return findMesh;
 
@@ -85,28 +81,28 @@ shared_ptr<Mesh> Resources::LoadSphereMesh()
 	if (findMesh)
 		return findMesh;
 
-	float radius = 0.5f;	// ±¸ÀÇ ¹ÝÁö¸§
-	uint32 stackCount = 20;		// ¹ØÀ¸·Î ³»·Á°¡´Â count
-	uint32 sliceCount = 20; // ¹ØÀ¸·Î ³»·Á°¡´Â count
+	// ±¸ÀÇ ¹ÝÁö¸§
+	float radius = 0.5f;
+	uint32 stackCount = 20;
+	uint32 sliceCount = 20;
 
 	vector<Vertex> vec;
 
-	// ºÏ±Ø (0, 0.5, 0)
+	// ºÏ±Ø
 	Vertex v;
-	v.pos = Vec3(0.f, radius, 0.f);
-	v.uv = Vec2(0.5f, 0.f);
+	v.pos = Vec3(0.0f, radius, 0.0f);
+	v.uv = Vec2(0.5f, 0.0f);
 	v.normal = v.pos;
 	v.normal.Normalize();
-	v.tangent = Vec3(1.f, 0.f, 1.f);
-
+	v.tangent = Vec3(1.0f, 0.0f, 1.0f);
 	vec.push_back(v);
 
-	// ½ºÅÃ, °í¸® °è»ê
+	// ½ºÅÃ°ú °í¸® °è»ê
 	float stackAngle = XM_PI / stackCount;
 	float sliceAngle = XM_2PI / sliceCount;
 
-	float deltaU = 1.0f / static_cast<float>(stackCount);
-	float deltaV = 1.0f / static_cast<float>(sliceCount);
+	float deltaU = 1.0f / static_cast<float>(sliceCount);
+	float deltaV = 1.0f / static_cast<float>(stackCount);
 
 	for (uint32 y = 1; y <= stackCount - 1; ++y)
 	{
@@ -121,11 +117,12 @@ shared_ptr<Mesh> Resources::LoadSphereMesh()
 			v.pos.z = radius * sinf(phi) * sinf(theta);
 
 			v.uv = Vec2(deltaU * x, deltaV * y);
+
 			v.normal = v.pos;
 			v.normal.Normalize();
 
 			v.tangent.x = -radius * sinf(phi) * cosf(theta);
-			v.tangent.y = 0.f;
+			v.tangent.y = 0.0f;
 			v.tangent.z = -radius * sinf(phi) * sinf(theta);
 			v.tangent.Normalize();
 
@@ -133,69 +130,64 @@ shared_ptr<Mesh> Resources::LoadSphereMesh()
 		}
 	}
 
-	// ³²±Ø (0, -0.5, 0)
-	v.pos = Vec3(0.f, -radius, 0.f);
-	v.uv = Vec2(0.5f, 1.f);
-	v.normal = v.pos; v.normal.Normalize();
-	v.tangent = Vec3(1.f, 0.f, 0.f);
+	// ³²±Ø
+	v.pos = Vec3(0.0f, -radius, 0.0f);
+	v.uv = Vec2(0.5f, 1.0f);
+	v.normal = v.pos;
+	v.normal.Normalize();
+	v.tangent = Vec3(1.0f, 0.0f, 0.0f);
 	vec.push_back(v);
 
-	vector<uint32> idxes;
+	vector<uint32> idx;
 
-	// ºÏ±Ø index
+	// ºÏ±Ø ÀÎµ¦½º
 	for (uint32 i = 0; i <= sliceCount; ++i)
 	{
-		//[0]
-		// |   \
-		//[i+1][i+2]
-
-		idxes.push_back(0);
-		idxes.push_back(i + 2);
-		idxes.push_back(i + 1);
+		//  [0]
+		//  |   \
+		// [i+1] [i+2]
+		idx.push_back(0);
+		idx.push_back(i + 2);
+		idx.push_back(i + 1);
 	}
 
-	// ¸öÅë index
-	uint32 ringVertexCount = sliceCount + 1; // ÇÑ ÁÙ¿¡ Á¡ÇÁÇØ¾ßÇÏ´Â °³¼ö
-
+	// ¸öÅë ÀÎµ¦½º
+	uint32 ringVertexCount = sliceCount + 1;
 	for (uint32 y = 0; y < stackCount - 2; ++y)
 	{
 		for (uint32 x = 0; x < sliceCount; ++x)
 		{
-			// +1 => ºÏ±Ø
+			//  [y, x] - [y, x+1]
+			//  |        /
+			//  [y+1, x]
+			idx.push_back(1 + (y)*ringVertexCount + (x));
+			idx.push_back(1 + (y)*ringVertexCount + (x + 1));
+			idx.push_back(1 + (y + 1) * ringVertexCount + (x));
 
-			// [y,x]1 - [y,x+1]2
-			// |	   /
-			// [y+1, x]3
-			idxes.push_back(1 + y * ringVertexCount + (x));
-			idxes.push_back(1 + y * ringVertexCount + (x + 1));
-			idxes.push_back(1 + (y + 1) * ringVertexCount + (x));
-
-			//			  [y, x+1]2
-			//          /       |  
-			// [y+1, x]1 - [y+1, x+1]3
-
-			idxes.push_back(1 + (y + 1) * ringVertexCount + (x));
-			idxes.push_back(1 + y * ringVertexCount + (x + 1));
-			idxes.push_back(1 + (y + 1) * ringVertexCount + (x + 1));
+			//          [y, x+1]
+			//        /        |
+			//  [y+1, x] - [y+1, x+1]
+			idx.push_back(1 + (y + 1)*ringVertexCount + (x));
+			idx.push_back(1 + (y)*ringVertexCount + (x + 1));
+			idx.push_back(1 + (y + 1) * ringVertexCount + (x + 1));
 		}
 	}
 
+	// ³²±Ø ÀÎµ¦½º
 	uint32 bottomIndex = static_cast<uint32>(vec.size()) - 1;
 	uint32 lastRingStartIndex = bottomIndex - ringVertexCount;
-
-	for (uint32 i = 0; i < sliceCount; i++)
+	for (uint32 i = 0; i < sliceCount; ++i)
 	{
 		// [last+i] - [last+i+1]
-		// |        / 
+		// |        /
 		// [bottom]
-
-		idxes.push_back(bottomIndex);
-		idxes.push_back(lastRingStartIndex + i);
-		idxes.push_back(lastRingStartIndex + i + 1);
+		idx.push_back(bottomIndex);
+		idx.push_back(lastRingStartIndex + i);
+		idx.push_back(lastRingStartIndex + i + 1);
 	}
 
 	shared_ptr<Mesh> mesh = make_shared<Mesh>();
-	mesh->Init(vec, idxes);
+	mesh->Init(vec, idx);
 	Add(L"Sphere", mesh);
 
 	return mesh;
@@ -204,7 +196,6 @@ shared_ptr<Mesh> Resources::LoadSphereMesh()
 shared_ptr<Mesh> Resources::LoadPlaneMesh(float width, float depth, uint32 m, uint32 n)
 {
 	shared_ptr<Mesh> findMesh = Get<Mesh>(L"Plane");
-
 	if (findMesh)
 		return findMesh;
 
@@ -221,37 +212,34 @@ shared_ptr<Mesh> Resources::LoadPlaneMesh(float width, float depth, uint32 m, ui
 	float dv = 1.0f / (m - 1);
 
 	vector<Vertex> vec(vertexCount);
-
 	for (uint32 z = 0; z < m; ++z)
 	{
 		float posZ = halfDepth - z * dz;
-
 		for (uint32 x = 0; x < n; ++x)
 		{
 			float posX = -halfWidth + x * dx;
-			int index = z * n + x;
 
-			vec[index].pos = Vec3(posX, 0.f, posZ);
-			vec[index].normal = Vec3::Up;
-			vec[index].tangent = Vec3::Right;
-			vec[index].uv = Vec2(du * x, dv * z);
+			vec[z * n + x].pos = Vec3(posX, 0.0f, posZ);
+			vec[z * n + x].normal = Vec3(0.0f, 1.0f, 0.0f);
+			vec[z * n + x].tangent = Vec3(1.0f, 0.0f, 0.0f);
+
+			vec[z * n + x].uv = Vec2(du * x, dv * z);
 		}
 	}
 
 	vector<uint32> idx(faceCount * 3);
 	uint32 k = 0;
-
 	for (int i = 0; i < m - 1; ++i)
 	{
 		for (int j = 0; j < n - 1; ++j)
 		{
-			idx[k] = i * n + j;					// 1
-			idx[k + 1] = i * n + j + 1;			// 2
-			idx[k + 2] = (i + 1) * n + j;		// 3
+			idx[k] = i * n + j;
+			idx[k + 1] = i * n + j + 1;
+			idx[k + 2] = (i + 1) * n + j;
 
-			idx[k + 3] = (i + 1) * n + j;		// 3
-			idx[k + 4] = i * n + j + 1;			// 2
-			idx[k + 5] = (i + 1) * n + j + 1;	// 4
+			idx[k + 3] = (i + 1) * n + j;
+			idx[k + 4] = i * n + j + 1;
+			idx[k + 5] = (i + 1) * n + j + 1;
 
 			k += 6;
 		}
@@ -267,22 +255,21 @@ shared_ptr<Mesh> Resources::LoadPlaneMesh(float width, float depth, uint32 m, ui
 shared_ptr<Mesh> Resources::LoadMeshFile(const wstring& path, const wstring& name)
 {
 	shared_ptr<Mesh> findMesh = Get<Mesh>(name);
-
 	if (findMesh)
 		return findMesh;
 
-	ifstream fin(path.c_str());
+	std::ifstream fin(path.c_str());
 
 	if (!fin)
 	{
-		wstring errorStr = path + L" not found.";
+		wstring errorStr = path + L"not found.";
 		MessageBox(0, errorStr.c_str(), 0, 0);
 		return nullptr;
 	}
 
 	uint32 vertexCount = 0;
 	uint32 tCount = 0;
-	string ignore;
+	std::string ignore;
 
 	fin >> ignore >> vertexCount;
 	fin >> ignore >> tCount;
@@ -292,26 +279,29 @@ shared_ptr<Mesh> Resources::LoadMeshFile(const wstring& path, const wstring& nam
 	float dv = 1.0f / (tCount - 1);
 
 	vector<Vertex> vec(vertexCount);
-
-	for (uint32 i = 0; i < vertexCount; i++)
+	for (uint32 i = 0; i < vertexCount; ++i)
 	{
 		fin >> vec[i].pos.x >> vec[i].pos.y >> vec[i].pos.z;
 		fin >> vec[i].normal.x >> vec[i].normal.y >> vec[i].normal.z;
+
+		vec[i].tangent = vec[i].normal;
+		vec[i].uv = { 0.0f, 0.0f };
 	}
 
-	fin >> ignore >> ignore >> ignore;
+	fin >> ignore;
+	fin >> ignore;
+	fin >> ignore;
 
-	vector<uint32> tVec(tCount * 3);
-
-	for (uint32 i = 0; i < tCount; i++)
+	vector<uint32> idx(tCount * 3);
+	for (uint32 i = 0; i < tCount; ++i)
 	{
-		fin >> tVec[i * 3] >> tVec[i * 3 + 1] >> tVec[i * 3 + 2];
+		fin >> idx[i * 3 + 0] >> idx[i * 3 + 1] >> idx[i * 3 + 2];
 	}
 
 	fin.close();
 
 	shared_ptr<Mesh> mesh = make_shared<Mesh>();
-	mesh->Init(vec, tVec);
+	mesh->Init(vec, idx);
 	Add(name, mesh);
 
 	return mesh;

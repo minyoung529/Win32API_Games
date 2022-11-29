@@ -30,10 +30,12 @@ void Collider::FinalUpdate()
 
 void Collider::Render(HDC hdc)
 {
-	m_vFinalPos;
-	m_vScale;
+	PEN_TYPE ePen = PEN_TYPE::GREEN;
 
-	SelectGDI penSelector(hdc, PEN_TYPE::GREEN);
+	if (m_iCheck)
+		ePen = PEN_TYPE::RED;
+
+	SelectGDI penSelector(hdc, ePen);
 	SelectGDI brushSelector(hdc, BRUSH_TYPE::HOLLOW);
 
 	Rectangle(hdc,
@@ -45,6 +47,7 @@ void Collider::Render(HDC hdc)
 
 void Collider::EnterCollision(Collider* _pOther)
 {
+	m_iCheck = true;
 }
 
 void Collider::StayCollision(Collider* _pOther)
@@ -53,4 +56,5 @@ void Collider::StayCollision(Collider* _pOther)
 
 void Collider::ExitCollision(Collider* _pOther)
 {
+	m_iCheck = false;
 }

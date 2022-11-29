@@ -1,23 +1,24 @@
 #pragma once
 #include "Object.h"
 
-class Transform;
-class GameObject;
-
 enum class COMPONENT_TYPE : uint8
 {
 	TRANSFORM,
 	MESHRENDERER,
 	CAMERA,
-	// ._.
+	LIGHT,
+	// ... 
 	MONOBEHAVIOUR,
-	END
+	END,
 };
 
 enum
 {
 	FIXED_COMPONENT_COUNT = static_cast<uint8>(COMPONENT_TYPE::END) - 1
 };
+
+class GameObject;
+class Transform;
 
 class Component : public Object
 {
@@ -36,6 +37,7 @@ public:
 public:
 	COMPONENT_TYPE GetType() { return m_type; }
 	bool IsValid() { return m_gameObject.expired() == false; }
+
 	shared_ptr<GameObject> GetGameObject();
 	shared_ptr<Transform> GetTransform();
 
@@ -47,3 +49,4 @@ protected:
 	COMPONENT_TYPE m_type;
 	weak_ptr<GameObject> m_gameObject;
 };
+

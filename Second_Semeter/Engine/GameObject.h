@@ -4,6 +4,9 @@
 
 class MonoBehaviour;
 class Transform;
+class Camera;
+class Light;
+class MeshRenderer;
 
 class GameObject : public Object, public enable_shared_from_this<GameObject>
 {
@@ -23,11 +26,15 @@ public:
 	void Render();
 
 public:
+	shared_ptr<Component> GetFixedComponent(COMPONENT_TYPE type);
+
 	shared_ptr<Transform> GetTransform();
+	shared_ptr<MeshRenderer> GetMeshRenderer();
+	shared_ptr<Camera> GetCamera();
+	shared_ptr<Light> GetLight();
 
 private:
-	// ม฿บน X
-	array<shared_ptr<Component>, FIXED_COMPONENT_COUNT> m_components;
+	array<shared_ptr<Component>, FIXED_COMPONENT_COUNT>	m_components;
 	vector<shared_ptr<MonoBehaviour>> m_scripts;
 };
 

@@ -11,6 +11,6 @@ public:
 	virtual void Update() override;
 
 private:
-	float m_speed = 1.f;
+	float m_speed = 1.0f;
 };
 

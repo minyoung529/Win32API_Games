@@ -7,35 +7,35 @@
 #include "GameObject.h"
 #include "MeshRenderer.h"
 #include "Scene.h"
-#include "Transform.h"
 #include "SceneManager.h"
+#include "Transform.h"
 #include "PlayerController.h"
 #include "Camera.h"
 #include "CameraController.h"
 #include "Resources.h"
+#include "Light.h"
 
 void Game::Init(const WindowInfo& window)
 {
-	m_sampleScene = make_shared<Scene>();
+	m_SampleScene = make_shared<Scene>();
+
 	g_Engine->Init(window);
-
-
+	
 #pragma region Camera
 	shared_ptr<GameObject> camera = make_shared<GameObject>();
 	camera->AddComponent(make_shared<Transform>());
 	camera->AddComponent(make_shared<Camera>());
 	camera->AddComponent(make_shared<CameraController>());
 	camera->GetTransform()->SetLocalPosition(Vec3(0.f, 10.f, -20.f));
-
-	m_sampleScene->AddGameObject(camera);
+	m_SampleScene->AddGameObject(camera);
 #pragma endregion
 
 #pragma region Cube
 	{
 		shared_ptr<GameObject> cube = make_shared<GameObject>();
 		cube->AddComponent(make_shared<Transform>());
-		cube->GetTransform()->SetLocalScale(Vec3::One * 10.f);
-		cube->GetTransform()->SetLocalPosition(Vec3(5.f, 10.f, 10.f));
+		cube->GetTransform()->SetLocalScale(Vec3(10.0f, 10.0f, 10.0f));
+		cube->GetTransform()->SetLocalPosition(Vec3(5.0f, 10.0f, 10.0f));
 
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
@@ -45,7 +45,7 @@ void Game::Init(const WindowInfo& window)
 		{
 			shared_ptr<Shader> shader = make_shared<Shader>();
 			shared_ptr<Texture> texture = make_shared<Texture>();
-			shader->Init(L"..\\Engine\\Default.hlsli");
+			shader->Init (L"..\\Resources\\Shader\\Default.hlsli");
 			texture->Init(L"..\\Resources\\Texture\\Illidan.png");
 
 			shared_ptr<Material> material = make_shared<Material>();
@@ -55,16 +55,16 @@ void Game::Init(const WindowInfo& window)
 		}
 
 		cube->AddComponent(meshRenderer);
-		m_sampleScene->AddGameObject(cube);
+		m_SampleScene->AddGameObject(cube);
 	}
-#pragma endregion 
+#pragma endregion
 
 #pragma region Sphere
 	{
 		shared_ptr<GameObject> sphere = make_shared<GameObject>();
 		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3::One * 10.f);
-		sphere->GetTransform()->SetLocalPosition(Vec3(-10.f, 10.f, 10.f));
+		sphere->GetTransform()->SetLocalScale(Vec3(10.0f, 10.0f, 10.0f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(-10.0f, 10.0f, 10.0f));
 
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
@@ -74,8 +74,8 @@ void Game::Init(const WindowInfo& window)
 		{
 			shared_ptr<Shader> shader = make_shared<Shader>();
 			shared_ptr<Texture> texture = make_shared<Texture>();
-			shader->Init(L"..\\Engine\\Default.hlsli");
-			texture->Init(L"..\\Resources\\Texture\\SpongeBob.jpg");
+			shader->Init(L"..\\Resources\\Shader\\Default.hlsli");
+			texture->Init(L"..\\Resources\\Texture\\Illidan.png");
 
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
@@ -84,27 +84,27 @@ void Game::Init(const WindowInfo& window)
 		}
 
 		sphere->AddComponent(meshRenderer);
-		m_sampleScene->AddGameObject(sphere);
+		m_SampleScene->AddGameObject(sphere);
 	}
-#pragma endregion 
+#pragma endregion
 
 #pragma region Plane
 	{
-		shared_ptr<GameObject> plane = make_shared<GameObject>();
-		plane->AddComponent(make_shared<Transform>());
-		plane->GetTransform()->SetLocalScale(Vec3::One);
-		plane->GetTransform()->SetLocalPosition(Vec3::Zero);
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3(1.0f, 1.0f, 1.0f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(0.0f, 0.0f, 0.0f));
 
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
-			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadPlaneMesh(100.f, 100.f, 50, 50);
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadPlaneMesh(100.0f, 100.0f, 50, 50);
 			meshRenderer->SetMesh(mesh);
 		}
 		{
 			shared_ptr<Shader> shader = make_shared<Shader>();
 			shared_ptr<Texture> texture = make_shared<Texture>();
-			shader->Init(L"..\\Engine\\Default.hlsli");
-			texture->Init(L"..\\Resources\\Texture\\Default.png");
+			shader->Init(L"..\\Resources\\Shader\\Default.hlsli");
+			texture->Init(L"..\\Resources\\Texture\\Illidan.png");
 
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
@@ -112,28 +112,28 @@ void Game::Init(const WindowInfo& window)
 			meshRenderer->SetMaterial(material);
 		}
 
-		plane->AddComponent(meshRenderer);
-		m_sampleScene->AddGameObject(plane);
+		sphere->AddComponent(meshRenderer);
+		m_SampleScene->AddGameObject(sphere);
 	}
-#pragma endregion 
+#pragma endregion
 
 #pragma region Model
 	{
-		shared_ptr<GameObject> plane = make_shared<GameObject>();
-		plane->AddComponent(make_shared<Transform>());
-		plane->GetTransform()->SetLocalScale(Vec3::One);
-		plane->GetTransform()->SetLocalPosition(Vec3(0.f, 5.f, 0.f));
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3(1.0f, 1.0f, 1.0f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(0.0f, 5.0f, 0.0f));
 
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
-			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadMeshFile(L"..\\Resources\\Models\\car.txt", L"Skull");
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadMeshFile(L"..\\Resources\\Models\\skull.txt", L"skull");
 			meshRenderer->SetMesh(mesh);
 		}
 		{
 			shared_ptr<Shader> shader = make_shared<Shader>();
 			shared_ptr<Texture> texture = make_shared<Texture>();
-			shader->Init(L"..\\Engine\\Default.hlsli");
-			texture->Init(L"..\\Resources\\Texture\\SpongeBob.jpg");
+			shader->Init(L"..\\Resources\\Shader\\Default.hlsli");
+			texture->Init(L"..\\Resources\\Texture\\Illidan.png");
 
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
@@ -141,14 +141,30 @@ void Game::Init(const WindowInfo& window)
 			meshRenderer->SetMaterial(material);
 		}
 
-		plane->AddComponent(meshRenderer);
-		m_sampleScene->AddGameObject(plane);
+		sphere->AddComponent(meshRenderer);
+		m_SampleScene->AddGameObject(sphere);
 	}
-#pragma endregion 
+#pragma endregion
 
+#pragma region Green Directional Light
+	{
+		shared_ptr<GameObject> light = make_shared<GameObject>();
+		light->AddComponent(make_shared<Transform>());
+		light->AddComponent(make_shared<Light>());
+		light->GetLight()->SetLightDirection(Vec3(1.f, -1.f, 0.f));
+		light->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
+		light->GetLight()->SetDiffuse(Vec3::Up);
+		light->GetLight()->SetAmbient(Vec3::Zero);
+		light->GetLight()->SetSpecular(Vec3::One * 0.3f);
 
+		m_SampleScene->AddGameObject(light);
+	}
+#pragma endregion
 
-	GET_SINGLE(SceneManager)->RegisterScene(L"SampleScene", m_sampleScene);
+	// 씬 등록(저장하기)
+	GET_SINGLE(SceneManager)->RegisterScene(L"SampleScene", m_SampleScene);
+
+	// 씬 로드하기
 	GET_SINGLE(SceneManager)->LoadScene(L"SampleScene");
 }
 

@@ -54,7 +54,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE TableDescriptorHeap::GetCpuHandle(uint8 reg)
 {
 	D3D12_CPU_DESCRIPTOR_HANDLE handle = m_descHeap->GetCPUDescriptorHandleForHeapStart();
 	handle.ptr += m_currentGroupIndex * m_groupSize;
-	handle.ptr += reg * m_handleSize;
+	handle.ptr += (reg-1) * m_handleSize;
 	return handle;
 }
 
