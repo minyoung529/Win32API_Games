@@ -18,6 +18,8 @@ struct VS_OUT
 	float2 uv : TEXCOORD;
 	float3 viewPos : POSITION;
 	float3 viewNormal : NORMAL;
+    float3 viewTangent : TANGENT;
+    float3 viewBinormal : BINORMAL;
 };
 
 VS_OUT VS_Main(VS_IN input)
@@ -30,20 +32,37 @@ VS_OUT VS_Main(VS_IN input)
 	// 모든 정점, normal => 같은 space
 	output.viewPos = mul(float4(input.pos, 1.0f), matWV).xyz;
 	output.viewNormal = normalize(mul(float4(input.normal, 0.f), matWV).xyz);
-
+    output.viewTangent = normalize(mul(float4(input.tangent, 0.f), matWV).xyz);
+    output.viewBinormal = normalize(cross(output.viewTangent, output.viewNormal));
+	
 	return output;
 }
 
 float4 PS_Main(VS_OUT input) : SV_Target
 {
-	float4 color = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    float4 color = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	
+	if(tex_on_0)
+        color = tex_0.Sample(sam_0, input.uv);
+	
+    float3 viewNormal = input.viewNormal;
+	
+	if(tex_on_1)
+    {
+		// (0~255) => (0~1)
+        float3 tangentSpaceNormal = tex_1.Sample(sam_0, input.uv).xyz;
+		// (0~1) => (-1~1)
+        tangentSpaceNormal = (tangentSpaceNormal - 0.5f) * 2.0f;
+        float3x3 matTBN = { input.viewTangent, input.viewBinormal, input.viewNormal };
+        viewNormal = normalize(mul(tangentSpaceNormal, matTBN));
+    }
 	
 	// lighting
 	LightColor totalColor = (LightColor)0.0f;
 
 	for (int i = 0; i < g_lightCount; i++)
 	{
-		LightColor color = CalculateLightColor(i, input.viewNormal, input.viewPos);
+		LightColor color = CalculateLightColor(i, viewNormal, input.viewPos);
 
 		totalColor.diffuse += color.diffuse;
 		totalColor.ambient += color.ambient;
