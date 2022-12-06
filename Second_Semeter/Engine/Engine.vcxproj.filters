@@ -119,6 +119,9 @@
     <ClInclude Include="Light.h">
       <Filter>소스 파일\Object\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Frustum.h">
+      <Filter>소스 파일\Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -205,6 +208,9 @@
     <ClCompile Include="Light.cpp">
       <Filter>소스 파일\Object\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Frustum.cpp">
+      <Filter>소스 파일\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
@@ -217,6 +223,9 @@
       <Filter>소스 파일\Shader</Filter>
     </None>
     <None Include="..\Resources\Shader\Utils.hlsli">
+      <Filter>소스 파일\Shader</Filter>
+    </None>
+    <None Include="..\Resources\Shader\Skybox.hlsli">
       <Filter>소스 파일\Shader</Filter>
     </None>
   </ItemGroup>

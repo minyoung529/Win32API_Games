@@ -1,6 +1,28 @@
 #pragma once
 #include "Object.h"
 
+enum class RASTERIZER_TYPE
+{
+	CULL_NONE,
+	CULL_FRONT,
+	CULL_BACK,	// Default
+	WIREFRAME
+};
+
+enum class DEPTH_STENCIL_TYPE
+{
+	LESS,		// Default
+	LESS_EQUAL,
+	GREATER,
+	GREATER_EQUAL
+};
+
+struct ShaderInfo
+{
+	RASTERIZER_TYPE rasterizerType = RASTERIZER_TYPE::CULL_BACK;
+	DEPTH_STENCIL_TYPE depthStencilType = DEPTH_STENCIL_TYPE::LESS;
+};
+
 class Shader : public Object
 {
 public:
@@ -8,7 +30,7 @@ public:
 	virtual ~Shader();
 
 public:
-	void Init(const wstring& path);
+	void Init(const wstring& path, ShaderInfo info = ShaderInfo());
 	void Render();
 
 private:

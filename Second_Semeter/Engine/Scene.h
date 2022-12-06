@@ -1,4 +1,5 @@
 #pragma once
+#include "Frustum.h"
 
 class GameObject;
 
@@ -23,4 +24,5 @@ public:
 
 private:
 	vector<shared_ptr<GameObject>> m_gameObjects;
+	Frustum m_frustum;
 };

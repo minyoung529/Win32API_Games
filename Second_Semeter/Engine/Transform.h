@@ -16,6 +16,8 @@ public:
 	const Vec3& GetLocalRotation()	{ return m_localRotation;	}
 	const Vec3& GetLocalScale()		{ return m_localScale;		}
 
+	float GetBoundingSphereRadius() { return max(max(m_localScale.x, m_localScale.y), m_localScale.z); }
+
 	void SetLocalPosition(const Vec3& position) { m_localPosition = position;	}
 	void SetLocalRotation(const Vec3& rotation) { m_localRotation = rotation;	}
 	void SetLocalScale(const Vec3& scale)		{ m_localScale = scale;			}

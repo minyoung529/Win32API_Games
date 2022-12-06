@@ -33,8 +33,13 @@ public:
 	shared_ptr<Camera> GetCamera();
 	shared_ptr<Light> GetLight();
 
+	void SetCheckFrustum(bool checkFrustNum) { m_checkFrustum = checkFrustNum; }
+	bool GetCheckFrustum() { return m_checkFrustum; }
+
 private:
 	array<shared_ptr<Component>, FIXED_COMPONENT_COUNT>	m_components;
 	vector<shared_ptr<MonoBehaviour>> m_scripts;
+
+	bool m_checkFrustum = true;
 };
 

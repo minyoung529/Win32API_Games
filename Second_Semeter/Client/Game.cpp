@@ -30,6 +30,35 @@ void Game::Init(const WindowInfo& window)
 	m_SampleScene->AddGameObject(camera);
 #pragma endregion
 
+#pragma region Skybox
+	{
+		shared_ptr<GameObject> skybox = make_shared<GameObject>();
+		skybox->AddComponent(make_shared<Transform>());
+		skybox->SetCheckFrustum(false);
+
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadSphereMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = make_shared<Shader>();
+			shared_ptr<Texture> texture = make_shared<Texture>();
+			shader->Init(L"..\\Resources\\Shader\\Skybox.hlsli", {RASTERIZER_TYPE::CULL_NONE, DEPTH_STENCIL_TYPE::LESS_EQUAL});
+			texture->Init(L"..\\Resources\\Texture\\Skybox.jpg");
+
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+
+		skybox->AddComponent(meshRenderer);
+		m_SampleScene->AddGameObject(skybox);
+	}
+#pragma endregion
+
+
 #pragma region Cube
 	{
 		shared_ptr<GameObject> cube = make_shared<GameObject>();
