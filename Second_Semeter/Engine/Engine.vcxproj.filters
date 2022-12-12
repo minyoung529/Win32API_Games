@@ -216,17 +216,19 @@
     <None Include="SimpleMath.inl">
       <Filter>소스 파일\Utils</Filter>
     </None>
-    <None Include="..\Resources\Shader\Default.hlsli">
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Resources\Shader\Default.hlsl">
       <Filter>소스 파일\Shader</Filter>
-    </None>
-    <None Include="..\Resources\Shader\Params.hlsli">
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\Params.hlsl">
       <Filter>소스 파일\Shader</Filter>
-    </None>
-    <None Include="..\Resources\Shader\Utils.hlsli">
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\Skybox.hlsl">
       <Filter>소스 파일\Shader</Filter>
-    </None>
-    <None Include="..\Resources\Shader\Skybox.hlsli">
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\Utils.hlsl">
       <Filter>소스 파일\Shader</Filter>
-    </None>
+    </FxCompile>
   </ItemGroup>
 </Project>

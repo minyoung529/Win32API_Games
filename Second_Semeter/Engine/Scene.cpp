@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "Light.h"
 #include "Transform.h"
+#include "Camera.h"
 
 void Scene::Awake()
 {
@@ -48,33 +49,20 @@ void Scene::FinalUpdate()
 	{
 		if (gameObject)
 			gameObject->FinalUpdate();
+
 	}
 
 	// 프로젝션, 뷰를 모두 구한 후 invert 시켜야하기 때문에 가장 나중에
-	m_frustum.FinalUpdate();
 }
 
 void Scene::Render()
 {
 	PushLightData();
-
-	for (const shared_ptr<GameObject>& gameObject : m_gameObjects)
+	for (auto& gameObject : m_gameObjects)
 	{
-		if (gameObject->GetMeshRenderer() == nullptr)
-			continue;
+		if(gameObject->GetCamera() == nullptr)continue;
 
-		if (gameObject->GetCheckFrustum())
-		{
-			if (m_frustum.ContainsSphere
-			(
-				gameObject->GetTransform()->GetWorldPosition(),
-				gameObject->GetTransform()->GetBoundingSphereRadius()) == false
-			)
-				continue;
-		}
-
-		if (gameObject)
-			gameObject->Render();
+		gameObject->GetCamera()->Render();
 	}
 }
 

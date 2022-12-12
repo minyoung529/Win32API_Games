@@ -1,6 +1,4 @@
 #pragma once
-#include "Frustum.h"
-
 class GameObject;
 
 class Scene
@@ -24,5 +22,4 @@ public:
 
 private:
 	vector<shared_ptr<GameObject>> m_gameObjects;
-	Frustum m_frustum;
 };

@@ -3,6 +3,7 @@
 #include "Material.h"
 #include "SceneManager.h"
 #include "Light.h"
+#include "Resources.h"
 
 void Engine::Init(const WindowInfo& window)
 {
@@ -31,6 +32,8 @@ void Engine::Init(const WindowInfo& window)
 
 	m_input->Init(window.hwnd);
 	m_timer->Init();
+
+	GET_SINGLE(Resources)->Init();
 
 	CreateConstantBuffer(CBV_REGISTER::b0, sizeof(LightParams), 1);
 	CreateConstantBuffer(CBV_REGISTER::b1, sizeof(TransformParams), 256);

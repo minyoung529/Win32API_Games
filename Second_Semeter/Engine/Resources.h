@@ -12,6 +12,12 @@ class Resources
 	DECLARE_SINGLE(Resources);
 
 public:
+	void Init();
+
+private:
+	void CreatDefaultShader();
+
+public:
 	template<typename T>
 	shared_ptr<T> Load(const wstring& key, const wstring& path);
 
@@ -27,6 +33,7 @@ public:
 public:
 	shared_ptr<Mesh> LoadCubeMesh();
 	shared_ptr<Mesh> LoadSphereMesh();
+	shared_ptr<Mesh> LoadQuadMesh();
 	shared_ptr<Mesh> LoadPlaneMesh(float width, float depth, uint32 m, uint32 n);
 	shared_ptr<Mesh> LoadMeshFile(const wstring& path, const wstring& name);
 

@@ -137,6 +137,12 @@
       </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -226,11 +232,13 @@
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Resources\Shader\Default.hlsli" />
-    <None Include="..\Resources\Shader\Params.hlsli" />
-    <None Include="..\Resources\Shader\Skybox.hlsli" />
-    <None Include="..\Resources\Shader\Utils.hlsli" />
     <None Include="SimpleMath.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Resources\Shader\Default.hlsl" />
+    <FxCompile Include="..\Resources\Shader\Params.hlsl" />
+    <FxCompile Include="..\Resources\Shader\Skybox.hlsl" />
+    <FxCompile Include="..\Resources\Shader\Utils.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

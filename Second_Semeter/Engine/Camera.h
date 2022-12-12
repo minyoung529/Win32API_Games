@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include "Frustum.h"
 
 enum class PROJECTION_TYPE
 {
@@ -15,6 +16,23 @@ public:
 
 public:
 	virtual void FinalUpdate() override;
+	virtual void Render() override;
+
+public:
+	void SetProjectionType(PROJECTION_TYPE type) { m_type = type; }
+	PROJECTION_TYPE GetProjectionType() { return m_type; }
+
+	void SetCullingMaskLayerOnOff(uint8 layer, bool on)
+	{
+		if (on)
+			m_cullingMask |= (1 << layer);
+		else
+			m_cullingMask &= ~(1 << layer);
+	}
+
+	void SetCullingMaskAll() { SetCullingMask(UINT32_MAX); }
+	void SetCullingMask(uint32 mask) { m_cullingMask = mask; }
+	bool IsCulled(uint8 layer) { return (m_cullingMask & (1 << layer)) != 0; }
 
 private:
 	PROJECTION_TYPE m_type = PROJECTION_TYPE::PERSPECTIVE;
@@ -26,6 +44,9 @@ private:
 
 	Matrix m_matView = {};
 	Matrix m_matProjection = {};
+
+	Frustum m_frustum;
+	uint32 m_cullingMask = 0;
 
 public:
 	static Matrix s_MatView;

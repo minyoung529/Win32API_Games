@@ -2,6 +2,9 @@
 #include "Camera.h"
 #include "Engine.h"
 #include "Transform.h"
+#include "SceneManager.h"
+#include "GameObject.h"
+#include "Scene.h"
 
 Matrix Camera::s_MatView;
 Matrix Camera::s_MatProjection;
@@ -27,6 +30,37 @@ void Camera::FinalUpdate()
 	else
 		m_matProjection = ::XMMatrixOrthographicLH(width * m_scale, height * m_scale, m_near, m_far);
 
+	m_frustum.FinalUpdate();
+}
+
+void Camera::Render()
+{
 	s_MatView = m_matView;
 	s_MatProjection = m_matProjection;
+
+	shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
+	const vector<shared_ptr<GameObject>>& gmaeObjects = scene->GetGameObjects();
+
+	for (const shared_ptr<GameObject>& gameObject : gmaeObjects)
+	{
+		if (gameObject->GetMeshRenderer() == nullptr)
+			continue;
+
+		if (IsCulled(gameObject->GetLayerIndex()))
+			continue;
+
+		if (gameObject->GetCheckFrustum())
+		{
+			if (m_frustum.ContainsSphere
+			(
+				gameObject->GetTransform()->GetWorldPosition(),
+				gameObject->GetTransform()->GetBoundingSphereRadius()) == false
+				)
+				continue;
+		}
+
+		if (gameObject)
+			gameObject->Render();
+	}
+
 }
