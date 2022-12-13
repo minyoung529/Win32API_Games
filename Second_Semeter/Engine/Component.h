@@ -7,6 +7,7 @@ enum class COMPONENT_TYPE : uint8
 	MESHRENDERER,
 	CAMERA,
 	LIGHT,
+	TERRAIN,
 	// ... 
 	MONOBEHAVIOUR,
 	END,

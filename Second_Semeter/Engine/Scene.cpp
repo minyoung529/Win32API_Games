@@ -60,7 +60,7 @@ void Scene::Render()
 	PushLightData();
 	for (auto& gameObject : m_gameObjects)
 	{
-		if(gameObject->GetCamera() == nullptr)continue;
+		if (gameObject->GetCamera() == nullptr)continue;
 
 		gameObject->GetCamera()->Render();
 	}
@@ -86,15 +86,38 @@ void Scene::PushLightData()
 
 void Scene::AddGameObject(shared_ptr<GameObject> gameObject)
 {
+	if (gameObject->GetCamera() != nullptr)
+	{
+		m_cameras.push_back(gameObject->GetCamera());
+	}
+
 	m_gameObjects.push_back(gameObject);
 }
 
 void Scene::RemoveGameObject(shared_ptr<GameObject> gameObject)
 {
+	if (gameObject->GetCamera() != nullptr)
+	{
+		auto findIt = std::find(m_cameras.begin(), m_cameras.end(), gameObject->GetCamera());
+
+		if (findIt != m_cameras.end())
+		{
+			m_cameras.erase(findIt);
+		}
+	}
+
 	auto findIt = std::find(m_gameObjects.begin(), m_gameObjects.end(), gameObject);
 
 	if (findIt != m_gameObjects.end())
 	{
 		m_gameObjects.erase(findIt);
 	}
+}
+
+shared_ptr<class Camera> Scene::GetMainCamera()
+{
+	if (m_cameras.empty())
+		return nullptr;
+
+	return m_cameras[0];
 }

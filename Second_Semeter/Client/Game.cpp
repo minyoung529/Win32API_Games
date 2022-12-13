@@ -14,6 +14,7 @@
 #include "CameraController.h"
 #include "Resources.h"
 #include "Light.h"
+#include "Terrain.h"
 
 void Game::Init(const WindowInfo& window)
 {
@@ -33,6 +34,7 @@ void Game::Init(const WindowInfo& window)
 		camera->AddComponent(make_shared<Camera>());
 		camera->AddComponent(make_shared<CameraController>());
 		camera->GetTransform()->SetLocalPosition(Vec3(0.f, 10.f, -20.f));
+		camera->GetCamera()->SetFar(10000.f);
 		uint8 layerIndex = GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI");
 		camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true);
 		m_SampleScene->AddGameObject(camera);
@@ -76,6 +78,22 @@ void Game::Init(const WindowInfo& window)
 
 		skybox->AddComponent(meshRenderer);
 		m_SampleScene->AddGameObject(skybox);
+	}
+#pragma endregion
+
+#pragma region TERRAIN
+	{
+		shared_ptr<GameObject> terrain = make_shared<GameObject>();
+		terrain->AddComponent(make_shared<Transform>());
+		terrain->GetTransform()->SetLocalScale(Vec3(50.f, 250.f, 50.f));
+		terrain->GetTransform()->SetLocalPosition(Vec3(-100.f, -200.f, 300.f));
+
+		terrain->AddComponent(make_shared<MeshRenderer>());
+
+		terrain->AddComponent(make_shared<Terrain>());
+		terrain->GetTerrain()->Init(64, 64);
+
+		m_SampleScene->AddGameObject(terrain);
 	}
 #pragma endregion
 

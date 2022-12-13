@@ -36,6 +36,7 @@ public:
 	shared_ptr<Mesh> LoadQuadMesh();
 	shared_ptr<Mesh> LoadPlaneMesh(float width, float depth, uint32 m, uint32 n);
 	shared_ptr<Mesh> LoadMeshFile(const wstring& path, const wstring& name);
+	shared_ptr<Mesh> LoadTerrainMesh(int32 sizeX = 15, int32 SizeZ = 15);
 
 private:
 	using KeyObjMap = std::map<wstring/*Key*/, shared_ptr<Object>>;
@@ -70,7 +71,7 @@ bool Resources::Add(const wstring& key, shared_ptr<T> object)
 	{
 		return false;
 	}
-	
+
 	keyObjMap[key] = object;
 
 	return true;

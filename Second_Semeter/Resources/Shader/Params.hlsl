@@ -41,24 +41,30 @@ cbuffer MATERIAL_PARAMS : register(b2)
     int int_1;
     int int_2;
     int int_3;
-    int int_4;
     float float_0;
     float float_1;
     float float_2;
     float float_3;
-    float float_4;
     int tex_on_0;
     int tex_on_1;
     int tex_on_2;
     int tex_on_3;
-    int tex_on_4;
+    
+    float2 vec2_0;
+    float2 vec2_1;
+    float2 vec2_2;
+    float2 vec2_3;
+    
+    float4 vec4_0;
+    float4 vec4_1;
+    float4 vec4_2;
+    float4 vec4_3;
 };
 
 Texture2D tex_0 : register(t0);
 Texture2D tex_1 : register(t1);
 Texture2D tex_2 : register(t2);
 Texture2D tex_3 : register(t3);
-Texture2D tex_4 : register(t4);
 
 SamplerState sam_0 : register(s0);
 

@@ -34,6 +34,12 @@ public:
 	void SetCullingMask(uint32 mask) { m_cullingMask = mask; }
 	bool IsCulled(uint8 layer) { return (m_cullingMask & (1 << layer)) != 0; }
 
+	void SetNear(float value) { m_near = value; }
+	void SetFar(float value) { m_far = value; }
+	void SetFOV(float value) { m_fov = value; }
+	void SetScale(float value) { m_scale = value; }
+
+
 private:
 	PROJECTION_TYPE m_type = PROJECTION_TYPE::PERSPECTIVE;
 

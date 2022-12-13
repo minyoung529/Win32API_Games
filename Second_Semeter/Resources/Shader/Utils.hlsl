@@ -96,5 +96,19 @@ LightColor CalculateLightColor(int lightIndex, float3 viewNormal, float3 viewPos
     return color;
 }
 
+float CalculateTessLevel(float3 cameraWorldPos, float3 patchPos, float min, float max, float maxLv)
+{
+    float distance = length(patchPos - cameraWorldPos);
+
+    if (distance < min)
+        return maxLv;
+    if (distance > max)
+        return 1.f;
+
+    float ratio = (distance - min) / (max - min);
+    float level = (maxLv - 1.f) * (1.f - ratio);
+    return level;
+}
+
 #endif // _UTILS_HLSLI_
 

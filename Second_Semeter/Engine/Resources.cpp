@@ -27,6 +27,29 @@ void Resources::CreatDefaultShader()
 		shader->Init(L"..\\Resources\\Shader\\Default.hlsl");
 		Add<Shader>(L"Default", shader);
 	}
+
+	// Terrain
+	{
+		ShaderInfo info =
+		{
+			RASTERIZER_TYPE::WIREFRAME,
+			DEPTH_STENCIL_TYPE::LESS,
+			D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST
+		};
+
+		ShaderArg arg =
+		{
+			"VS_Main",
+			"HS_Main",
+			"DS_Main",
+			"",
+			"PS_Main"
+		};
+
+		shared_ptr<Shader> shader = make_shared<Shader>();
+		shader->Init(L"..\\Resources\\Shader\\Terrain.hlsl", info, arg);
+		Add<Shader>(L"Terrain", shader);
+	}
 }
 
 shared_ptr<Mesh> Resources::LoadCubeMesh()
@@ -361,6 +384,57 @@ shared_ptr<Mesh> Resources::LoadMeshFile(const wstring& path, const wstring& nam
 	shared_ptr<Mesh> mesh = make_shared<Mesh>();
 	mesh->Init(vec, idx);
 	Add(name, mesh);
+
+	return mesh;
+}
+
+shared_ptr<Mesh> Resources::LoadTerrainMesh(int32 sizeX, int32 sizeZ)
+{
+	vector<Vertex> vec;
+	for (int32 z = 0; z < sizeZ + 1; z++)
+	{
+		for (int32 x = 0; x < sizeX + 1; x++)
+		{
+			Vertex vtx;
+			vtx.pos = Vec3(static_cast<float>(x), 0, static_cast<float>(z));
+			vtx.uv = Vec2(static_cast<float>(x), static_cast<float>(sizeZ - z));
+			vtx.normal = Vec3(0.f, 1.f, 0.f);
+			vtx.tangent = Vec3(1.f, 0.f, 0.f);
+
+			vec.push_back(vtx);
+		}
+	}
+
+	vector<uint32> idx;
+	for (int32 z = 0; z < sizeZ; z++)
+	{
+		for (int32 x = 0; x < sizeX; x++)
+		{
+			//  [0]
+			//   |    \
+            //  [2] - [1]
+			idx.push_back((sizeX + 1) * (z + 1) + (x));
+			idx.push_back((sizeX + 1) * (z)+(x + 1));
+			idx.push_back((sizeX + 1) * (z)+(x));
+			//  [1] - [2]
+			//      \  |
+			//        [0]
+			idx.push_back((sizeX + 1) * (z)+(x + 1));
+			idx.push_back((sizeX + 1) * (z + 1) + (x));
+			idx.push_back((sizeX + 1) * (z + 1) + (x + 1));
+		}
+	}
+
+	shared_ptr<Mesh> findMesh = Get<Mesh>(L"Terrain");
+	if (findMesh)
+	{
+		findMesh->Init(vec, idx);
+		return findMesh;
+	}
+
+	shared_ptr<Mesh> mesh = make_shared<Mesh>();
+	mesh->Init(vec, idx);
+	Add(L"Terrain", mesh);
 
 	return mesh;
 }

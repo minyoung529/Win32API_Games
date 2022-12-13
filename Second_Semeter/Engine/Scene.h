@@ -19,7 +19,9 @@ public:
 	void RemoveGameObject(shared_ptr<GameObject> gameObject);
 
 	const vector<shared_ptr<GameObject>>& GetGameObjects() { return m_gameObjects; }
+	shared_ptr<class Camera> GetMainCamera();
 
 private:
 	vector<shared_ptr<GameObject>> m_gameObjects;
+	vector<shared_ptr<class Camera>> m_cameras;
 };
