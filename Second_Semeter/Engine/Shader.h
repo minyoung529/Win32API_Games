@@ -21,7 +21,7 @@ struct ShaderInfo
 {
 	RASTERIZER_TYPE rasterizerType = RASTERIZER_TYPE::CULL_BACK;
 	DEPTH_STENCIL_TYPE depthStencilType = DEPTH_STENCIL_TYPE::LESS;
-	D3D12_PRIMITIVE_TOPOLOGY topology= D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST;
+	D3D12_PRIMITIVE_TOPOLOGY topology= D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 };
 
 struct ShaderArg
@@ -55,6 +55,8 @@ private:
 	static D3D12_PRIMITIVE_TOPOLOGY_TYPE GetTopologyType(D3D_PRIMITIVE_TOPOLOGY topology);
 
 private:
+	ShaderInfo				m_info;
+
 	ComPtr<ID3DBlob>		m_vsBlob;
 	ComPtr<ID3DBlob>		m_hsBlob;
 	ComPtr<ID3DBlob>		m_dsBlob;

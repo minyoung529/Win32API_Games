@@ -23,7 +23,7 @@ void Mesh::Update()
 
 void Mesh::Render()
 {
-	CMD_LIST->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//CMD_LIST->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	CMD_LIST->IASetVertexBuffers(0, 1, &m_vertexBufferView);
 	CMD_LIST->IASetIndexBuffer(&m_indexBufferView);
 

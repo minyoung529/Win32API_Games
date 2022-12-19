@@ -26,6 +26,8 @@ public:
 	uint8 LayerNameToIndex(const wstring& name);
 	const wstring& IndexToLayerName(uint8 index) { return m_layerNames[index]; }
 
+	shared_ptr<class GameObject> Pick(int32 screenX, int32 screenY);
+
 private:
 	shared_ptr<Scene>				m_activeScene;
 	map<wstring, shared_ptr<Scene>> m_sceneContainer;

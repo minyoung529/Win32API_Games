@@ -48,10 +48,10 @@ void Terrain::Init(int32 sizeX, int32 sizeZ)
 	m_material->SetFloat(0, m_maxTesselation);
 
 	m_material->SetTexture(1, normalTexture);
-	m_material->SetTexture(1, normalTexture);
+	m_material->SetTexture(2, heightTexture);
 
 	m_material->SetVec2(0, Vec2(heightTexture->GetWidth(), heightTexture->GetHeight()));
-	m_material->SetVec2(1, Vec2(500.f, 5000.f));
+	m_material->SetVec2(1, Vec2(100.f, 2000.f));
 
 	shared_ptr<MeshRenderer> meshRenderer = GetGameObject()->GetMeshRenderer();
 	shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadTerrainMesh(sizeX, sizeZ);

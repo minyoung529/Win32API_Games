@@ -12,6 +12,8 @@ Shader::~Shader()
 
 void Shader::Init(const wstring& path, ShaderInfo info, ShaderArg arg)
 {
+	m_info = info;
+
 	CreateVertexShader(path, arg.vs, "vs_5_0");	// vertex shader
 
 	if (arg.hs.empty() == false)
@@ -98,6 +100,7 @@ void Shader::Init(const wstring& path, ShaderInfo info, ShaderArg arg)
 
 void Shader::Render()
 {
+	CMD_LIST->IASetPrimitiveTopology(m_info.topology);
 	CMD_LIST->SetPipelineState(m_pipelineState.Get());
 }
 

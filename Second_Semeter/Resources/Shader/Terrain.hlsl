@@ -118,7 +118,7 @@ DS_OUT DS_Main(const OutputPatch<HS_OUT, 3> input, float3 location : SV_DomainLo
     // uv를 뽑아온다
     float2 fullUV = float2(uv.x / (float) tileCountX, uv.y / (float) tileCountZ);
     float height = tex_2.SampleLevel(sam_0, fullUV, 0).x;
-    localPos.y = height; 
+    localPos.y = height*10; 
     // 실제로 정점의 높이가 바뀐다!
 
     float2 deltaUV = float2(1.f / mapWidth, 1.f / mapHeight);

@@ -39,6 +39,8 @@ public:
 	void SetFOV(float value) { m_fov = value; }
 	void SetScale(float value) { m_scale = value; }
 
+	Matrix& GetViewMatrix() { return m_matView; }
+	Matrix& GetProjMatrix() { return m_matProjection; }
 
 private:
 	PROJECTION_TYPE m_type = PROJECTION_TYPE::PERSPECTIVE;

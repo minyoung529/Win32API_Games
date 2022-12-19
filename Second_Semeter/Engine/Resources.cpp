@@ -32,7 +32,7 @@ void Resources::CreatDefaultShader()
 	{
 		ShaderInfo info =
 		{
-			RASTERIZER_TYPE::WIREFRAME,
+			RASTERIZER_TYPE::CULL_BACK,
 			DEPTH_STENCIL_TYPE::LESS,
 			D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST
 		};

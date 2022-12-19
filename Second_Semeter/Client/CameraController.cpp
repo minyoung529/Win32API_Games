@@ -4,6 +4,7 @@
 #include "Timer.h"
 #include "Engine.h"
 #include "Transform.h"
+#include "SceneManager.h"
 
 CameraController::CameraController()
 {
@@ -16,14 +17,20 @@ CameraController::~CameraController()
 void CameraController::LateUpdate()
 {
 	Vec3 pos = GetTransform()->GetLocalPosition();
+
+	float speed = m_speed;
+
+	if (INPUT->GetButton(KEY_TYPE::LSHIFT))
+		speed *= 10;
+
 	if (INPUT->GetButton(KEY_TYPE::W))
-		pos += GetTransform()->GetLook() * m_speed * DELTA_TIME;
+		pos += GetTransform()->GetLook() * speed * DELTA_TIME;
 	if (INPUT->GetButton(KEY_TYPE::S))
-		pos -= GetTransform()->GetLook() * m_speed * DELTA_TIME;
+		pos -= GetTransform()->GetLook() * speed * DELTA_TIME;
 	if (INPUT->GetButton(KEY_TYPE::A))
-		pos -= GetTransform()->GetRight() * m_speed * DELTA_TIME;
+		pos -= GetTransform()->GetRight() * speed * DELTA_TIME;
 	if (INPUT->GetButton(KEY_TYPE::D))
-		pos += GetTransform()->GetRight() * m_speed * DELTA_TIME;
+		pos += GetTransform()->GetRight() * speed * DELTA_TIME;
 	GetTransform()->SetLocalPosition(pos);
 
 	
@@ -51,4 +58,10 @@ void CameraController::LateUpdate()
 		rot.y -= DELTA_TIME * 0.5f;
 		GetTransform()->SetLocalRotation(rot);
 	}	
+
+	if (INPUT->GetButtonDown(KEY_TYPE::LBUTTON))
+	{
+		const POINT& pos = INPUT->GetMousePos();
+		shared_ptr<GameObject> obj = GET_SINGLE(SceneManager)->Pick(pos.x, pos.y);
+	}
 }

@@ -164,6 +164,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BaseCollider.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CommandQueue.h" />
     <ClInclude Include="Component.h" />
@@ -189,6 +190,7 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimpleMath.h" />
+    <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="SwapChain.h" />
     <ClInclude Include="TableDescriptorHeap.h" />
     <ClInclude Include="Terrain.h" />
@@ -197,6 +199,7 @@
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BaseCollider.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CommandQueue.cpp" />
     <ClCompile Include="Component.cpp" />
@@ -226,6 +229,7 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
+    <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="SwapChain.cpp" />
     <ClCompile Include="TableDescriptorHeap.cpp" />
     <ClCompile Include="Terrain.cpp" />

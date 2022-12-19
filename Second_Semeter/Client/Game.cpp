@@ -15,6 +15,7 @@
 #include "Resources.h"
 #include "Light.h"
 #include "Terrain.h"
+#include "SphereCollider.h"
 
 void Game::Init(const WindowInfo& window)
 {
@@ -85,8 +86,10 @@ void Game::Init(const WindowInfo& window)
 	{
 		shared_ptr<GameObject> terrain = make_shared<GameObject>();
 		terrain->AddComponent(make_shared<Transform>());
-		terrain->GetTransform()->SetLocalScale(Vec3(50.f, 250.f, 50.f));
-		terrain->GetTransform()->SetLocalPosition(Vec3(-100.f, -200.f, 300.f));
+		terrain->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+		terrain->GetTransform()->SetLocalPosition(Vec3(-10.f, -50.f, 30.f));
+
+		terrain->SetCheckFrustum(false);
 
 		terrain->AddComponent(make_shared<MeshRenderer>());
 
@@ -132,6 +135,8 @@ void Game::Init(const WindowInfo& window)
 		cube->AddComponent(make_shared<Transform>());
 		cube->GetTransform()->SetLocalScale(Vec3(10.0f, 10.0f, 10.0f));
 		cube->GetTransform()->SetLocalPosition(Vec3(5.0f, 10.0f, 10.0f));
+		
+		cube->AddComponent(make_shared<SphereCollider>());
 
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{

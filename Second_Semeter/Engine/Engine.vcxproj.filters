@@ -30,6 +30,9 @@
     <Filter Include="소스 파일\Object\Resource">
       <UniqueIdentifier>{23f5f1a7-4da1-4818-a8f9-8af053723612}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Object\Component\Collider">
+      <UniqueIdentifier>{548773cb-10a2-4e6c-97b1-ce3ada8e5708}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -125,6 +128,12 @@
     <ClInclude Include="Terrain.h">
       <Filter>소스 파일\Object\Component</Filter>
     </ClInclude>
+    <ClInclude Include="BaseCollider.h">
+      <Filter>소스 파일\Object\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereCollider.h">
+      <Filter>소스 파일\Object\Component\Collider</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -216,6 +225,12 @@
     </ClCompile>
     <ClCompile Include="Terrain.cpp">
       <Filter>소스 파일\Object\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseCollider.cpp">
+      <Filter>소스 파일\Object\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereCollider.cpp">
+      <Filter>소스 파일\Object\Component\Collider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

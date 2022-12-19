@@ -6,6 +6,7 @@ enum class KEY_TYPE
 	DOWN = VK_DOWN,
 	LEFT = VK_LEFT,
 	RIGHT = VK_RIGHT,
+	LSHIFT = VK_SHIFT,
 
 	W = 'W',
 	A = 'A',
