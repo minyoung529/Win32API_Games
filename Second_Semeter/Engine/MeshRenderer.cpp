@@ -12,17 +12,31 @@ MeshRenderer::~MeshRenderer()
 {
 }
 
+void MeshRenderer::SetMaterial(shared_ptr<Material> material, uint32 idx)
+{
+	if (m_materials.size() <= static_cast<size_t>(idx))
+	{
+		m_materials.resize(static_cast<size_t>(idx) + 1);
+	}
+
+	m_materials[idx] = material;
+}
+
 void MeshRenderer::Update()
 {
 }
 
 void MeshRenderer::Render()
 {
-	GetTransform()->PushData();
+	for (uint32 i = 0; i < m_materials.size(); i++)
+	{
+		shared_ptr<Material>& material = m_materials[i];
 
-	if (m_material)
-		m_material->PushData();
+		if (material == nullptr || material->GetShader() == nullptr)
+			continue;
 
-	if (m_mesh)
-		m_mesh->Render();
+		GetTransform()->PushData();
+		material->PushData();
+		m_mesh->Render(i);
+	}
 }

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Resources.h"
+#include "MeshData.h"
 
 void Resources::Init()
 {
@@ -437,4 +438,20 @@ shared_ptr<Mesh> Resources::LoadTerrainMesh(int32 sizeX, int32 sizeZ)
 	Add(L"Terrain", mesh);
 
 	return mesh;
+}
+
+shared_ptr<class MeshData> Resources::LoadFBX(const wstring& path)
+{
+	wstring key = path;
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::LoadFromFBX(path);
+	meshData->SetName(key);
+
+	Add(key, meshData);
+
+	return meshData;
 }

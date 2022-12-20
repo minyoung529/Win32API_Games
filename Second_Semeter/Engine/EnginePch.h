@@ -37,6 +37,8 @@ using namespace Microsoft::WRL;
 #include <DirectXTex.h>
 #include <DirectXTex.inl>
 
+#include "FBX/fbxsdk.h"
+
 // 각종 lib
 #pragma comment(lib, "d3d12")
 #pragma comment(lib, "dxgi")
@@ -47,6 +49,17 @@ using namespace Microsoft::WRL;
 #pragma comment(lib, "DirectXTex_Debug.lib")
 #else
 #pragma comment(lib, "DirectXTex.lib")
+#endif
+
+#ifdef _DEBUG
+#pragma comment(lib, "FBX\\debug\\libfbxsdk-md.lib")
+#pragma comment(lib, "FBX\\debug\\libxml2-md.lib")
+#pragma comment(lib, "FBX\\debug\\zlib-md.lib")
+
+#else
+#pragma comment(lib, "FBX\\release\\libfbxsdk-md.lib")
+#pragma comment(lib, "FBX\\release\\libxml2-md.lib")
+#pragma comment(lib, "FBX\\release\\zlib-md.lib")
 #endif
 
 // 각종 typedef
@@ -153,3 +166,7 @@ public:								\
 #define CONST_BUFFER(type)	g_Engine->GetConstantBuffer(type)
 
 extern unique_ptr<class Engine> g_Engine;
+
+// Utils
+wstring s2ws(const string& s);
+string ws2s(const wstring& s);

@@ -80,7 +80,7 @@ shared_ptr<class GameObject> SceneManager::Pick(int32 screenX, int32 screenY)
 	Matrix projMatrix = camera->GetProjMatrix();
 
 	// ViewSpace 
-	float viewX = (2.0f * screenX / width - 1.f) / projMatrix(0, 0);
+	float viewX = (+2.0f * screenX / width - 1.f) / projMatrix(0, 0);
 	float viewY = (-2.0f * screenY / height + 1.f) / projMatrix(1, 1);
 
 	// view ¿ªÇà·Ä x 

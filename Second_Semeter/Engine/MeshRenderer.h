@@ -12,7 +12,9 @@ public:
 
 public:
 	void SetMesh(shared_ptr<Mesh> mesh) { m_mesh = mesh; }
-	void SetMaterial(shared_ptr<Material> material) { m_material = material; }
+	void SetMaterial(shared_ptr<Material> material, uint32 idx = 0);
+	
+	shared_ptr<Material> GetMaterial(uint32 idx = 0) { return m_materials[idx]; }
 
 public:
 	void Update();
@@ -20,6 +22,6 @@ public:
 
 private:
 	shared_ptr<Mesh> m_mesh;
-	shared_ptr<Material> m_material;
+	vector<shared_ptr<Material>> m_materials;
 };
 

@@ -134,6 +134,12 @@
     <ClInclude Include="SphereCollider.h">
       <Filter>소스 파일\Object\Component\Collider</Filter>
     </ClInclude>
+    <ClInclude Include="FBXLoader.h">
+      <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshData.h">
+      <Filter>소스 파일\Object\Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -231,6 +237,12 @@
     </ClCompile>
     <ClCompile Include="SphereCollider.cpp">
       <Filter>소스 파일\Object\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="FBXLoader.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshData.cpp">
+      <Filter>소스 파일\Object\Resource</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

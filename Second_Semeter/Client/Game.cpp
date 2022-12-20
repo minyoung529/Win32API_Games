@@ -16,6 +16,7 @@
 #include "Light.h"
 #include "Terrain.h"
 #include "SphereCollider.h"
+#include "MeshData.h"
 
 void Game::Init(const WindowInfo& window)
 {
@@ -100,6 +101,22 @@ void Game::Init(const WindowInfo& window)
 	}
 #pragma endregion
 
+
+#pragma region FBX
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Dragon.fbx");
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"Dragon");
+			gameObject->SetCheckFrustum(false);
+			m_SampleScene->AddGameObject(gameObject);
+		}
+	}
+#pragma endregion
+
+
 #pragma region UI Test
 	{
 		shared_ptr<GameObject> sphere = make_shared<GameObject>();
@@ -124,7 +141,7 @@ void Game::Init(const WindowInfo& window)
 		}
 
 		sphere->AddComponent(meshRenderer);
-		m_SampleScene->AddGameObject(sphere);
+		//m_SampleScene->AddGameObject(sphere);
 	}
 #pragma endregion
 
@@ -135,7 +152,7 @@ void Game::Init(const WindowInfo& window)
 		cube->AddComponent(make_shared<Transform>());
 		cube->GetTransform()->SetLocalScale(Vec3(10.0f, 10.0f, 10.0f));
 		cube->GetTransform()->SetLocalPosition(Vec3(5.0f, 10.0f, 10.0f));
-		
+
 		cube->AddComponent(make_shared<SphereCollider>());
 
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
@@ -155,7 +172,7 @@ void Game::Init(const WindowInfo& window)
 			}
 
 			cube->AddComponent(meshRenderer);
-			m_SampleScene->AddGameObject(cube);
+			//m_SampleScene->AddGameObject(cube);
 		}
 #pragma endregion
 
@@ -181,7 +198,7 @@ void Game::Init(const WindowInfo& window)
 				meshRenderer->SetMaterial(material);
 			}
 
-			sphere->AddComponent(meshRenderer);
+			//sphere->AddComponent(meshRenderer);
 			//m_SampleScene->AddGameObject(sphere);
 		}
 #pragma endregion
@@ -236,7 +253,7 @@ void Game::Init(const WindowInfo& window)
 			}
 
 			sphere->AddComponent(meshRenderer);
-			m_SampleScene->AddGameObject(sphere);
+			//m_SampleScene->AddGameObject(sphere);
 		}
 #pragma endregion
 
