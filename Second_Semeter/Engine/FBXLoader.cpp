@@ -314,7 +314,7 @@ void FBXLoader::CreateMaterials()
 			shared_ptr<Material> material = make_shared<Material>();
 			wstring key = m_meshes[i].materials[j].name;
 			material->SetName(key);
-			material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"Default"));
+			material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"Forward"));
 
 			{   // Diffuse
 				wstring diffuseName = m_meshes[i].materials[j].diffuseTexName.c_str();

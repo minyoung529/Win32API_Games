@@ -252,7 +252,7 @@
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\Resources\Shader\Default.hlsl">
+    <FxCompile Include="..\Resources\Shader\Forward.hlsl">
       <Filter>소스 파일\Shader</Filter>
     </FxCompile>
     <FxCompile Include="..\Resources\Shader\Params.hlsl">
@@ -265,6 +265,9 @@
       <Filter>소스 파일\Shader</Filter>
     </FxCompile>
     <FxCompile Include="..\Resources\Shader\Terrain.hlsl">
+      <Filter>소스 파일\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\Deferred.hlsl">
       <Filter>소스 파일\Shader</Filter>
     </FxCompile>
   </ItemGroup>

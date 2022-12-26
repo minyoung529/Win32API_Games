@@ -246,7 +246,8 @@
     <None Include="SimpleMath.inl" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\Resources\Shader\Default.hlsl" />
+    <FxCompile Include="..\Resources\Shader\Deferred.hlsl" />
+    <FxCompile Include="..\Resources\Shader\Forward.hlsl" />
     <FxCompile Include="..\Resources\Shader\Params.hlsl" />
     <FxCompile Include="..\Resources\Shader\Skybox.hlsl" />
     <FxCompile Include="..\Resources\Shader\Terrain.hlsl" />

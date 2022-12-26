@@ -73,6 +73,8 @@ void CommandQueue::RenderBegin(const D3D12_VIEWPORT* vp, const D3D12_RECT* rect)
 	m_cmdList->RSSetViewports(1, vp);
 	m_cmdList->RSSetScissorRects(1, rect);
 	// Specify the buffers we are going to render to.
+
+	// 백 버퍼에 그리고 있음
 	D3D12_CPU_DESCRIPTOR_HANDLE backBufferView = m_swapChain->GetBackRTV();
 	m_cmdList->ClearRenderTargetView(backBufferView, Colors::LightSteelBlue, 0, nullptr);
 

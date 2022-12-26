@@ -25,8 +25,8 @@ void Resources::CreatDefaultShader()
 	// Default
 	{
 		shared_ptr<Shader> shader = make_shared<Shader>();
-		shader->Init(L"..\\Resources\\Shader\\Default.hlsl");
-		Add<Shader>(L"Default", shader);
+		shader->Init(L"..\\Resources\\Shader\\Forward.hlsl");
+		Add<Shader>(L"Forward", shader);
 	}
 
 	// Terrain
