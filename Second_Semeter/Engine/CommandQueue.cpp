@@ -53,8 +53,11 @@ void CommandQueue::RenderBegin(const D3D12_VIEWPORT* vp, const D3D12_RECT* rect)
 {
 	m_cmdAlloc->Reset();
 	m_cmdList->Reset(m_cmdAlloc.Get(), nullptr);
+	
+	int8 backIndex = m_swapChain->GetBackBufferIndex();
+
 	D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-		m_swapChain->GetBackRTVBuffer().Get(),
+		g_Engine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SWAP_CHAIN)->GetRTTexture(backIndex)->GetTex2D().Get(),
 		D3D12_RESOURCE_STATE_PRESENT, // 화면 출력
 		D3D12_RESOURCE_STATE_RENDER_TARGET); // 외주 결과물
 
@@ -73,21 +76,14 @@ void CommandQueue::RenderBegin(const D3D12_VIEWPORT* vp, const D3D12_RECT* rect)
 	m_cmdList->RSSetViewports(1, vp);
 	m_cmdList->RSSetScissorRects(1, rect);
 	// Specify the buffers we are going to render to.
-
-	// 백 버퍼에 그리고 있음
-	D3D12_CPU_DESCRIPTOR_HANDLE backBufferView = m_swapChain->GetBackRTV();
-	m_cmdList->ClearRenderTargetView(backBufferView, Colors::LightSteelBlue, 0, nullptr);
-
-	D3D12_CPU_DESCRIPTOR_HANDLE depthStencileView = g_Engine->GetDepthStencileBuffer()->GetDSVCpuHandle();
-	m_cmdList->OMSetRenderTargets(1, &backBufferView, FALSE, &depthStencileView);
-
-	m_cmdList->ClearDepthStencilView(depthStencileView, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
 void CommandQueue::RenderEnd()
 {
+	int8 backIndex = m_swapChain->GetBackBufferIndex();
+
 	D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-		m_swapChain->GetBackRTVBuffer().Get(),
+		g_Engine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SWAP_CHAIN)->GetRTTexture(backIndex)->GetTex2D().Get(),
 		D3D12_RESOURCE_STATE_RENDER_TARGET, // 외주 결과물
 		D3D12_RESOURCE_STATE_PRESENT); // 화면 출력
 	m_cmdList->ResourceBarrier(1, &barrier);

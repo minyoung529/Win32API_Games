@@ -1,7 +1,13 @@
 #pragma once
 #include "Object.h"
 
-enum class RASTERIZER_TYPE
+enum class SHADER_TYPE : uint8
+{
+	DEFERRED,
+	FORWARD,
+};
+
+enum class RASTERIZER_TYPE : uint8
 {
 	CULL_NONE,
 	CULL_FRONT,
@@ -9,19 +15,23 @@ enum class RASTERIZER_TYPE
 	WIREFRAME
 };
 
-enum class DEPTH_STENCIL_TYPE
+enum class DEPTH_STENCIL_TYPE : uint8
 {
-	LESS,		// Default
+	LESS,
 	LESS_EQUAL,
 	GREATER,
-	GREATER_EQUAL
+	GREATER_EQUAL,
+	NO_DEPTH_TEST, // ±Ì¿Ã ≈◊Ω∫∆Æ(X) + ±Ì¿Ã ±‚∑œ(O)
+	NO_DEPTH_TEST_NO_WRITE, // ±Ì¿Ã ≈◊Ω∫∆Æ(X) + ±Ì¿Ã ±‚∑œ(X)
+	LESS_NO_WRITE, // ±Ì¿Ã ≈◊Ω∫∆Æ(O) + ±Ì¿Ã ±‚∑œ(X)
 };
 
 struct ShaderInfo
 {
+	SHADER_TYPE shaderType = SHADER_TYPE::FORWARD;
 	RASTERIZER_TYPE rasterizerType = RASTERIZER_TYPE::CULL_BACK;
 	DEPTH_STENCIL_TYPE depthStencilType = DEPTH_STENCIL_TYPE::LESS;
-	D3D12_PRIMITIVE_TOPOLOGY topology= D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	D3D12_PRIMITIVE_TOPOLOGY topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 };
 
 struct ShaderArg
@@ -42,6 +52,8 @@ public:
 public:
 	void Init(const wstring& path, ShaderInfo info = ShaderInfo(), ShaderArg arg = ShaderArg());
 	void Render();
+
+	SHADER_TYPE GetShaderType() { return m_info.shaderType; }
 
 private:
 	void CreateShader(const wstring& path, const string& name, const string& version, ComPtr<ID3DBlob>& blob, D3D12_SHADER_BYTECODE& shaderByteCode);

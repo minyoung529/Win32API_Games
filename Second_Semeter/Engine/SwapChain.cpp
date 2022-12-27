@@ -4,7 +4,6 @@
 void SwapChain::Init(const WindowInfo& window, ComPtr<ID3D12Device> device, ComPtr<IDXGIFactory> dxgi, ComPtr<ID3D12CommandQueue> cmdQueue)
 {
 	CreateSwapChain(window, dxgi, cmdQueue);
-	CreateRTV(device);
 }
 
 void SwapChain::Present()
@@ -39,28 +38,4 @@ void SwapChain::CreateSwapChain(const WindowInfo& window, ComPtr<IDXGIFactory> d
 	sd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD; // 전면후면버퍼 교체시 이전프레임 정보버림
 	sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 	dxgi->CreateSwapChain(cmdQueue.Get(), &sd, &m_swapChain);
-	for (int32 i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
-		m_swapChain->GetBuffer(i, IID_PPV_ARGS(&m_rtvBuffer[i]));
-
-}
-
-void SwapChain::CreateRTV(ComPtr<ID3D12Device> device)
-{
-	int32 rtvHeapSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-
-	D3D12_DESCRIPTOR_HEAP_DESC rtvDesc;
-	rtvDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-	rtvDesc.NumDescriptors = SWAP_CHAIN_BUFFER_COUNT;
-	rtvDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	rtvDesc.NodeMask = 0;
-
-	// 같은 종류의 데이터끼리 배열로 관리
-	// RTV 목록 : [ ] [ ]
-	device->CreateDescriptorHeap(&rtvDesc, IID_PPV_ARGS(&m_rtvHeap));
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHeapBegin = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
-	for (int i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
-	{
-		m_rtvHandle[i] = CD3DX12_CPU_DESCRIPTOR_HANDLE(rtvHeapBegin, i * rtvHeapSize);
-		device->CreateRenderTargetView(m_rtvBuffer[i].Get(), nullptr, m_rtvHandle[i]);
-	}
 }

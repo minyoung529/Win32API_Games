@@ -13,6 +13,7 @@ void Resources::CreatDefaultShader()
 	{
 		ShaderInfo info =
 		{
+			SHADER_TYPE::FORWARD,
 			RASTERIZER_TYPE::CULL_NONE,
 			DEPTH_STENCIL_TYPE::LESS_EQUAL
 		};
@@ -22,17 +23,50 @@ void Resources::CreatDefaultShader()
 		Add<Shader>(L"Skybox", shader);
 	}
 
-	// Default
+	// Forward
 	{
 		shared_ptr<Shader> shader = make_shared<Shader>();
 		shader->Init(L"..\\Resources\\Shader\\Forward.hlsl");
 		Add<Shader>(L"Forward", shader);
 	}
 
+	// Deferred
+	{
+		ShaderInfo info
+		{
+			SHADER_TYPE::DEFERRED
+		};
+		shared_ptr<Shader> shader = make_shared<Shader>();
+		shader->Init(L"..\\Resources\\Shader\\Deferred.hlsl", info);
+		Add<Shader>(L"Deferred", shader);
+	}
+
+	// Texture (Forward)
+	{
+		ShaderInfo info =
+		{
+		SHADER_TYPE::FORWARD,
+		RASTERIZER_TYPE::CULL_NONE,
+		DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE
+		};
+		ShaderArg arg =
+		{
+		"VS_Tex",
+		"",
+		"",
+		"",
+		"PS_Tex",
+		};
+		shared_ptr<Shader> shader = make_shared<Shader>();
+		shader->Init(L"..\\Resources\\Shader\\Forward.hlsl", info, arg);
+		Add<Shader>(L"Texture", shader);
+	}
+
 	// Terrain
 	{
 		ShaderInfo info =
 		{
+			SHADER_TYPE::DEFERRED,
 			RASTERIZER_TYPE::CULL_BACK,
 			DEPTH_STENCIL_TYPE::LESS,
 			D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST
@@ -51,6 +85,24 @@ void Resources::CreatDefaultShader()
 		shader->Init(L"..\\Resources\\Shader\\Terrain.hlsl", info, arg);
 		Add<Shader>(L"Terrain", shader);
 	}
+}
+
+shared_ptr<Texture> Resources::CreateTexture(const wstring& name, DXGI_FORMAT format, uint32 width, uint32 height, const D3D12_HEAP_PROPERTIES& heapProperty, D3D12_HEAP_FLAGS heapFlags, D3D12_RESOURCE_FLAGS resFlags, Vec4 clearColor)
+{
+	shared_ptr<Texture> texture = make_shared<Texture>();
+	texture->Create(format, width, height, heapProperty, heapFlags, resFlags, clearColor);
+	Add(name, texture);
+
+	return texture;
+}
+
+shared_ptr<Texture> Resources::CreateTextureFromResource(const wstring& name, ComPtr<ID3D12Resource> tex2D)
+{
+	shared_ptr<Texture> texture = make_shared<Texture>();
+	texture->CreateFromResource(tex2D);
+	Add(name, texture);
+
+	return texture;
 }
 
 shared_ptr<Mesh> Resources::LoadCubeMesh()

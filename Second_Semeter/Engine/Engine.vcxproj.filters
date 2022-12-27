@@ -80,9 +80,6 @@
     <ClInclude Include="Texture.h">
       <Filter>소스 파일\Object\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="DepthStencileBuffer.h">
-      <Filter>소스 파일\Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Material.h">
       <Filter>소스 파일\Object\Resource</Filter>
     </ClInclude>
@@ -140,6 +137,9 @@
     <ClInclude Include="MeshData.h">
       <Filter>소스 파일\Object\Resource</Filter>
     </ClInclude>
+    <ClInclude Include="RenderTargetGroup.h">
+      <Filter>소스 파일\Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -183,9 +183,6 @@
     </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>소스 파일\Object\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="DepthStencileBuffer.cpp">
-      <Filter>소스 파일\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
       <Filter>소스 파일\Object\Resource</Filter>
@@ -243,6 +240,9 @@
     </ClCompile>
     <ClCompile Include="MeshData.cpp">
       <Filter>소스 파일\Object\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTargetGroup.cpp">
+      <Filter>소스 파일\Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

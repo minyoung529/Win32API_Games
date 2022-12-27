@@ -58,11 +58,39 @@ void Scene::FinalUpdate()
 void Scene::Render()
 {
 	PushLightData();
-	for (auto& gameObject : m_gameObjects)
-	{
-		if (gameObject->GetCamera() == nullptr)continue;
 
-		gameObject->GetCamera()->Render();
+	// SwapChain Group 초기화
+	int8 backIndex = g_Engine->GetSwapChain()->GetBackBufferIndex();
+	g_Engine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SWAP_CHAIN)->ClearRenderTargetView(backIndex);
+	
+	// Deferred Group 초기화
+	g_Engine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->ClearRenderTargetView();
+	
+	// Deferred OMSet
+	g_Engine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->OMSetRenderTargets();
+	
+	shared_ptr<Camera> mainCamera = m_cameras[0];	// mainCam
+	mainCamera->SortGameObject();
+	mainCamera->Render_Deferred();
+	
+	// Swapchain OMSet
+	g_Engine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SWAP_CHAIN)->OMSetRenderTargets(1, backIndex);
+	
+	mainCamera->Render_Forward();
+
+	// 메인 먼저,
+	// 그 외에는 모두 forward rendering
+	
+	for (auto& camera : m_cameras)
+	{
+		if (camera == mainCamera)
+			continue;
+
+		// Swapchain OMSet
+		g_Engine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SWAP_CHAIN)->OMSetRenderTargets(1, backIndex);
+
+		camera->SortGameObject();
+		camera->Render_Forward();
 	}
 }
 

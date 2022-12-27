@@ -46,7 +46,7 @@ struct PS_OUT
 
 
 // SV_Target => 기본으로 설정한 백 버퍼 렌더링
-PS_OUT PS_Msain(VS_OUT input)
+PS_OUT PS_Main(VS_OUT input)
 {
     PS_OUT output = (PS_OUT) 0;
     float4 color = float4(1.0f, 1.0f, 1.0f, 1.0f);

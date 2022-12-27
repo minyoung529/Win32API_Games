@@ -19,6 +19,11 @@ public:
 	virtual void Render() override;
 
 public:
+	void SortGameObject();
+	void Render_Deferred();
+	void Render_Forward();
+
+public:
 	void SetProjectionType(PROJECTION_TYPE type) { m_type = type; }
 	PROJECTION_TYPE GetProjectionType() { return m_type; }
 
@@ -55,6 +60,10 @@ private:
 
 	Frustum m_frustum;
 	uint32 m_cullingMask = 0;
+
+private:
+	vector<shared_ptr<GameObject>> m_vecDeferred;
+	vector<shared_ptr<GameObject>> m_vecForward;
 
 public:
 	static Matrix s_MatView;

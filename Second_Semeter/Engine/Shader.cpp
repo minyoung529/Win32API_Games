@@ -41,7 +41,6 @@ void Shader::Init(const wstring& path, ShaderInfo info, ShaderArg arg)
 	m_pipelineDesc.pRootSignature = ROOT_SIGNATURE.Get();
 
 	m_pipelineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	//m_pipelineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
 	m_pipelineDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 	m_pipelineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 	m_pipelineDesc.SampleMask = UINT_MAX;
@@ -49,7 +48,23 @@ void Shader::Init(const wstring& path, ShaderInfo info, ShaderArg arg)
 	m_pipelineDesc.NumRenderTargets = 1;
 	m_pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 	m_pipelineDesc.SampleDesc.Count = 1;
-	m_pipelineDesc.DSVFormat = g_Engine->GetDepthStencileBuffer()->GetDSVFormat();
+	m_pipelineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+
+	switch (info.shaderType)
+	{
+	case SHADER_TYPE::DEFERRED:
+		m_pipelineDesc.NumRenderTargets = RENDER_TARGET_G_BUFFER_GROUP_MEMBER_COUNT;
+		m_pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R32G32B32A32_FLOAT; // POSITION
+		m_pipelineDesc.RTVFormats[1] = DXGI_FORMAT_R32G32B32A32_FLOAT; // NORMAL
+		m_pipelineDesc.RTVFormats[2] = DXGI_FORMAT_R8G8B8A8_UNORM; // COLOR
+		// PS_OUT	
+
+		break;
+	case SHADER_TYPE::FORWARD:
+		m_pipelineDesc.NumRenderTargets = 1;
+		m_pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+		break;
+	}
 
 	switch (info.rasterizerType)
 	{
@@ -93,6 +108,22 @@ void Shader::Init(const wstring& path, ShaderInfo info, ShaderArg arg)
 		m_pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_GREATER_EQUAL;
 		break;
 
+	case DEPTH_STENCIL_TYPE::NO_DEPTH_TEST:
+		m_pipelineDesc.DepthStencilState.DepthEnable = FALSE;
+		m_pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
+		break;
+
+		// UI
+	case DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE:
+		m_pipelineDesc.DepthStencilState.DepthEnable = FALSE;
+		m_pipelineDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+		break;
+
+	case DEPTH_STENCIL_TYPE::LESS_NO_WRITE:
+		m_pipelineDesc.DepthStencilState.DepthEnable = TRUE;
+		m_pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
+		m_pipelineDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+		break;
 	}
 
 	DEVICE->CreateGraphicsPipelineState(&m_pipelineDesc, IID_PPV_ARGS(&m_pipelineState));
